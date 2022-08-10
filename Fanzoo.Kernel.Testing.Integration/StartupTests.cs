@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Fanzoo.Kernel.Testing.Integration
 {
-    [Collection("LocalDb")]
+    [Collection("LocalDb"), Trait("Category", "Integration Tests")]
     public class StartupTests
     {
         private readonly SqlLocalDbWebApplicationFactory _factory;
