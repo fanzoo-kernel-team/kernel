@@ -1,0 +1,2 @@
+﻿[assembly: Xunit.TestCaseOrderer("Fanzoo.Kernel.Testing.PriorityOrderer", "Fanzoo.Kernel.Testing")]
+[assembly: Xunit.TestCollectionOrderer("Fanzoo.Kernel.Testing.PriorityCollectionOrderer", "Fanzoo.Kernel.Testing")] 

@@ -1,0 +1,25 @@
+﻿namespace Fanzoo.Kernel.Domain.Values.Stripe
+{
+    public sealed class StripeCustomerIdentifierValue : StringValue
+    {
+        private StripeCustomerIdentifierValue() { } //ORM
+
+        public StripeCustomerIdentifierValue(string value) : base(value)
+        {
+            Guard.Against.NullOrWhiteSpace(value, nameof(value));
+            Guard.Against.InvalidPrefix(value, "cus_", nameof(value));
+        }
+
+        public static Result<StripeCustomerIdentifierValue, Error> Create(string stripeCustomerIdentifier)
+        {
+            var isValid = Check.For
+                .NullOrWhiteSpace(stripeCustomerIdentifier)
+                .And
+                .StartsWith(stripeCustomerIdentifier, "cus_")
+                    .IsValid;
+
+            return isValid ? new StripeCustomerIdentifierValue(stripeCustomerIdentifier) : Errors.ValueObjects.StripeCustomerIdentifier.InvalidFormat;
+
+        }
+    }
+}

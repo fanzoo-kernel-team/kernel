@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+		<PackageReference Include="FluentMigrator" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="3.3.2" />
+		<PackageReference Include="FluentNHibernate" Version="3.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.43.0.51858">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Fanzoo.Kernel.Commands\Fanzoo.Kernel.Commands.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Configuration\Fanzoo.Kernel.Configuration.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Data\Fanzoo.Kernel.Data.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Domain\Fanzoo.Kernel.Domain.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Events\Fanzoo.Kernel.Events.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Queries\Fanzoo.Kernel.Queries.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Web\Fanzoo.Kernel.Web.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+</Project>

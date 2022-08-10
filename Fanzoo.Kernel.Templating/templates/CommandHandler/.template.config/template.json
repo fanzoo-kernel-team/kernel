@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bill Wheelock",
+  "classifications": [
+    "Fanzoo",
+    "CommandHandlers"
+  ],
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Fanzoo.Kernel.Templating.CommandHandlers.NewCommandHandler",
+  "name": "New CommandHandler",
+  "shortName": "fz-commandhandler",
+  "symbols": {
+    "project-name": {
+      "type": "parameter",
+      "description": "The name of the project",
+      "replaces": "{project}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },	  
+    "command-name": {
+      "type": "parameter",
+      "description": "The name of the Command/CommandHandler",
+      "replaces": "{name}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "area-name": {
+      "type": "parameter",
+      "description": "The sub-area of the project. i.e. Users, Orders, Invoices",
+      "replaces": "{area}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },	
+    "commandhandler-filename": {
+      "type": "generated",
+      "generator": "join",
+      "fileRename": "CommandHandler",
+      "valueTransform": "ValueAfterLastDot",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "command-name"
+          },
+          {
+            "type": "const",
+            "value": "CommandHandler"
+          }
+        ],
+        "separator": ""
+      }
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)",
+      "replacement": ""
+    }
+  }
+}

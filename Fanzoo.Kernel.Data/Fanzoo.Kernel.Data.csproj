@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.31.1" />
+    <PackageReference Include="FluentNHibernate" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.43.0.51858">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fanzoo.Kernel.Domain\Fanzoo.Kernel.Domain.csproj" />
+    <ProjectReference Include="..\Fanzoo.Kernel.Events.Abstractions\Fanzoo.Kernel.Events.Abstractions.csproj" />
+    <ProjectReference Include="..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
+    <ProjectReference Include="..\Fanzoo.Kernel.Web\Fanzoo.Kernel.Web.csproj" />
+  </ItemGroup>
+
+</Project>

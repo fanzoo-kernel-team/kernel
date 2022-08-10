@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bill Wheelock",
+  "classifications": [
+    "Fanzoo",
+    "EventHandlers"
+  ],
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Fanzoo.Kernel.Templating.EventHandlers.NewIntegrationEventHandler",
+  "name": "New IntegrationEventHandler",
+  "shortName": "fz-integrationeventhandler",
+  "symbols": {
+    "project-name": {
+      "type": "parameter",
+      "description": "The name of the project",
+      "replaces": "{project}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "event-name": {
+      "type": "parameter",
+      "description": "The name of the Event/EventHandler",
+      "replaces": "{name}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "area-name": {
+      "type": "parameter",
+      "description": "The sub-area of the project. i.e. Users, Orders, Invoices",
+      "replaces": "{area}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "eventhandler-filename": {
+      "type": "generated",
+      "generator": "join",
+      "fileRename": "IntegrationEventHandler",
+      "valueTransform": "ValueAfterLastDot",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "event-name"
+          },
+          {
+            "type": "const",
+            "value": "EventHandler"
+          }
+        ],
+        "separator": ""
+      }
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)",
+      "replacement": ""
+    }
+  }
+}

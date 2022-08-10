@@ -1,0 +1,24 @@
+﻿using Fanzoo.Kernel.Data.Mapping;
+using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities;
+
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Mapping
+{
+    public class RefreshTokenMap : MutableEntityClassMap<RefreshToken, RefreshTokenIdentifierValue, Guid>
+    {
+        public RefreshTokenMap() : base()
+        {
+            MapValueObject(e => e.Token);
+
+            MapValueObject(e => e.IPAddress);
+
+            Map(e => e.Issued);
+
+            Map(e => e.ExpirationDate);
+
+            Map(e => e.Revoked);
+
+            Not.LazyLoad();
+        }
+    }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bill Wheelock",
+  "classifications": [
+    "Fanzoo",
+    "QueryHandlers"
+  ],
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Fanzoo.Kernel.Templating.QueryHandlers.NewManyQueryHandler",
+  "name": "New QueryHandler with IEnumerable<TReturn>",
+  "shortName": "fz-queryhandler-many",
+  "symbols": {
+    "project-name": {
+      "type": "parameter",
+      "description": "The name of the project",
+      "replaces": "{project}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },	  
+    "query-name": {
+      "type": "parameter",
+      "description": "The name of the Query/QueryHandler",
+      "replaces": "{name}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "area-name": {
+      "type": "parameter",
+      "description": "The sub-area of the project. i.e. Users, Orders, Invoices",
+      "replaces": "{area}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },
+    "returntype": {
+      "type": "parameter",
+      "description": "The return type of the query",
+      "replaces": "{returntype}",
+      "datatype": "string",
+      "defaultValue": "_",
+      "isRequired": true
+    },	
+    "queryhandler-filename": {
+      "type": "generated",
+      "generator": "join",
+      "fileRename": "QueryHandler",
+      "valueTransform": "ValueAfterLastDot",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "query-name"
+          },
+          {
+            "type": "const",
+            "value": "QueryHandler"
+          }
+        ],
+        "separator": ""
+      }
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)",
+      "replacement": ""
+    }
+  }
+}

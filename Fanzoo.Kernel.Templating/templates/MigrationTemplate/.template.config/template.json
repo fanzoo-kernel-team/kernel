@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bill Wheelock",
+  "classifications": [
+    "Fanzoo",
+    "Migrations"
+  ],
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Fanzoo.Kernel.Templating.Migrations.NewMigration",
+  "name": "New Migration",
+  "shortName": "fz-migration",
+  "symbols": {
+    "migrationdate": {
+      "type": "generated",
+      "generator": "now",
+      "parameters": {
+        "format": "yyyyMMddHHmm"
+      },
+      "replaces": "{date}"
+    },
+    "migration-name": {
+      "type": "parameter",
+      "description": "The name of the migration. e.g. AddIsActiveMigration",
+      "replaces": "{name}",
+      "datatype": "string",
+      "defaultValue": "Migration",
+      "isRequired": true
+    },
+    "project-name": {
+      "type": "parameter",
+      "description": "The name of the project",
+      "replaces": "{projectname}",
+      "datatype": "string",
+      "defaultValue": "Fanzoo",
+      "isRequired": true
+    },
+    "migrationFileName": {
+      "type": "generated",
+      "generator": "join",
+      "fileRename": "Migration",
+      "valueTransform": "ValueAfterLastDot",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "migrationdate"
+          },
+          {
+            "type": "ref",
+            "value": "migration-name"
+          }
+        ],
+        "separator": "_"
+      }
+    }
+  },
+  "forms": {
+    "ValueAfterLastDot": {
+      "identifier": "replace",
+      "pattern": "^.*\\.(?=[^\\.]+$)",
+      "replacement": ""
+    }
+  }
+}
