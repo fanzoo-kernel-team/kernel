@@ -71,7 +71,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third Party", "Third Party"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.SendGrid", "Third Party\Fanzoo.Kernel.SendGrid\Fanzoo.Kernel.SendGrid.csproj", "{A2097CD2-E293-4C99-A68B-BC644D7DE5DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanzoo.Kernel.Stripe", "Third Party\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj", "{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Stripe", "Third Party\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj", "{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
