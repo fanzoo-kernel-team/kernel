@@ -7,13 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Stripe.net" Version="40.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-		<PackageReference Include="SendGrid" Version="9.28.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.43.0.51858">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,13 +21,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Fanzoo.Kernel.Builder\Fanzoo.Kernel.Builder.csproj" />
-		<ProjectReference Include="..\..\Fanzoo.Kernel.Common\Fanzoo.Kernel.Common.csproj" />
-		<ProjectReference Include="..\..\Fanzoo.Kernel.DependencyInjection\Fanzoo.Kernel.DependencyInjection.csproj" />
-		<ProjectReference Include="..\..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Common\Fanzoo.Kernel.Common.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Builder\Fanzoo.Kernel.Builder.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.DependencyInjection\Fanzoo.Kernel.DependencyInjection.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
+
 </Project>

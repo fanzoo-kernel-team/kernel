@@ -57,21 +57,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Web", "Fanzoo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Web.Mvc", "Fanzoo.Kernel.Web.Mvc\Fanzoo.Kernel.Web.Mvc.csproj", "{283642ED-602F-44EA-A572-AA82E8BD19E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector", "testing\Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector\Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.csproj", "{8230B238-F89B-499C-8F3C-D0DD8C12F257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector", "Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector\Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.csproj", "{8230B238-F89B-499C-8F3C-D0DD8C12F257}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Refrerence Applications", "Refrerence Applications", "{8D37ABAF-7119-45A1-AD37-F885DCED4A1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.Integration", "testing\Fanzoo.Kernel.Testing.Integration\Fanzoo.Kernel.Testing.Integration.csproj", "{03EAA6AA-0407-49B6-951B-A63C757CD0C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.Integration", "Fanzoo.Kernel.Testing.Integration\Fanzoo.Kernel.Testing.Integration.csproj", "{03EAA6AA-0407-49B6-951B-A63C757CD0C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.Unit", "testing\Fanzoo.Kernel.Testing.Unit\Fanzoo.Kernel.Testing.Unit.csproj", "{C8AA6E78-58E0-459A-9919-128E9AE793D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.Unit", "Fanzoo.Kernel.Testing.Unit\Fanzoo.Kernel.Testing.Unit.csproj", "{C8AA6E78-58E0-459A-9919-128E9AE793D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing", "testing\Fanzoo.Kernel.Testing\Fanzoo.Kernel.Testing.csproj", "{EBB6F295-4326-484B-B812-A771C43A407F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing", "Fanzoo.Kernel.Testing\Fanzoo.Kernel.Testing.csproj", "{EBB6F295-4326-484B-B812-A771C43A407F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third Party", "Third Party", "{0781F836-15AA-45D9-A418-62633AA91B15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.SendGrid", "Third Party\Fanzoo.Kernel.SendGrid\Fanzoo.Kernel.SendGrid.csproj", "{A2097CD2-E293-4C99-A68B-BC644D7DE5DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.SendGrid", "Fanzoo.Kernel.SendGrid\Fanzoo.Kernel.SendGrid.csproj", "{A2097CD2-E293-4C99-A68B-BC644D7DE5DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Stripe", "Third Party\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj", "{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Stripe", "Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj", "{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
