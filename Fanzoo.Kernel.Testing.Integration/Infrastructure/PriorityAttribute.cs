@@ -1,4 +1,6 @@
-﻿namespace Fanzoo.Kernel.Testing
+﻿using System;
+
+namespace Fanzoo.Kernel.Testing
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class PriorityAttribute : Attribute

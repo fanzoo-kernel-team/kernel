@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Fanzoo.Kernel.Testing
