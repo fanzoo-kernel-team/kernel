@@ -1,5 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<PackageId>Fanzoo.Kernel</PackageId>
+		<Description>An opinionated framework for building scalable web applications.</Description>
+		<Authors>The Fanzoo Kernel Team</Authors>
+	</PropertyGroup>
+	
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
