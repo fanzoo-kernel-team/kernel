@@ -1,3 +1,3 @@
-![](https://github.com/fanzoo-kernel-team/kernel/workflows/Kernel_CI/badge.svg)
+![](https://github.com/fanzoo-kernel-team/kernel/actions/workflows/dotnet.yml/badge.svg)
 
 TODO
