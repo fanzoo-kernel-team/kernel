@@ -7,25 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Fanzoo.Kernel.Builder\Fanzoo.Kernel.Builder.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Commands\Fanzoo.Kernel.Commands.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Common\Fanzoo.Kernel.Common.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Configuration\Fanzoo.Kernel.Configuration.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Data.Migrations\Fanzoo.Kernel.Data.Migrations.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Data\Fanzoo.Kernel.Data.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.DependencyInjection\Fanzoo.Kernel.DependencyInjection.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Domain\Fanzoo.Kernel.Domain.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Events.Abstractions\Fanzoo.Kernel.Events.Abstractions.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Events.Domain.Abstractions\Fanzoo.Kernel.Events.Domain.Abstractions.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Events.Integration.Abstractions\Fanzoo.Kernel.Events.Integration.Abstractions.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Events\Fanzoo.Kernel.Events.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Queries\Fanzoo.Kernel.Queries.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Templating\Fanzoo.Kernel.Templating.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Web.Mvc\Fanzoo.Kernel.Web.Mvc.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Web\Fanzoo.Kernel.Web.csproj" />
 		<ProjectReference Include="..\Fanzoo.Kernel.SendGrid\Fanzoo.Kernel.SendGrid.csproj" />
 		<ProjectReference Include="..\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj" />
+		<ProjectReference Include="..\Fanzoo.Kernel\Fanzoo.Kernel.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

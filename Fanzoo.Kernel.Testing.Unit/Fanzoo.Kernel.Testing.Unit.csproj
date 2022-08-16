@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Fanzoo.Kernel.Domain\Fanzoo.Kernel.Domain.csproj" />
+	  <ProjectReference Include="..\Fanzoo.Kernel\Fanzoo.Kernel.csproj" />
 	</ItemGroup>
 
 </Project>

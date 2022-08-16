@@ -21,13 +21,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Fanzoo.Kernel.Builder\Fanzoo.Kernel.Builder.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Common\Fanzoo.Kernel.Common.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.DependencyInjection\Fanzoo.Kernel.DependencyInjection.csproj" />
-		<ProjectReference Include="..\Fanzoo.Kernel.Services\Fanzoo.Kernel.Services.csproj" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	  <ProjectReference Include="..\Fanzoo.Kernel\Fanzoo.Kernel.csproj" />
 	</ItemGroup>
 </Project>
