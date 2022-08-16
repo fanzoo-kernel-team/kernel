@@ -4,7 +4,7 @@ using Fanzoo.Kernel.DependencyInjection;
 using Fanzoo.Kernel.SendGrid.Services.Configuration;
 using Microsoft.AspNetCore.Builder;
 
-namespace Fanzoo.Kernel.SendGrid.Abstractions
+namespace Fanzoo.Kernel.SendGrid
 {
     public static class WebApplicationExtensions
     {

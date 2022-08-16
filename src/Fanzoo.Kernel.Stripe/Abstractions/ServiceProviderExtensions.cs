@@ -4,7 +4,7 @@ using Fanzoo.Kernel.Services;
 using Fanzoo.Kernel.Stripe.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fanzoo.Kernel.Stripe.Abstractions
+namespace Fanzoo.Kernel.Stripe
 {
     public static class ServiceProviderExtensions
     {

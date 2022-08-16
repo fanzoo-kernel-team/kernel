@@ -4,7 +4,7 @@ using Fanzoo.Kernel.DependencyInjection;
 using Fanzoo.Kernel.Stripe.Services.Configuration;
 using Microsoft.AspNetCore.Builder;
 
-namespace Fanzoo.Kernel.Stripe.Abstractions
+namespace Fanzoo.Kernel.Stripe
 {
     public static class WebApplicationExtensions
     {

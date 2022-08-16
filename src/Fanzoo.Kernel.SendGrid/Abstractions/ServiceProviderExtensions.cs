@@ -4,7 +4,7 @@ using Fanzoo.Kernel.SendGrid.Services;
 using Fanzoo.Kernel.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fanzoo.Kernel.SendGrid.Abstractions
+namespace Fanzoo.Kernel.SendGrid
 {
     public static class ServiceProviderExtensions
     {
