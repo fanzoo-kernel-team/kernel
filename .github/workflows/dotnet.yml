@@ -3,6 +3,7 @@ name: .NET
 on:
   push:
     branches: [ "main" ]
+
   pull_request:
     branches: [ "main" ]
 
@@ -13,6 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -28,5 +30,5 @@ jobs:
       run: dotnet test -c Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration"
       
     - name: Pack
-      run: dotnet pack Fanzoo.Kernel.Domain/Fanzoo.Kernel.Domain.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      run: dotnet pack src/Fanzoo.Kernel/Fanzoo.Kernel.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
       

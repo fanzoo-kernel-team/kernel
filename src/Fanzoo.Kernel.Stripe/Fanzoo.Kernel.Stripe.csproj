@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Stripe.net" Version="40.1.0" />
+		<PackageReference Include="Stripe.net" Version="40.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
 			<PrivateAssets>all</PrivateAssets>
