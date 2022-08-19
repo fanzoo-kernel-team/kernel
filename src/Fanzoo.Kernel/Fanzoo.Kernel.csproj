@@ -3,9 +3,10 @@
 	<PropertyGroup>
 		<PackageId>Fanzoo.Kernel</PackageId>
 		<Description>An opinionated framework for building scalable web applications.</Description>
-		<Authors>Fanzoo_Kernel_Team</Authors>
+		<Authors>The Fanzoo Kernel Team</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageIcon>logo.png</PackageIcon>
+		<PackageIconUrl>https://i.postimg.cc/Qdp2wnb2/logo.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/fanzoo-kernel-team/kernel</PackageProjectUrl>
 	</PropertyGroup>
 
@@ -58,6 +59,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Include="logo.png" Pack="true" Visible="false" PackagePath="\" />
+		<None Include="logo.png" Pack="true" Visible="false" PackagePath="logo.png" />
 	</ItemGroup>
 </Project>
