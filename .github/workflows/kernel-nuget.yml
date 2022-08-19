@@ -1,0 +1,15 @@
+name: Kernel NuGet Release
+
+on:
+  release:
+      types: [published]
+
+jobs:
+  publish-nuget:
+
+steps:
+    - id: version
+      uses: battila7/get-version-action@v2
+
+    - run: echo ${{ steps.version.outputs.version-without-v }}
+            
