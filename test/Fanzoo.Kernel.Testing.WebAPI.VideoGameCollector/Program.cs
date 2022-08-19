@@ -21,7 +21,6 @@ await using var application =
         .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly())
             .Build();
 
-
 application.MapGet("/heartbeat", () => { });
 
 application
