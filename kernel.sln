@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA7B85C7-B096-417D-A35F-587BA2E8A2C0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -31,6 +30,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Stripe", "src\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj", "{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel", "src\Fanzoo.Kernel\Fanzoo.Kernel.csproj", "{D17DBE4C-1AD6-4068-AFB9-7CA230ADBB45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{725E8FF0-7792-48C0-9D8F-F1877C932371}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D589E6D8-AA28-4089-BCDE-00AA26027F52}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\kernel-ci.yml = .github\workflows\kernel-ci.yml
+		.github\workflows\kernel-nuget.yml = .github\workflows\kernel-nuget.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +85,8 @@ Global
 		{C8AA6E78-58E0-459A-9919-128E9AE793D9} = {01433CBB-CA04-4B48-A25C-E104737D120C}
 		{A2097CD2-E293-4C99-A68B-BC644D7DE5DA} = {0781F836-15AA-45D9-A418-62633AA91B15}
 		{8EFE5EE5-6B38-4B2F-ABD6-0BEB5432E95F} = {0781F836-15AA-45D9-A418-62633AA91B15}
+		{725E8FF0-7792-48C0-9D8F-F1877C932371} = {EA7B85C7-B096-417D-A35F-587BA2E8A2C0}
+		{D589E6D8-AA28-4089-BCDE-00AA26027F52} = {725E8FF0-7792-48C0-9D8F-F1877C932371}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA21DCB8-F8EE-48DD-9758-8533FDD0839F}
