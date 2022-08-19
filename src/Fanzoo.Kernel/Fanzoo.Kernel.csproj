@@ -4,8 +4,9 @@
 		<PackageId>Fanzoo.Kernel</PackageId>
 		<Description>An opinionated framework for building scalable web applications.</Description>
 		<Authors>The Fanzoo Kernel Team</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
-	
+
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>

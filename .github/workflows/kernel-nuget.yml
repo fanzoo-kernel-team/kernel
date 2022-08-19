@@ -3,6 +3,10 @@ name: Kernel NuGet Release
 on:
   release:
       types: [published]
+env:
+  PROJECT_PATH: 'Fanzoo.Kernel/Fanzoo.Kernel.csproj'
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\nuget
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
   publish-nuget:
@@ -11,11 +15,26 @@ jobs:
 
     name: Publish NuGet Release
     steps:
+    
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build -c Release --no-restore
 
     - name: Get Version
       id: version
       uses: battila7/get-version-action@v2
 
-    - name: Test Version
-      run: echo ${{ steps.version.outputs.version-without-v }}
-            
+    - name: 'Pack project'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+    - name: 'Push package'
+      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.KERNEL_NUGET_API }} -s ${{ env.NUGET_SOURCE_URL }}            
