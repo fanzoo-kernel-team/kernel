@@ -5,7 +5,7 @@ on:
       types: [published]
 env:
   PROJECT_PATH: 'src/Fanzoo.Kernel/Fanzoo.Kernel.csproj'
-  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\nuget
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/.nuget
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
