@@ -5,7 +5,7 @@
 		<Description>An opinionated framework for building scalable web applications.</Description>
 		<Authors>Fanzoo_Kernel_Team</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageIcon>icon.png</PackageIcon>
+		<PackageIcon>logo.png</PackageIcon>
 		<ProjectUrl>https://github.com/fanzoo-kernel-team/kernel</ProjectUrl>
 	</PropertyGroup>
 
@@ -58,6 +58,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
+		<None Include="logo.png" Pack="true" Visible="false" PackagePath="\" />
 	</ItemGroup>
 </Project>
