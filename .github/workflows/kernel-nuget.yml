@@ -9,8 +9,11 @@ jobs:
 
     name: Publish NuGet Release
     steps:
-        - id: version
-            uses: battila7/get-version-action@v2
 
-        - run: echo ${{ steps.version.outputs.version-without-v }}
+    - name: Get Version
+        id: version
+        uses: battila7/get-version-action@v2
+
+    - name: Test Version
+        run: echo ${{ steps.version.outputs.version-without-v }}
             
