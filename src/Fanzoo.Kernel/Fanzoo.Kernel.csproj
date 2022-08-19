@@ -6,7 +6,7 @@
 		<Authors>Fanzoo_Kernel_Team</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageIcon>logo.png</PackageIcon>
-		<ProjectUrl>https://github.com/fanzoo-kernel-team/kernel</ProjectUrl>
+		<PackageProjectUrl>https://github.com/fanzoo-kernel-team/kernel</PackageProjectUrl>
 	</PropertyGroup>
 
 	<PropertyGroup>
