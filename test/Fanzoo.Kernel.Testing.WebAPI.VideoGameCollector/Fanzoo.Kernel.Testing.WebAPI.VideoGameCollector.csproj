@@ -7,8 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Fanzoo.Kernel.SendGrid\Fanzoo.Kernel.SendGrid.csproj" />
-		<ProjectReference Include="..\..\src\Fanzoo.Kernel.Stripe\Fanzoo.Kernel.Stripe.csproj" />
 		<ProjectReference Include="..\..\src\Fanzoo.Kernel\Fanzoo.Kernel.csproj" />
 	</ItemGroup>
 
