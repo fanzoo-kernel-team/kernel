@@ -27,6 +27,9 @@ application.MapPost("/games", async ([FromQuery] string name, CommandDispatcher 
     return result.IsSuccessful ? Results.Ok() : Results.BadRequest();
 });
 
+application.MapGet("/service-provider", (IServiceProvider serviceProvider) => serviceProvider is not null ? Results.Ok() : Results.BadRequest());
+
+
 application
     .UseRESTApi()
         .RunWithMigrations();

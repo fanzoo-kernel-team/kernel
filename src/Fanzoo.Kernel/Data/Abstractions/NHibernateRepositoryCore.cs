@@ -1,33 +1,35 @@
-﻿using Fanzoo.Kernel.Data.Queries.Domain;
-using ISession = NHibernate.ISession;
-
-namespace Fanzoo.Kernel.Data
+﻿namespace Fanzoo.Kernel.Data
 {
-    public abstract class NHibernateRepositoryCore<TEntity> where TEntity : class, IAggregateRoot
+    public abstract class NHibernateRepositoryCore<TAggregateRoot, TIdentifier, TPrimitive> : IRepository<TAggregateRoot, TIdentifier, TPrimitive>
+        where TAggregateRoot : class, IAggregateRoot, IEntity<TIdentifier, TPrimitive>, ITrackableEntity
+        where TIdentifier : notnull, IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
     {
-        protected readonly ISession _session;
 
-        protected NHibernateRepositoryCore(ISession session)
+        private readonly IUnitOfWorkContext _context;
+
+        protected NHibernateRepositoryCore(IUnitOfWorkFactory unitOfWorkFactory)
         {
-            _session = session;
+            if (unitOfWorkFactory is null)
+            {
+                throw new ArgumentNullException(nameof(unitOfWorkFactory));
+            }
+
+            _context = unitOfWorkFactory.Current.GetContext();
         }
 
-        public async ValueTask<TEntity> LoadAsync(object id) => await _session.LoadAsync<TEntity>(id);
+        public async ValueTask<TAggregateRoot> LoadAsync(TIdentifier id) => await _context.LoadAsync<TAggregateRoot, TIdentifier>(id);
 
-        public async ValueTask<TEntity?> FindAsync(object id) => await _session.GetAsync<TEntity>(id); //TODO: revisit
+        public async ValueTask AddAsync(TAggregateRoot entity)
+        {
+            if (!entity.IsTransient)
+            {
+                throw new InvalidOperationException("entity must be transient to add");
+            }
 
-        public async ValueTask AddAsync(TEntity entity) => await _session.SaveAsync(entity); //TODO: this should check if it's transient first!
+            await _context.AddAsync(entity);
+        }
 
-        public async ValueTask UpdateAsync(TEntity entity) => await _session.UpdateAsync(entity); //TODO: this needs to go away
-
-        public async ValueTask DeleteAsync(TEntity entity) => await _session.DeleteAsync(entity);
-
-        public async ValueTask<TEntity?> FindSingleOrDefaultAsync<TQuery>(TQuery query) where TQuery : SingleOrDefaultQuerySpecification<TEntity> => await query.ExecuteAsync(_session.Query<TEntity>());
-
-        public async ValueTask<TEntity> FindSingleAsync<TQuery>(TQuery query) where TQuery : SingleQuerySpecification<TEntity> => await query.ExecuteAsync(_session.Query<TEntity>());
-
-        public async ValueTask<IEnumerable<TEntity>> FindAllAsync<TQuery>(TQuery query) where TQuery : AllQuerySpecification<TEntity> => await query.ExecuteAsync(_session.Query<TEntity>());
-
-        public async ValueTask<TReturnValue> GetScalarAsync<TQuery, TReturnValue>(TQuery query) where TQuery : ScalarQuerySpecification<TEntity, TReturnValue> => await query.ExecuteAsync(_session.Query<TEntity>());
+        public async ValueTask DeleteAsync(TAggregateRoot entity) => await _context.DeleteAsync(entity);
     }
 }

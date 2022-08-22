@@ -1,12 +1,14 @@
 ﻿namespace Fanzoo.Kernel.Data
 {
-    public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class, IAggregateRoot
+    public interface IRepository<TAggregateRoot, TIdentifier, TPrimitive>
+        where TAggregateRoot : class, IAggregateRoot, IEntity<TIdentifier, TPrimitive>, ITrackableEntity
+        where TIdentifier : notnull, IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
     {
-        ValueTask AddAsync(TEntity entity);
+        ValueTask<TAggregateRoot> LoadAsync(TIdentifier id);
 
-        ValueTask UpdateAsync(TEntity entity);
+        ValueTask AddAsync(TAggregateRoot entity);
 
-        ValueTask DeleteAsync(TEntity entity);
-
+        ValueTask DeleteAsync(TAggregateRoot entity);
     }
 }

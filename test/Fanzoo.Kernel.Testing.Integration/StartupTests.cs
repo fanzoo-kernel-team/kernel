@@ -28,9 +28,16 @@ namespace Fanzoo.Kernel.Testing.Integration
                 .CreateClient()
                     .PostAsync("/games?name=Pitfall", null))
                         .EnsureSuccessStatusCode();
-
         }
 
+        [Fact]
+        public async Task Test_Service_Provider_Exists_For_Injection()
+        {
+            (await _factory
+                .CreateClient()
+                    .GetAsync("/service-provider"))
+                        .EnsureSuccessStatusCode();
+        }
 
         //TODO: move these to the new solution files when complete
         //[Fact]

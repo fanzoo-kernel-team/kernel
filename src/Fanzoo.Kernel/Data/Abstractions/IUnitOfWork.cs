@@ -1,14 +1,16 @@
 ﻿namespace Fanzoo.Kernel.Data
 {
-    public interface IUnitOfWork : IDisposable, IAsyncDisposable
+    public interface IUnitOfWork
     {
         bool IsDirty { get; }
+
+        bool IsClosed { get; }
 
         bool WasCommitted { get; }
 
         bool WasRolledBack { get; }
 
-        IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot; //TODO: remove when repositories are freed
+        IUnitOfWorkContext GetContext();
 
         ValueTask CommitAsync();
 

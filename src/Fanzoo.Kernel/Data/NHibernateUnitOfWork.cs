@@ -2,41 +2,29 @@
 
 namespace Fanzoo.Kernel.Data
 {
-    public sealed class NHibernateUnitOfWork : IScopedUnitOfWork
+    public sealed class NHibernateUnitOfWork : IUnitOfWork, IDisposable, IAsyncDisposable
     {
         private readonly ISession _session;
         private readonly ITransaction _transaction;
 
-        private readonly Dictionary<Type, object> _repositories = new();
-
         public NHibernateUnitOfWork(ISession session)
         {
-            _session = session;
+            _session = session ?? throw new ArgumentNullException(nameof(session));
 
             _session.FlushMode = FlushMode.Commit;
 
             _transaction = _session.BeginTransaction();
         }
 
-        public IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot
-        {
-            if (_repositories.ContainsKey(typeof(TEntity)))
-            {
-                return _repositories[typeof(TEntity)] as IRepository<TEntity> ?? throw new InvalidOperationException("Repository not found.");
-            }
-
-            var respository = new NHibernateRepository<TEntity>(_session);
-
-            _repositories.Add(typeof(TEntity), respository);
-
-            return respository;
-        }
+        public bool IsClosed => _transaction.WasCommitted || _transaction.WasRolledBack;
 
         public bool IsDirty => _session.IsDirty();
 
         public bool WasCommitted => _transaction.WasCommitted;
 
         public bool WasRolledBack => _transaction.WasRolledBack;
+
+        public IUnitOfWorkContext GetContext() => new NHibernateUnitOfWorkContext(_session);
 
         public async ValueTask CommitAsync()
         {
@@ -66,6 +54,11 @@ namespace Fanzoo.Kernel.Data
             _session.Dispose();
         }
 
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask; //OK to call this, nothing happens
+        public ValueTask DisposeAsync()
+        {
+            Dispose();
+
+            return ValueTask.CompletedTask;
+        }
     }
 }
