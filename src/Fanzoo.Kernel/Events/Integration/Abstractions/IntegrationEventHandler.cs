@@ -1,25 +1,60 @@
-﻿using Fanzoo.Kernel.Data;
-using Fanzoo.Kernel.Domain.Entities;
+﻿using Fanzoo.Kernel.Commands;
+using Fanzoo.Kernel.Data;
 
 namespace Fanzoo.Kernel.Events.Integration
 {
 
-    public abstract class IntegrationEventHandler<TEvent> : EventHandler<TEvent>, IIntegrationEventHandler<TEvent> where TEvent : IEvent
+    public abstract class IntegrationEventHandler<TEvent> : IIntegrationEventHandler<TEvent> where TEvent : IEvent
     {
-        private readonly IReadOnlyUnitOfWork _unitOfWork;
-        protected IntegrationEventHandler(IReadOnlyUnitOfWork unitOfWork) : base()
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly EventDispatcher _eventDispatcher;
+
+        protected IntegrationEventHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
         {
-            _unitOfWork = unitOfWork;
+            _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
+
+            if (unitOfWorkFactory is null)
+            {
+                throw new ArgumentNullException(nameof(unitOfWorkFactory));
+            }
+
+            _unitOfWork = unitOfWorkFactory.Open();
         }
 
-        protected IReadOnlyRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot => _unitOfWork.Repository<TEntity>();
+        public async ValueTask HandleAsync(TEvent @event)
+        {
+            try
+            {
+                await OnHandleAsync(@event);
 
-        protected ValueTask CommitAsync() => throw new NotImplementedException();
+                //handle cascading domain events
+                var entities = _unitOfWork.GetEntitiesWithEvents().ToArray();
 
-        protected ValueTask RollbackAsync() => throw new NotImplementedException();
+                while (entities.Any())
+                {
+                    foreach (var entity in entities)
+                    {
+                        foreach (var domainEvent in entity.Events)
+                        {
+                            await _eventDispatcher.DispatchDomainEventAsync(domainEvent);
+                        }
 
-        protected override ValueTask OnSuccessAsync() => ValueTask.CompletedTask;
+                        _eventDispatcher.QueueIntegrationEvents(entity.Events);
 
-        protected override ValueTask OnErrorAsync(Exception e) => ValueTask.CompletedTask;
+                        entity.Events.Clear();
+                    }
+
+                    entities = _unitOfWork.GetEntitiesWithEvents().ToArray();
+                }
+
+                await _unitOfWork.CommitAsync();
+            }
+            catch
+            {
+                await _unitOfWork.RollbackAsync();
+            }
+        }
+
+        protected abstract ValueTask OnHandleAsync(TEvent @event);
     }
 }

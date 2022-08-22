@@ -6,19 +6,14 @@
         where TPrimitive : notnull, new()
     {
 
-        private readonly IUnitOfWorkContext _context;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         protected NHibernateRepositoryCore(IUnitOfWorkFactory unitOfWorkFactory)
         {
-            if (unitOfWorkFactory is null)
-            {
-                throw new ArgumentNullException(nameof(unitOfWorkFactory));
-            }
-
-            _context = unitOfWorkFactory.Current.GetContext();
+            _unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
         }
 
-        public async ValueTask<TAggregateRoot> LoadAsync(TIdentifier id) => await _context.LoadAsync<TAggregateRoot, TIdentifier>(id);
+        public async ValueTask<TAggregateRoot> LoadAsync(TIdentifier id) => await _unitOfWorkFactory.Current.GetContext().LoadAsync<TAggregateRoot, TIdentifier>(id);
 
         public async ValueTask AddAsync(TAggregateRoot entity)
         {
@@ -27,9 +22,9 @@
                 throw new InvalidOperationException("entity must be transient to add");
             }
 
-            await _context.AddAsync(entity);
+            await _unitOfWorkFactory.Current.GetContext().AddAsync(entity);
         }
 
-        public async ValueTask DeleteAsync(TAggregateRoot entity) => await _context.DeleteAsync(entity);
+        public async ValueTask DeleteAsync(TAggregateRoot entity) => await _unitOfWorkFactory.Current.GetContext().DeleteAsync(entity);
     }
 }

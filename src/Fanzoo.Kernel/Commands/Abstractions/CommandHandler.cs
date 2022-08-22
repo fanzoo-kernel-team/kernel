@@ -1,27 +1,24 @@
-﻿using CSharpFunctionalExtensions;
-using Fanzoo.Kernel.Data;
-using Fanzoo.Kernel.Domain.Entities;
+﻿using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Events;
-using Serilog;
 
 namespace Fanzoo.Kernel.Commands;
 
 public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult> where TCommand : ICommand
 {
-    private readonly ILogger _logger;
-
+    private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
 
-    private readonly IScopedUnitOfWork _unitOfWork;
-
-    protected CommandHandler(IScopedUnitOfWork unitOfWork, EventDispatcher eventDispatcher)
+    protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {
-        _unitOfWork = unitOfWork;
-        _eventDispatcher = eventDispatcher;
-        _logger = Log.ForContext<CommandHandler<TCommand, TResult>>();
-    }
+        _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
-    protected IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot => _unitOfWork.Repository<TEntity>();
+        if (unitOfWorkFactory is null)
+        {
+            throw new ArgumentNullException(nameof(unitOfWorkFactory));
+        }
+
+        _unitOfWork = unitOfWorkFactory.Open();
+    }
 
     public async Task<CommandResult<TResult>> HandleAsync(TCommand command)
     {
@@ -51,9 +48,9 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
                     entities = _unitOfWork.GetEntitiesWithEvents().ToArray();
                 }
 
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(); //this closes the UnitOfWork
 
-                await _eventDispatcher.DispatchDeferredIntegrationEventsAsync();
+                await _eventDispatcher.DispatchDeferredIntegrationEventsAsync(); //this will open subsequent UnitOfWork's
             }
 
             return result;
@@ -72,10 +69,7 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
         }
     }
 
-    protected void PublishIntegrationEvent(IEvent @event) =>
-        //can we publish the same event twice? (Probably can with different values)
-
-        _eventDispatcher.QueueIntegrationEvent(@event);
+    protected void PublishIntegrationEvent(IEvent @event) => _eventDispatcher.QueueIntegrationEvent(@event);
 
     protected abstract Task<CommandResult<TResult>> OnHandleAsync(TCommand command);
 
@@ -83,20 +77,20 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
 
 public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
 {
-    private readonly ILogger _logger;
-
+    private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
 
-    private readonly IScopedUnitOfWork _unitOfWork;
-
-    protected CommandHandler(IScopedUnitOfWork unitOfWork, EventDispatcher eventDispatcher)
+    protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {
-        _unitOfWork = unitOfWork;
-        _eventDispatcher = eventDispatcher;
-        _logger = Log.ForContext<CommandHandler<TCommand>>();
-    }
+        _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
-    protected IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot => _unitOfWork.Repository<TEntity>();
+        if (unitOfWorkFactory is null)
+        {
+            throw new ArgumentNullException(nameof(unitOfWorkFactory));
+        }
+
+        _unitOfWork = unitOfWorkFactory.Open();
+    }
 
     public async Task<CommandResult> HandleAsync(TCommand command)
     {

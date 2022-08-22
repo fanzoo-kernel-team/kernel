@@ -1,7 +1,7 @@
 ﻿using Fanzoo.Kernel.Commands;
+using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Events;
 using Fanzoo.Kernel.Queries;
-using Fanzoo.Kernel.Services;
 
 namespace Fanzoo.Kernel.DependencyInjection
 {
@@ -12,8 +12,9 @@ namespace Fanzoo.Kernel.DependencyInjection
             //add all the core stuff
             services
                 .AddCommandHandlers(new[] { typeof(ICommandHandler<,>).Assembly })
-                .AddIntegrationEventHandlers(new[] { typeof(IEventHandler<>).Assembly })
+                .AddEventHandlers(new[] { typeof(IEventHandler<>).Assembly })
                 .AddQueryHandlers(new[] { typeof(IQueryHandler<,>).Assembly })
+                .AddRepositories(new[] { typeof(IRepository<,,>).Assembly })
                 .AddSlapper()
                 .AddServices(new[] { typeof(IService).Assembly })
                 .AddCore();
@@ -41,8 +42,9 @@ namespace Fanzoo.Kernel.DependencyInjection
 
         internal static IServiceCollection AddFrameworkCore(this IServiceCollection services, IEnumerable<Assembly> assembliesToSearch) => services
                 .AddCommandHandlers(assembliesToSearch)
-                .AddIntegrationEventHandlers(assembliesToSearch)
+                .AddEventHandlers(assembliesToSearch)
                 .AddQueryHandlers(assembliesToSearch)
+                .AddRepositories(assembliesToSearch)
                 .AddServices(assembliesToSearch)
                 .AddCore();
 
@@ -96,7 +98,7 @@ namespace Fanzoo.Kernel.DependencyInjection
 
         }
 
-        internal static IServiceCollection AddIntegrationEventHandlers(this IServiceCollection services, IEnumerable<Assembly> assembliesToSearch)
+        internal static IServiceCollection AddEventHandlers(this IServiceCollection services, IEnumerable<Assembly> assembliesToSearch)
         {
             static bool IsHandlerInterface(Type type) => type.IsGenericType &&
                         (type.GetGenericTypeDefinition() == typeof(IEventHandler<>));
@@ -115,6 +117,27 @@ namespace Fanzoo.Kernel.DependencyInjection
 
             return services;
 
+        }
+
+        internal static IServiceCollection AddRepositories(this IServiceCollection services, IEnumerable<Assembly> assembliesToSearch)
+        {
+            static bool IsRepositoryInterface(Type type) => type.IsGenericType &&
+                        (type.GetGenericTypeDefinition() == typeof(IRepository<,,>));
+
+            foreach (var assembly in assembliesToSearch)
+            {
+                var repositories = assembly.GetTypes()
+                    .Where(t => !t.IsAbstract)
+                    .Where(t => t.GetInterfaces().Any(i => IsRepositoryInterface(i)))
+                        .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => !IsRepositoryInterface(i)))); //TODO: this assumes there are only 2 interfaces - the framework and the explicit. Problem down the road?
+
+                foreach (var repository in repositories)
+                {
+                    services.AddTransient(repository.Interface, repository.Type);
+                }
+            }
+
+            return services;
         }
 
         internal static IServiceCollection AddServices(this IServiceCollection services, IEnumerable<Assembly> assembliesToSearch)

@@ -4,9 +4,9 @@ using ISession = NHibernate.ISession;
 
 namespace Fanzoo.Kernel.Commands;
 
-internal static class IScopedUnitOfWorkExtensions
+internal static class IUnitOfWorkExtensions
 {
-    public static IEnumerable<IAggregateRoot> GetEntitiesWithEvents(this IScopedUnitOfWork unitOfWork)
+    public static IEnumerable<IAggregateRoot> GetEntitiesWithEvents(this IUnitOfWork unitOfWork)
     {
         if (unitOfWork.GetFieldValue("_session") is not ISession session)
         {
