@@ -20,6 +20,19 @@ namespace Fanzoo.Kernel.Testing.Integration
                     .GetAsync("/heartbeat"))
                         .EnsureSuccessStatusCode();
 
+
+        [Fact]
+        public async Task Test_Can_Create_Game()
+        {
+            (await _factory
+                .CreateClient()
+                    .PostAsync("/games?name=Pitfall", null))
+                        .EnsureSuccessStatusCode();
+
+        }
+
+
+        //TODO: move these to the new solution files when complete
         //[Fact]
         //public void SendGrid_Service_Loads_On_Startup()
         //{

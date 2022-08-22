@@ -14,11 +14,11 @@ namespace Fanzoo.Kernel.Data
 
         public async ValueTask<TEntity> LoadAsync(object id) => await _session.LoadAsync<TEntity>(id);
 
-        public async ValueTask<TEntity?> FindAsync(object id) => await _session.GetAsync<TEntity>(id);
+        public async ValueTask<TEntity?> FindAsync(object id) => await _session.GetAsync<TEntity>(id); //TODO: revisit
 
-        public async ValueTask AddAsync(TEntity entity) => await _session.SaveAsync(entity);
+        public async ValueTask AddAsync(TEntity entity) => await _session.SaveAsync(entity); //TODO: this should check if it's transient first!
 
-        public async ValueTask UpdateAsync(TEntity entity) => await _session.UpdateAsync(entity);
+        public async ValueTask UpdateAsync(TEntity entity) => await _session.UpdateAsync(entity); //TODO: this needs to go away
 
         public async ValueTask DeleteAsync(TEntity entity) => await _session.DeleteAsync(entity);
 

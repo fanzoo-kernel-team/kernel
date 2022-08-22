@@ -8,7 +8,7 @@
 
         bool WasRolledBack { get; }
 
-        IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot;
+        IRepository<TEntity> Repository<TEntity>() where TEntity : class, IAggregateRoot; //TODO: remove when repositories are freed
 
         ValueTask CommitAsync();
 

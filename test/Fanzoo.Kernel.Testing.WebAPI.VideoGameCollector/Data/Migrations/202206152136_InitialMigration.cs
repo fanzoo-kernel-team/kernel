@@ -56,6 +56,12 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Migrations
                         .AsString(DatabaseCatalog.FieldLength.Default)
                         .NotNullable();
 
+            Create.Table("Game")
+                .AsMutable()
+                    .WithColumn("Name")
+                        .AsString()
+                        .NotNullable();
+
             Create.Index("User", "Username").Unique();
             Create.Index("User", "Email").Unique();
 
