@@ -2,7 +2,7 @@
 
 namespace Fanzoo.Kernel.Data
 {
-    public sealed class NHibernateUnitOfWorkContext : IUnitOfWorkContext, IQueryableUnitOfWorkContext
+    public sealed class NHibernateUnitOfWorkContext : IUnitOfWorkContext
     {
         private readonly ISession _session;
 

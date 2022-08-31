@@ -25,6 +25,16 @@
             await _unitOfWorkFactory.Current.GetContext().AddAsync(entity);
         }
 
-        public async ValueTask DeleteAsync(TAggregateRoot entity) => await _unitOfWorkFactory.Current.GetContext().DeleteAsync(entity);
+        public async ValueTask DeleteAsync(TAggregateRoot entity)
+        {
+            if (entity.IsTransient)
+            {
+                throw new InvalidOperationException("transient entity cannot be deleted");
+            }
+
+            await _unitOfWorkFactory.Current.GetContext().DeleteAsync(entity);
+        }
+
+        protected IQueryable<TAggregateRoot> Query => _unitOfWorkFactory.Current.GetContext().Query<TAggregateRoot>();
     }
 }

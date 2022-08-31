@@ -61,6 +61,6 @@ namespace Fanzoo.Kernel.DependencyInjection
         public static IServiceCollection AddNHibernateCore(this IServiceCollection services, ISessionFactory sessionFactory) =>
             services
                 .AddSingleton(sessionFactory)
-                .AddSingleton<IUnitOfWorkFactory, NHibernateUnitOfWorkFactory>();
+                .AddScoped<IUnitOfWorkFactory, NHibernateUnitOfWorkFactory>();
     }
 }
