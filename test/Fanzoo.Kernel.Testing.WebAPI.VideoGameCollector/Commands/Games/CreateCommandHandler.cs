@@ -1,9 +1,10 @@
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Commands.Games;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Repositories;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.CommandHandlers.Games
 {
+    public record CreateCommand(string Name) : ICommand;
+
     public class CreateCommandHandler : CommandHandler<CreateCommand>
     {
         private readonly IGameRepository _gameRepository;
@@ -22,4 +23,6 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.CommandHandlers.Games
             return CommandResult.Success();
         }
     }
+
+
 }
