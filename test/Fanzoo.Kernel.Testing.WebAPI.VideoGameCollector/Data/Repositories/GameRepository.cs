@@ -8,9 +8,9 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Repositories
     {
         public GameRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory) { }
 
-        public async ValueTask<IEnumerable<Game>> FindByNameAsync(string name)
-        {
-            return await Query.Where(game => game.Name == name).ToListAsync();
-        }
+        public async ValueTask<IEnumerable<Game>> FindAsync(GameNameValue name) =>
+            await Query
+                .Where(game => game.Name == name)
+                    .ToListAsync();
     }
 }

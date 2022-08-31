@@ -14,6 +14,6 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities
             };
         }
 
-        public GameNameValue Name { get; protected set; } = default!;
+        public GameNameValue Name { get; set; } = default!;
     }
 }

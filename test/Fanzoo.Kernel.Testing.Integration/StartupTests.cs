@@ -1,3 +1,5 @@
+using System.Net.Http.Json;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Dtos;
 using Xunit;
 
 namespace Fanzoo.Kernel.Testing.Integration
@@ -28,6 +30,34 @@ namespace Fanzoo.Kernel.Testing.Integration
                 .CreateClient()
                     .PostAsync("/games?name=Pitfall", null))
                         .EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task Test_Can_Update_Many()
+        {
+            (await _factory
+                .CreateClient()
+                    .PostAsync("/games?name=Pitfall", null))
+                        .EnsureSuccessStatusCode();
+
+            (await _factory
+                .CreateClient()
+                    .PostAsync("/games?name=Pitfall", null))
+                        .EnsureSuccessStatusCode();
+
+            (await _factory
+                .CreateClient()
+                    .PostAsync("/games/rename?oldName=Pitfall&newName=Pitfall!", null))
+                        .EnsureSuccessStatusCode();
+
+            var details = await (await _factory
+                .CreateClient()
+                    .GetAsync("/games?name=Pitfall!"))
+                        .Content.ReadFromJsonAsync<IEnumerable<GameDetailsDto>>();
+
+            Assert.NotNull(details);
+
+            Assert.True(details.Count() > 1);
         }
 
         //TODO: move these to the new solution files when complete

@@ -5,6 +5,6 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Repositories
 {
     public interface IGameRepository : IRepository<Game, GameIdentifierValue, Guid>
     {
-        ValueTask<IEnumerable<Game>> FindByNameAsync(string name);
+        ValueTask<IEnumerable<Game>> FindAsync(GameNameValue name);
     }
 }
