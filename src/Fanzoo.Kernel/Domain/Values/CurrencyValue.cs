@@ -44,7 +44,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public int MinorUnits { get; private set; }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Code;
         }

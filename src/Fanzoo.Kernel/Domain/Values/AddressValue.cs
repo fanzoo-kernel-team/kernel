@@ -56,7 +56,7 @@ namespace Fanzoo.Kernel.Domain.Values
             return sb.ToString();
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return PrimaryAddress;
 

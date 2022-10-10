@@ -2,7 +2,6 @@
 global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text.RegularExpressions;
-global using CSharpFunctionalExtensions;
 global using Fanzoo.Kernel;
 global using Fanzoo.Kernel.Configuration;
 global using Fanzoo.Kernel.DependencyInjection;

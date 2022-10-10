@@ -27,7 +27,7 @@
 
         public string LastName { get; } = default!;
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return FirstName;
             yield return LastName;

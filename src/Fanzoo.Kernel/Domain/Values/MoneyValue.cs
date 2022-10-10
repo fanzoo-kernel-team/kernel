@@ -36,7 +36,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public CurrencyValue Currency { get; init; } = default!;
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Amount;
         }
