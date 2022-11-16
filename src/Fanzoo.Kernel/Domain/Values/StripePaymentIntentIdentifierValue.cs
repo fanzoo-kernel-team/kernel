@@ -10,7 +10,7 @@
             Guard.Against.InvalidPrefix(value, "pi_", nameof(value));
         }
 
-        public static Result<StripePaymentIntentIdentifierValue, Error> Create(string stripePaymentIntentIdentifier)
+        public static ValueResult<StripePaymentIntentIdentifierValue, Error> Create(string stripePaymentIntentIdentifier)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(stripePaymentIntentIdentifier)

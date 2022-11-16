@@ -22,7 +22,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="CSharpFunctionalExtensions" Version="2.31.1" />
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="FluentMigrator" Version="3.3.2" />
 		<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="3.3.2" />

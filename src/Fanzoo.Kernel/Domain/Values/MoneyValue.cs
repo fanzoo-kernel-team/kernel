@@ -17,7 +17,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         }
 
-        public static Result<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
+        public static ValueResult<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
         {
             if (Check.For.LessThanMinValueValue(amount, 0).IsInvalid)
             {
@@ -36,7 +36,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public CurrencyValue Currency { get; init; } = default!;
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Amount;
         }

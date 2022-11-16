@@ -1,13 +1,10 @@
-﻿using CSharpFunctionalExtensions;
-using Fanzoo.Kernel.Domain.Values;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities
 {
     public class User : Domain.Entities.RefreshTokens.Users.Guid.User<RefreshToken>
     {
         protected User() : base(10, 10) { }
 
-        public static Result<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password)
+        public static ValueResult<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password)
         {
             var user = new User()
             {

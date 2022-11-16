@@ -28,7 +28,7 @@ namespace Fanzoo.Kernel.Web.Services
             _passwordHashingService = passwordHashingService;
         }
 
-        public async ValueTask<Result<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password)
+        public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password)
         {
             var user = await GetUserByUsernameAsync(username);
 
@@ -65,7 +65,7 @@ namespace Fanzoo.Kernel.Web.Services
             return (new JwtSecurityTokenHandler().WriteToken(accessToken).ToString(), refreshToken.Token);
         }
 
-        public async ValueTask<Result<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken)
+        public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken)
         {
             var user = await GetUserByTokenAsync(RefreshTokenValue.Create(refreshToken).Value);
 

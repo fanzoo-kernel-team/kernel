@@ -17,7 +17,7 @@ namespace Fanzoo.Kernel.Web.Middleware
             {
                 await _nextDelegate(context);
             }
-            catch (ResultFailureException<Error> e)
+            catch (KernelErrorException e)
             {
                 await HandleResultExceptionAsync(context, e);
             }
@@ -27,11 +27,11 @@ namespace Fanzoo.Kernel.Web.Middleware
             }
         }
 
-        private static async ValueTask HandleResultExceptionAsync(HttpContext context, ResultFailureException<Error> e)
+        private static async ValueTask HandleResultExceptionAsync(HttpContext context, KernelErrorException e)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsJsonAsync(e.Error);
+            await context.Response.WriteAsJsonAsync(e);
         }
 
         private static async ValueTask HandleExceptionAsync(HttpContext context)

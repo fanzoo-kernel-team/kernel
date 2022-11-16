@@ -23,7 +23,7 @@ namespace Fanzoo.Kernel.Domain.Values
                                     .Cast<TInheritor>()
                                         .Single(f => f.Id.Equals(id));
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Id;
         }

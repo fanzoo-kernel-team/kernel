@@ -12,7 +12,7 @@
             LastName = lastName;
         }
 
-        public static Result<NameValue, Error> Create(string firstName, string lastName)
+        public static ValueResult<NameValue, Error> Create(string firstName, string lastName)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(firstName)
@@ -27,7 +27,7 @@
 
         public string LastName { get; } = default!;
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<object> GetEqualityValues()
         {
             yield return FirstName;
             yield return LastName;

@@ -15,7 +15,7 @@
             Guard.Against.InvalidEmailFormat(username, nameof(username));
         }
 
-        public static Result<EmailUsernameValue, Error> Create(string username)
+        public static ValueResult<EmailUsernameValue, Error> Create(string username)
         {
             username = username.ToLower().Trim();
 

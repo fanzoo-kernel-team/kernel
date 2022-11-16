@@ -16,7 +16,7 @@ namespace Fanzoo.Kernel.Domain.Values
             Guard.Against.LengthGreaterThan(password, MaximumPasswordLength, nameof(password));
         }
 
-        public static Result<PasswordValue, Error> Create(string password)
+        public static ValueResult<PasswordValue, Error> Create(string password)
         {
             password = password.Trim();
 

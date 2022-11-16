@@ -13,7 +13,7 @@
             Guard.Against.InvalidEmailFormat(email, nameof(email));
         }
 
-        public static Result<EmailValue, Error> Create(string email)
+        public static ValueResult<EmailValue, Error> Create(string email)
         {
             email = email.ToLower().Trim();
 

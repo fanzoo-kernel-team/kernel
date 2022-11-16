@@ -10,7 +10,7 @@
             Guard.Against.InvalidPrefix(value, "cus_", nameof(value));
         }
 
-        public static Result<StripeCustomerIdentifierValue, Error> Create(string stripeCustomerIdentifier)
+        public static ValueResult<StripeCustomerIdentifierValue, Error> Create(string stripeCustomerIdentifier)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(stripeCustomerIdentifier)
