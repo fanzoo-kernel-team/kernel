@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Fanzoo.Kernel.Configuration
+﻿namespace Fanzoo.Kernel.Configuration
 {
     public class KeyValueConfigurationProvider : ConfigurationProvider
     {
-        private readonly IDictionary<string, string> _keyValues;
+        private readonly IDictionary<string, string?> _keyValues;
 
-        public KeyValueConfigurationProvider(IDictionary<string, string> keyValues)
+        public KeyValueConfigurationProvider(IDictionary<string, string?> keyValues)
         {
             _keyValues = keyValues;
         }
 
-        public override void Load() => Data = new Dictionary<string, string>(_keyValues, StringComparer.OrdinalIgnoreCase);
+        public override void Load() => Data = new Dictionary<string, string?>(_keyValues, StringComparer.OrdinalIgnoreCase);
     }
 }

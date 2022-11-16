@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Fanzoo.Kernel.Configuration
+﻿namespace Fanzoo.Kernel.Configuration
 {
     public static class ConfigurationExtensions
     {
         public static string? GetConnectionString(this IConfiguration configuration)
         {
             //first grab the explicitly configured connection string, if it exists
-            var connectionString = configuration.GetConnectionString(configuration[ConfigurationKeys.ConnectionStringName.ToString()]);
+            var connectionString = configuration.GetConnectionString(configuration[ConfigurationKeys.ConnectionStringName.ToString()] ?? string.Empty);
 
             if (connectionString is null)
             {
@@ -17,13 +15,13 @@ namespace Fanzoo.Kernel.Configuration
                 return section?.GetChildren().FirstOrDefault()?.Value;
             }
 
-            return configuration.GetConnectionString(configuration[ConfigurationKeys.ConnectionStringName.ToString()]);
+            return configuration.GetConnectionString(configuration[ConfigurationKeys.ConnectionStringName.ToString()] ?? string.Empty);
         }
 
         public static string? GetConnectionString(this ConfigurationManager configurationManager)
         {
             //first grab the explicitly configured connection string, if it exists
-            var connectionString = configurationManager.GetConnectionString(configurationManager[ConfigurationKeys.ConnectionStringName.ToString()]);
+            var connectionString = configurationManager.GetConnectionString(configurationManager[ConfigurationKeys.ConnectionStringName.ToString()] ?? string.Empty);
 
             if (connectionString is null)
             {
@@ -33,7 +31,7 @@ namespace Fanzoo.Kernel.Configuration
                 return section?.GetChildren().FirstOrDefault()?.Value;
             }
 
-            return configurationManager.GetConnectionString(configurationManager[ConfigurationKeys.ConnectionStringName.ToString()]);
+            return configurationManager.GetConnectionString(configurationManager[ConfigurationKeys.ConnectionStringName.ToString()] ?? string.Empty);
         }
     }
 }
