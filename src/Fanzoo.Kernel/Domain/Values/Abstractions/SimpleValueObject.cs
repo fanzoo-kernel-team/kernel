@@ -16,6 +16,8 @@
             yield return Value;
         }
 
+        public static implicit operator T(SimpleValueObject<T> valueObject) => valueObject.Value;
+
         public override string ToString() => Value.ToString()!; //for some reason ToString doesn't understand the notnull constraint
 
     }

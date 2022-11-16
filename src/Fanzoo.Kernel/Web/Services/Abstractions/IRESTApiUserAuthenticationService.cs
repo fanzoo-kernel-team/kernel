@@ -15,9 +15,9 @@ namespace Fanzoo.Kernel.Web.Services
         where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
         where TTokenPrimitive : notnull, new()
     {
-        ValueTask<Result<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password);
+        ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password);
 
-        ValueTask<Result<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken);
+        ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken);
 
         ValueTask<UnitResult<Error>> RevokeAsync(string refreshToken);
 

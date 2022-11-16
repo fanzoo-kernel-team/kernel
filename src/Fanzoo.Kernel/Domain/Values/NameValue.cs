@@ -12,7 +12,7 @@
             LastName = lastName;
         }
 
-        public static Result<NameValue, Error> Create(string firstName, string lastName)
+        public static ValueResult<NameValue, Error> Create(string firstName, string lastName)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(firstName)

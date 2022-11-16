@@ -6,7 +6,7 @@
 
         private RegionValue(string regionAbbreviation) : base(regionAbbreviation) { }
 
-        public static Result<RegionValue, Error> Create(string regionAbbreviation)
+        public static ValueResult<RegionValue, Error> Create(string regionAbbreviation)
         {
             regionAbbreviation = regionAbbreviation.ToUpper();
 

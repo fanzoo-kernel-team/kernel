@@ -9,7 +9,7 @@
             Guard.Against.InvalidBase64String(value, nameof(value));
         }
 
-        public static Result<HashedPasswordValue, Error> Create(string hashedPassword) =>
+        public static ValueResult<HashedPasswordValue, Error> Create(string hashedPassword) =>
             Check.For.Base64String(hashedPassword).IsValid
                 ? new HashedPasswordValue(hashedPassword)
                 : Errors.ValueObjects.HashedPasswordValue.InvalidFormat;

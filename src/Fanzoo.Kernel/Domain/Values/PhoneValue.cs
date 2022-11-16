@@ -15,7 +15,7 @@
 
         }
 
-        public static Result<PhoneValue, Error> Create(string phone)
+        public static ValueResult<PhoneValue, Error> Create(string phone)
         {
             //sanitize
             var digits = phone

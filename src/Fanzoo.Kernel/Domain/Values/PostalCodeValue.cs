@@ -11,7 +11,7 @@
             Guard.Against.NonMatchingRegex(postalCode, "^\\b\\d{5}\\b(?:[- ]{1}\\d{4})?$", nameof(postalCode));
         }
 
-        public static Result<PostalCodeValue, Error> Create(string postalCode)
+        public static ValueResult<PostalCodeValue, Error> Create(string postalCode)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(postalCode)

@@ -55,11 +55,11 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
 
             return result;
         }
-        catch (ResultFailureException<Error> e)
+        catch (KernelErrorException e)
         {
             await _unitOfWork.RollbackAsync();
 
-            return CommandResult<TResult>.Fail(e.Error);
+            return CommandResult<TResult>.Fail(e);
         }
         catch (Exception e)
         {
@@ -127,11 +127,11 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
 
             return result;
         }
-        catch (ResultFailureException<Error> e)
+        catch (KernelErrorException e)
         {
             await _unitOfWork.RollbackAsync();
 
-            return CommandResult.Fail(e.Error);
+            return CommandResult.Fail(e);
         }
         catch (Exception e)
         {

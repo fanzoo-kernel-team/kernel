@@ -17,7 +17,7 @@ namespace Fanzoo.Kernel.Domain.Values
             PostalCode = postalCode;
         }
 
-        public static Result<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode)
+        public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(primaryAddress)

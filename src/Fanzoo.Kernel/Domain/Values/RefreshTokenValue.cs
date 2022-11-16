@@ -9,10 +9,10 @@ namespace Fanzoo.Kernel.Domain.Values
         public RefreshTokenValue(string refreshToken) : base(refreshToken)
         {
             Guard.Against.NullOrWhiteSpace(refreshToken, nameof(refreshToken));
-            Guard.Against.InvalidBase64String(refreshToken, nameof(refreshToken));  
+            Guard.Against.InvalidBase64String(refreshToken, nameof(refreshToken));
         }
 
-        public static Result<RefreshTokenValue, Error> Create(string refreshToken)
+        public static ValueResult<RefreshTokenValue, Error> Create(string refreshToken)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(refreshToken)

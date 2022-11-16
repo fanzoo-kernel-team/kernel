@@ -13,7 +13,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         protected DefaultStringValue(string value, int maxSize) : base(value, maxSize) { }
 
-        public static Result<TImplementor, Error> Create(string value)
+        public static ValueResult<TImplementor, Error> Create(string value)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(value)

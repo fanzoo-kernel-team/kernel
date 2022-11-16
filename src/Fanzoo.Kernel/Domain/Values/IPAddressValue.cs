@@ -10,7 +10,7 @@
             Guard.Against.NonMatchingRegex(ipAddress, IPAddressPattern, nameof(ipAddress));
         }
 
-        public static Result<IPAddressValue, Error> Create(string ipAddress)
+        public static ValueResult<IPAddressValue, Error> Create(string ipAddress)
         {
             var isValid = Check.For
                 .NullOrWhiteSpace(ipAddress)

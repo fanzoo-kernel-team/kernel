@@ -17,7 +17,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         }
 
-        public static Result<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
+        public static ValueResult<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
         {
             if (Check.For.LessThanMinValueValue(amount, 0).IsInvalid)
             {
