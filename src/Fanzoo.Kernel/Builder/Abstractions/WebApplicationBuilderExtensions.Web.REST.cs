@@ -1,6 +1,4 @@
-﻿using Fanzoo.Kernel.Domain.Entities;
-using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
-using Fanzoo.Kernel.Domain.Values;
+﻿using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
 using Fanzoo.Kernel.Web.Services;
 
 namespace Fanzoo.Kernel.Builder
@@ -22,7 +20,7 @@ namespace Fanzoo.Kernel.Builder
 
             builder.Services
                 .AddWebCore()
-                .AddRESTApiCore<TUserAuthenticationService, TUser, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(builder.Configuration["Jwt:Secret"]);
+                .AddRESTApiCore<TUserAuthenticationService, TUser, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(builder.Configuration["Jwt:Secret"] ?? throw new ArgumentException("Configuration not found."));
 
             return builder;
         }
