@@ -1,6 +1,7 @@
 name: Kernel NuGet Release
 
 on:
+  workflow_dispatch:
   release:
       types: [published]
 env:
