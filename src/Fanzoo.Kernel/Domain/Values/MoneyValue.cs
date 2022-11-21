@@ -1,5 +1,6 @@
 ﻿#pragma warning disable IDE0046 // Convert to conditional expression
 
+
 namespace Fanzoo.Kernel.Domain.Values
 {
     public sealed class MoneyValue : ValueObject
@@ -10,10 +11,12 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public MoneyValue(decimal amount, CurrencyValue currency)
         {
-            Amount = amount;
-            Currency = currency;
+
             Guard.Against.LessThanMinCurrency(amount, 0m, nameof(amount));
             Guard.Against.InvalidMinorUnits(amount, currency.MinorUnits, nameof(amount));
+
+            Amount = amount;
+            Currency = currency;
 
         }
 
@@ -43,31 +46,22 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public static MoneyValue operator +(MoneyValue a, MoneyValue b)
         {
-            //check that the currency is the same
-            //if not, throw exception
+            if (a.Currency != b.Currency)
+            {
+                throw new KernelErrorException(Errors.ValueObjects.MoneyValue.CannotPerformArithmeticOperationOnDifferentCurrencies);
+            }
 
-            //throw new KernelErrorException(Errors.ValueObjects.MoneyValue.CannotPerformArithmeticOperationOnDifferentCurrencies);
-
-            var result = MoneyValue.Create(100, CurrencyValue.USDollar);
-
-            var money = result.Value;
-
-            return Create(a.Amount + b.Amount, a.Currency).Value;
+            return new(a.Amount + b.Amount, a.Currency);
         }
 
-        //TODO: operators
+        public static MoneyValue operator -(MoneyValue a, MoneyValue b)
+        {
+            if (a.Currency != b.Currency)
+            {
+                throw new KernelErrorException(Errors.ValueObjects.MoneyValue.CannotPerformArithmeticOperationOnDifferentCurrencies);
+            }
 
-        /*
-         
-            var amount1 = MoneyValue.Create(100, USD);
-            var amount2 = MoneyValue.Create(200, USD);
-
-            var dollar = amount1.Amount + amount2.Amount;
-
-            var amount3 = MoneyValue.Create(dollar, USD);
-
-            var amount3 = amount1 + amount2;
-         
-        */
+            return new(a.Amount - b.Amount, a.Currency);
+        }
     }
 }

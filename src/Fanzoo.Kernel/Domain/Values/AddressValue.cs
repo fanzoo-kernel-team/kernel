@@ -10,6 +10,7 @@ namespace Fanzoo.Kernel.Domain.Values
         {
             Guard.Against.NullOrWhiteSpace(primaryAddress, nameof(primaryAddress));
             Guard.Against.NullOrWhiteSpace(city, nameof(city));
+
             PrimaryAddress = primaryAddress;
             SecondaryAddress = secondaryAddress;
             City = city;
