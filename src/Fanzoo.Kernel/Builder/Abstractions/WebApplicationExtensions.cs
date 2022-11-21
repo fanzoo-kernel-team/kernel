@@ -1,7 +1,5 @@
 ﻿using Fanzoo.Kernel.Web.Middleware;
 using FluentMigrator.Runner;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Fanzoo.Kernel.Builder
@@ -77,6 +75,16 @@ namespace Fanzoo.Kernel.Builder
             }
 
             application.Run();
+        }
+
+        public static WebApplication UseApplicationModuleEndpoints(this WebApplication application)
+        {
+            foreach (var module in application.Services.GetServices<IApplicationModule>())
+            {
+                module.MapEndpoints(application);
+            }
+
+            return application;
         }
     }
 }
