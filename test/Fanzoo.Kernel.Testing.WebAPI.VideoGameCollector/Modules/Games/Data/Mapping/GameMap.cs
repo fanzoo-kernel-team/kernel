@@ -1,8 +1,8 @@
 ﻿using Fanzoo.Kernel.Data.Mapping;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Values;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Entities;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values;
 
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Mapping
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Data.Mapping
 {
     public class GameMap : MutableEntityClassMap<Game, GameIdentifierValue, Guid>
     {

@@ -1,8 +1,8 @@
 ﻿using Fanzoo.Kernel.Data.Mapping;
 using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
 
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Mapping
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Mapping
 {
     public class UserMap : MutableEntityClassMap<User, UserIdentifierValue, Guid>
     {

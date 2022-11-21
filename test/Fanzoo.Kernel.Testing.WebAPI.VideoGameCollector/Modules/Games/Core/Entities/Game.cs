@@ -1,6 +1,6 @@
-﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Values;
+﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values;
 
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Entities
 {
     public class Game : AggregateRoot<GameIdentifierValue, Guid>, IMutableEntity
     {

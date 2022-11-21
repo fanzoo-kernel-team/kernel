@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Dtos;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Queries;
 using Xunit;
 
 namespace Fanzoo.Kernel.Testing.Integration
@@ -24,13 +25,10 @@ namespace Fanzoo.Kernel.Testing.Integration
 
 
         [Fact]
-        public async Task Test_Can_Create_Game()
-        {
-            (await _factory
+        public async Task Test_Can_Create_Game() => (await _factory
                 .CreateClient()
                     .PostAsync("/games?name=Pitfall", null))
                         .EnsureSuccessStatusCode();
-        }
 
         [Fact]
         public async Task Test_Can_Update_Many()
@@ -47,13 +45,13 @@ namespace Fanzoo.Kernel.Testing.Integration
 
             (await _factory
                 .CreateClient()
-                    .PostAsync("/games/rename?oldName=Pitfall&newName=Pitfall!", null))
+                    .PutAsJsonAsync("/games/rename", new RenameAllRequest("Pitfall", "Pitfall!")))
                         .EnsureSuccessStatusCode();
 
             var details = await (await _factory
                 .CreateClient()
                     .GetAsync("/games?name=Pitfall!"))
-                        .Content.ReadFromJsonAsync<IEnumerable<GameDetailsDto>>();
+                        .Content.ReadFromJsonAsync<IEnumerable<GameDetailResult>>();
 
             Assert.NotNull(details);
 

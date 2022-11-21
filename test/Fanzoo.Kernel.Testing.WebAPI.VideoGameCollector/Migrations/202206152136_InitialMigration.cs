@@ -1,4 +1,4 @@
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Data.Migrations
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Migrations
 {
     [Migration(202206152136)]
     public class InitialMigration : Migration

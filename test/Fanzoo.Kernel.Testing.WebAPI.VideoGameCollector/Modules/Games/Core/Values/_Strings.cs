@@ -1,4 +1,4 @@
-﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Values
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values
 {
     public class GameNameValue : StringValue
     {
