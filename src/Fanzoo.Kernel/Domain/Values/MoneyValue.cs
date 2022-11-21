@@ -1,4 +1,6 @@
 ﻿#pragma warning disable IDE0046 // Convert to conditional expression
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 
 
 namespace Fanzoo.Kernel.Domain.Values
@@ -42,6 +44,7 @@ namespace Fanzoo.Kernel.Domain.Values
         protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Amount;
+            yield return Currency;
         }
 
         public static MoneyValue operator +(MoneyValue a, MoneyValue b)
@@ -63,5 +66,9 @@ namespace Fanzoo.Kernel.Domain.Values
 
             return new(a.Amount - b.Amount, a.Currency);
         }
+
+        public static bool operator ==(MoneyValue a, decimal amount) => a.Amount == amount;
+
+        public static bool operator !=(MoneyValue a, decimal amount) => a.Amount != amount;
     }
 }
