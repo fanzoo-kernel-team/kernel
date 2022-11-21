@@ -1,5 +1,4 @@
-﻿using System;
-using Fanzoo.Kernel.Domain.Values;
+﻿using Fanzoo.Kernel.Domain.Values;
 using Fanzoo.Kernel.Domain.Values.Stripe;
 using Xunit;
 
@@ -75,7 +74,7 @@ namespace Fanzoo.Kernel.Tests
 
 
         }
-        
+
         [Fact]
         public void Test_MoneyValue()
         {
@@ -98,6 +97,18 @@ namespace Fanzoo.Kernel.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new MoneyValue(invalidMoneyValueDecimal, CurrencyValue.USDollar));
 
             Assert.NotNull(new MoneyValue(validMoneyValueAmount, CurrencyValue.USDollar));
+
+            Assert.Throws<KernelErrorException>(() => new MoneyValue(1, CurrencyValue.USDollar) + new MoneyValue(1, CurrencyValue.SwissFranc));
+
+            var a = new MoneyValue(2, CurrencyValue.USDollar);
+            var b = new MoneyValue(5, CurrencyValue.USDollar);
+
+            var x = a + b;
+            var y = b - a;
+
+            Assert.True(x == 7);
+            Assert.True(y == 3);
+
         }
 
         [Fact]
@@ -111,7 +122,7 @@ namespace Fanzoo.Kernel.Tests
 
             var invalidName = "";
 
-            var name = NameValue.Create(validFirstName,validLastName);
+            var name = NameValue.Create(validFirstName, validLastName);
 
             Assert.True(name.Value == nameValue);
 
@@ -124,7 +135,7 @@ namespace Fanzoo.Kernel.Tests
             Assert.Throws<ArgumentException>(() => new NameValue(validFirstName, invalidName));
 
             Assert.NotNull(new NameValue(validFirstName, validLastName));
-            
+
         }
 
         [Fact]
@@ -173,7 +184,7 @@ namespace Fanzoo.Kernel.Tests
             var password = PasswordValue.Create(validPassword);
 
             Assert.True(password.Value == validPassword);
-            
+
             Assert.True(PasswordValue.Create(invalidPasswordShort).IsFailure);
 
             Assert.True(PasswordValue.Create(invalidPasswordLong).IsFailure);
@@ -181,7 +192,7 @@ namespace Fanzoo.Kernel.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new PasswordValue(invalidPasswordLong));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => new PasswordValue(invalidPasswordShort));
-            
+
             Assert.NotNull(new PasswordValue(validPassword));
         }
 
