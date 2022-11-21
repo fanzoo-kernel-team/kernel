@@ -1,4 +1,4 @@
-﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
 {
     public class User : Domain.Entities.RefreshTokens.Users.Guid.User<RefreshToken>
     {
