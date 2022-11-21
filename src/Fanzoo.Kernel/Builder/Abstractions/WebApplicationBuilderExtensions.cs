@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Fanzoo.Kernel.Builder
 {
@@ -139,6 +137,44 @@ namespace Fanzoo.Kernel.Builder
             builder.Services.AddAutoMapperCore(assemblyName);
 
             return builder;
+        }
+
+        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, Assembly assembly) => builder.AddApplicationModulesFromAssemblies(new[] { assembly });
+
+        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, string assemblyName) => builder.AddApplicationModulesFromAssemblies(new[] { Assembly.Load(assemblyName) });
+
+        public static WebApplicationBuilder AddApplicationModulesFromAssemblies(this WebApplicationBuilder builder, Assembly[] assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                var modules = assembly
+                    .GetTypes()
+                        .Where(t => t.IsClass)
+                        .Where(t => t.IsAssignableTo(typeof(IApplicationModule)))
+                            .Select(Activator.CreateInstance)
+                                .Cast<IApplicationModule>();
+
+                foreach (var module in modules)
+                {
+                    //add the module to the service registry
+                    builder.Services.AddTransient(typeof(IApplicationModule), module.GetType());
+
+                    //add it's services to the registry
+                    module.RegisterServices(builder.Services);
+
+                }
+            }
+
+            return builder;
+        }
+
+        public static WebApplicationBuilder AddApplicationModulesFromAssemblies(this WebApplicationBuilder builder, Action<IServiceTypeAssemblyBuilder> addTypes)
+        {
+            var serviceTypeBuilder = new ServiceTypeAssemblyBuilder();
+
+            addTypes.Invoke(serviceTypeBuilder);
+
+            return builder.AddApplicationModulesFromAssemblies(serviceTypeBuilder.Assemblies.ToArray());
         }
     }
 }
