@@ -8,6 +8,6 @@ namespace Fanzoo.Kernel.Testing.Integration
 
     public class IntegrationSqlLocalDbWebApplicationFactory : SqlLocalDbWebApplicationFactory<Program>
     {
-        public IntegrationSqlLocalDbWebApplicationFactory() : base("kernel-test-instance", "kernel") { }
+        public IntegrationSqlLocalDbWebApplicationFactory() : base("kernel-test-instance", "videogames") { }
     }
 }
