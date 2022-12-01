@@ -3,7 +3,7 @@ using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
 using Fanzoo.Kernel.Domain.Values;
 using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
 using Fanzoo.Kernel.Services;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Entities;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
 using Fanzoo.Kernel.Web.Services.Configuration;
 using Microsoft.Extensions.Options;
 
