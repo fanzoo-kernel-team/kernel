@@ -1,6 +1,8 @@
-﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
+﻿using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid;
+
+namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
 {
-    public class User : Domain.Entities.RefreshTokens.Users.Guid.User<RefreshToken>
+    public class User : Domain.Entities.RefreshTokens.Users.Guid.User
     {
         protected User() : base(10, 10) { }
 
@@ -18,6 +20,6 @@
             return user;
         }
 
-        protected override RefreshToken CreateToken() => throw new NotImplementedException();
+        protected override RefreshToken CreateToken(DateTime expirationDate, IPAddressValue ipAddress) => RefreshToken.Create(expirationDate, ipAddress).Value;
     }
 }

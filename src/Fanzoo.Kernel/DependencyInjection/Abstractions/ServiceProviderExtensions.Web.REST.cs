@@ -1,8 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Fanzoo.Kernel.Domain.Entities;
 using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
-using Fanzoo.Kernel.Domain.Values;
-using Fanzoo.Kernel.Services;
 using Fanzoo.Kernel.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

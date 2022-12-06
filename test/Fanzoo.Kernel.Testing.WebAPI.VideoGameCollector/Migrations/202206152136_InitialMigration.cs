@@ -68,6 +68,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Migrations
             Create.ForeignKey("RefreshToken", "User");
 
             Create.Index("RefreshToken", "Token").Unique();
+
+            Insert.IntoTable("User").Row(new { Id = Guid.NewGuid(), Username = "billw@fanzootechnology.com", Email = "billw@fanzootechnology.com", Password = "ACCY+b4bvLeFcGENH/SFOrpZCi45WE5bhJDcho+8kT8UX+lzS0kOk46x6DUkvQH5Jw==", LastAuthenticationChange = DateTime.Now, IsActive = true, CreatedDate = DateTime.Now, CreatedBy = "system" });
         }
 
         public override void Down() { }

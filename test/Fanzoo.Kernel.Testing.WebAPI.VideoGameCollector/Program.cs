@@ -22,7 +22,7 @@ if (isStandAlone)
 
 var builder =
     WebApplication.CreateBuilder(args)
-        .AddRESTApiCore<RESTApiUserAuthenticationService, User, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue, RefreshToken, RefreshTokenIdentifierValue, Guid>()
+        .AddRESTApiCore<RESTApiUserAuthenticationService, User, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue, Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid.RefreshToken, RefreshTokenIdentifierValue, Guid>()
         .AddApplicationModulesFromAssembly(Assembly.GetExecutingAssembly())
         .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
         .AddFrameworkCoreFromAssemblies(addTypes =>

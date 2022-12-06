@@ -56,4 +56,9 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users.Guid
     {
         protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
     }
+
+    public abstract class User : User<UserIdentifierValue, System.Guid, EmailUsernameValue, RefreshTokens.Guid.RefreshToken, RefreshTokenIdentifierValue, System.Guid>
+    {
+        protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
+    }
 }

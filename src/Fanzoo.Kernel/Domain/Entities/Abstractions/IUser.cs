@@ -2,7 +2,7 @@
 
 namespace Fanzoo.Kernel.Domain.Entities.Users
 {
-    public interface IUser<TIdentifier, TPrimitive, out TUsername>
+    public interface IUser<TIdentifier, TPrimitive, out TUsername> : IMutableEntity
         where TIdentifier : IdentifierValue<TPrimitive>
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue

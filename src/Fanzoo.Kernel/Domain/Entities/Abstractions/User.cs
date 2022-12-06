@@ -164,13 +164,15 @@ namespace Fanzoo.Kernel.Domain.Entities.Users
 
 namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
 {
-    public abstract class User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> : User<TIdentifier, TPrimitive, TUsername>, IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
-        where TIdentifier : IdentifierValue<TPrimitive>, new()
-        where TPrimitive : notnull, new()
-        where TUsername : IUsernameValue
-        where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive, TIdentifier, TPrimitive>
-        where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
-        where TTokenPrimitive : notnull, new()
+    public abstract class User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
+        User<TIdentifier, TPrimitive, TUsername>,
+        IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>, new()
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive, TIdentifier, TPrimitive>
+            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+            where TTokenPrimitive : notnull, new()
     {
 
         private readonly int _numberOfInactiveTokensToStore;
@@ -190,7 +192,7 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
             //remove inactive tokens
             RemoveInActiveRefreshTokens();
 
-            var token = CreateToken();
+            var token = CreateToken(expirationDate, ipAddress);
 
             _refreshTokens.Add(token);
 
@@ -220,7 +222,7 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
             _refreshTokens.RemoveAll(token => tokensToRemove.Contains(token));
         }
 
-        protected abstract TRefreshToken CreateToken();
+        protected abstract TRefreshToken CreateToken(DateTime expirationDate, IPAddressValue ipAddress);
 
         protected override void OnLock() => InvalidateAllTokens();
 

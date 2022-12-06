@@ -1,6 +1,6 @@
 ﻿using Fanzoo.Kernel.Data.Mapping;
+using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid;
 using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Mapping
 {
