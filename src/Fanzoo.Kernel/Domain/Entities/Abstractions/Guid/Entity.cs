@@ -1,8 +1,7 @@
-﻿using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
-
-namespace Fanzoo.Kernel.Domain.Entities.Guid
+﻿namespace Fanzoo.Kernel.Domain.Entities.Guid
 {
-    public class Entity : Entity<UserIdentifierValue, System.Guid>
+    public abstract class Entity<TIdentifier> : Entity<TIdentifier, System.Guid>
+        where TIdentifier : IdentifierValue<System.Guid>, new()
     {
 
     }
