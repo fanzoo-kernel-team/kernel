@@ -69,10 +69,7 @@ namespace Fanzoo.Kernel.Builder
 
             var migrationRunner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-            if (migrationRunner is not null)
-            {
-                migrationRunner.MigrateUp();
-            }
+            migrationRunner?.MigrateUp();
 
             application.Run();
         }

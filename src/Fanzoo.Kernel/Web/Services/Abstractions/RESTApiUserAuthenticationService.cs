@@ -23,6 +23,8 @@ namespace Fanzoo.Kernel.Web.Services
         private readonly IPasswordHashingService _passwordHashingService;
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
+        private bool _disposed = false;
+
         protected RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory)
         {
             _settings = settings.Value;
@@ -239,13 +241,31 @@ namespace Fanzoo.Kernel.Web.Services
             return (accessToken, refreshToken);
         }
 
-        public void Dispose() => _unitOfWorkFactory?.Dispose();
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         public ValueTask DisposeAsync()
         {
-            Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
 
             return ValueTask.CompletedTask;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _unitOfWorkFactory?.Dispose();
+                }
+
+                _disposed = true;
+            }
         }
     }
 }

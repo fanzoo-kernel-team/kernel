@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Data
 {
-    public sealed class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory, IDisposable, IAsyncDisposable
+    public sealed class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
     {
         private readonly ISessionFactory _sessionFactory;
         private readonly IServiceProvider _serviceProvider;
@@ -20,10 +20,7 @@
                 throw new InvalidOperationException("Cannot open a new UnitOfWork until the current one is closed.");
             }
 
-            if (_current is not null)
-            {
-                _current.Dispose();
-            }
+            _current?.Dispose();
 
             _current = new NHibernateUnitOfWork(
                 _sessionFactory
@@ -38,13 +35,7 @@
 
         public bool CanOpen => _current is null || _current.IsClosed;
 
-        public void Dispose()
-        {
-            if (_current is not null)
-            {
-                _current.Dispose();
-            }
-        }
+        public void Dispose() => _current?.Dispose();
 
         public ValueTask DisposeAsync()
         {

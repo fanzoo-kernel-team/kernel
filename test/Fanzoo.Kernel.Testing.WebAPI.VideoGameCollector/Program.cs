@@ -5,7 +5,6 @@ using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var isStandAlone = Environment.GetEnvironmentVariable("RUN_MODE") == "Stand-alone";
@@ -65,9 +64,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var application = builder.Build();
 
-application.MapGet("/heartbeat", ([FromServices] IHttpContextAccessor context) =>
+application.MapGet("/heartbeat", () =>
 {
-    var meh = context.HttpContext.Request;
+    return Results.Ok();
 });
 
 if (application.Environment.IsDevelopment())

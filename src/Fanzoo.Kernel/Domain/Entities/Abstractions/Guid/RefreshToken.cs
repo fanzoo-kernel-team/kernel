@@ -2,7 +2,7 @@
 
 namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid
 {
-    public class RefreshToken : RefreshToken<RefreshTokenIdentifierValue, System.Guid, UserIdentifierValue, System.Guid>
+    public class RefreshToken : RefreshToken<RefreshTokenIdentifierValue, System.Guid>
     {
         public static ValueResult<RefreshToken, Error> Create(DateTime expirationDate, IPAddressValue ipAddress) =>
             expirationDate <= SystemDateTime.Now

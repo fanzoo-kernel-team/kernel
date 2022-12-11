@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Fanzoo.Kernel.Configuration
+﻿namespace Fanzoo.Kernel.Configuration
 {
     public class ApplicationConfigurationBuilder
     {
         private IConfigurationBuilder _configurationBuilder;
 
-        private Dictionary<string, string> _keyValues;
+        private Dictionary<string, string?> _keyValues;
 
         public ApplicationConfigurationBuilder()
         {
