@@ -1,10 +1,8 @@
 ﻿namespace Fanzoo.Kernel.Domain.Entities
 {
-    public interface IRefreshToken<TIdentifier, TPrimitive, TUserIdentifier, TUserPrimitive> : IMutableEntity
+    public interface IRefreshToken<TIdentifier, TPrimitive> : IMutableEntity
         where TIdentifier : IdentifierValue<TPrimitive>
         where TPrimitive : notnull, new()
-        where TUserIdentifier : IdentifierValue<TUserPrimitive>
-        where TUserPrimitive : notnull, new()
 
     {
         public TIdentifier Id { get; }

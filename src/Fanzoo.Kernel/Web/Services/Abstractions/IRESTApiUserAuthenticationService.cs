@@ -11,7 +11,7 @@ namespace Fanzoo.Kernel.Web.Services
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
         where TPassword : IPasswordValue
-        where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive, TIdentifier, TPrimitive>
+        where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
         where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
         where TTokenPrimitive : notnull, new()
     {

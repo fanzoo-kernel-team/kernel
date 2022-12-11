@@ -45,14 +45,14 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users.Guid
 {
     public abstract class User<TUsername, TRefreshToken> : User<UserIdentifierValue, System.Guid, TUsername, TRefreshToken, RefreshTokenIdentifierValue, System.Guid>
         where TUsername : IUsernameValue
-        where TRefreshToken : IRefreshToken<RefreshTokenIdentifierValue, System.Guid, UserIdentifierValue, System.Guid>, new()
+        where TRefreshToken : IRefreshToken<RefreshTokenIdentifierValue, System.Guid>, new()
 
     {
         protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
     }
 
     public abstract class User<TRefreshToken> : User<UserIdentifierValue, System.Guid, EmailUsernameValue, TRefreshToken, RefreshTokenIdentifierValue, System.Guid>
-            where TRefreshToken : IRefreshToken<RefreshTokenIdentifierValue, System.Guid, UserIdentifierValue, System.Guid>, new()
+            where TRefreshToken : IRefreshToken<RefreshTokenIdentifierValue, System.Guid>, new()
     {
         protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
     }

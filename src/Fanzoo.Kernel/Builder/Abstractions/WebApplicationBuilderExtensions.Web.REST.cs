@@ -12,7 +12,7 @@ namespace Fanzoo.Kernel.Builder
             where TUserIdentifierPrimitive : notnull, new()
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
-            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive, TUserIdentifier, TUserIdentifierPrimitive>
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
             where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
             where TTokenPrimitive : notnull, new()
         {

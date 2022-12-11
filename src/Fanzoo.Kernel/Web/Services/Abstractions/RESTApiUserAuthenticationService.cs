@@ -14,7 +14,7 @@ namespace Fanzoo.Kernel.Web.Services
             where TPrimitive : notnull, new()
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
-            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive, TIdentifier, TPrimitive>
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
             where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
             where TTokenPrimitive : notnull, new()
     {
@@ -227,7 +227,7 @@ namespace Fanzoo.Kernel.Web.Services
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Convert.FromBase64String(_settings.Secret)), SecurityAlgorithms.HmacSha256));
         }
 
-        private async ValueTask<(JwtSecurityToken AccessToken, IRefreshToken<TTokenIdentifier, TTokenPrimitive, TIdentifier, TPrimitive> RefreshToken)> GetTokensAsync(IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> user)
+        private async ValueTask<(JwtSecurityToken AccessToken, IRefreshToken<TTokenIdentifier, TTokenPrimitive> RefreshToken)> GetTokensAsync(IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> user)
         {
             var accessToken = await GenerateAccessTokenAsync(user);
 

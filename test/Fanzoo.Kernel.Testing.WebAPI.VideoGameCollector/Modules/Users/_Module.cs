@@ -9,7 +9,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games
         {
             var group = endpoints.MapGroup("/account");
 
-            group.MapPost("/authenticate", PostAuthenticate.HandleAsync);
+            group.MapPost("/authenticate", PostAuthenticate.HandleAsync)
+                .Produces(StatusCodes.Status200OK, contentType: "text/plain");
 
             return endpoints;
         }

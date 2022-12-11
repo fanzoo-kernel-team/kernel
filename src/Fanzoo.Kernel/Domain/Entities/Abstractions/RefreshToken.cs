@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Entities
 {
-    public abstract class RefreshToken<TIdentifier, TPrimitive, TUserIdentifier, TUserPrimitive> : Entity<TIdentifier, TPrimitive>, IRefreshToken<TIdentifier, TPrimitive, TUserIdentifier, TUserPrimitive>
+    public abstract class RefreshToken<TIdentifier, TPrimitive, TUserIdentifier, TUserPrimitive> : Entity<TIdentifier, TPrimitive>, IRefreshToken<TIdentifier, TPrimitive>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
         where TUserIdentifier : IdentifierValue<TUserPrimitive>
