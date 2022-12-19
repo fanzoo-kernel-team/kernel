@@ -9,6 +9,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games
         {
             var group = endpoints.MapGroup("/games");
 
+            group.RequireAuthorization();
+
             group.MapGet(string.Empty, GetByName.HandleAsync);
 
             group.MapPost(string.Empty, PostCreate.HandleAsync);

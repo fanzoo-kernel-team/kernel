@@ -1,8 +1,11 @@
-﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
+﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
+using Fanzoo.Kernel.Domain.Entities.Users;
+
+namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users
 {
-    public class User : Domain.Entities.RefreshTokens.Users.Guid.User<RefreshToken>
+    public class User : User<UserIdentifierValue, Guid, EmailUsernameValue>
     {
-        protected User() : base(10, 10) { }
+        protected User() : base(10) { }
 
         public static ValueResult<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password)
         {
@@ -17,7 +20,5 @@
 
             return user;
         }
-
-        protected override RefreshToken CreateToken() => throw new NotImplementedException();
     }
 }

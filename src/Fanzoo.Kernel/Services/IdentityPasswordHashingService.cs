@@ -13,6 +13,13 @@ namespace Fanzoo.Kernel.Services
 
         public string HashPassword(string username, string password) => _passwordHasher.HashPassword(username, password);
 
-        public bool VerifyPasswordHash(string username, string hashedPassword, string providedPassword) => _passwordHasher.VerifyHashedPassword(username, hashedPassword, providedPassword) == PasswordVerificationResult.Success;
+        //TODO: modify this to return an enum so our auth service can automatically rehash
+        public bool VerifyPasswordHash(string username, string hashedPassword, string providedPassword) =>
+            _passwordHasher.VerifyHashedPassword(username, hashedPassword, providedPassword) switch
+            {
+                PasswordVerificationResult.Failed => false,
+                PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded => true,
+                _ => throw new InvalidOperationException()
+            };
     }
 }

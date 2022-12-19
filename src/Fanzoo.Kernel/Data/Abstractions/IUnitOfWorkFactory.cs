@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Data
 {
-    public interface IUnitOfWorkFactory
+    public interface IUnitOfWorkFactory : IDisposable, IAsyncDisposable
     {
         IUnitOfWork Open();
 

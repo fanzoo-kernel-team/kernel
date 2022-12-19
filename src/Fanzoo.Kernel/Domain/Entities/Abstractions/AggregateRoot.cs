@@ -2,6 +2,11 @@
 
 namespace Fanzoo.Kernel.Domain.Entities
 {
+    public interface IAggregateRoot
+    {
+        ICollection<IEvent> Events { get; }
+    }
+
     public abstract class AggregateRoot<TIdentifier, TPrimitive> : Entity<TIdentifier, TPrimitive>, IAggregateRoot
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()

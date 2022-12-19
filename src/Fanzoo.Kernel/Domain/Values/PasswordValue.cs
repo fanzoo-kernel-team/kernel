@@ -4,7 +4,7 @@ namespace Fanzoo.Kernel.Domain.Values
 {
     public sealed class PasswordValue : StringValue, IPasswordValue
     {
-        private const int MinimumPasswordLength = 8;
+        private const int MinimumPasswordLength = 6;
 
         private const int MaximumPasswordLength = 50;
 
@@ -46,5 +46,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
             return new PasswordValue(sb.ToString());
         }
+
+        public static implicit operator PasswordValue(string s) => new(s);
     }
 }

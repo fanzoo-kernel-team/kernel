@@ -29,5 +29,7 @@
 
             return isValid ? new EmailUsernameValue(username) : Errors.ValueObjects.UsernameValue.InvalidFormat;
         }
+
+        public static implicit operator EmailUsernameValue(string s) => new(s);
     }
 }
