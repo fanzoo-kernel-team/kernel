@@ -17,5 +17,14 @@ namespace Fanzoo.Kernel.Builder
 
             return builder;
         }
+
+        public static WebApplicationBuilder AddRESTApiCore(this WebApplicationBuilder builder)
+        {
+            builder.Services
+                .AddWebCore()
+                .AddRESTApiCore();
+
+            return builder;
+        }
     }
 }

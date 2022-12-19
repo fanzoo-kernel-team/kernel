@@ -1,6 +1,7 @@
 ﻿using Fanzoo.Kernel.Data.Mapping;
-using Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens;
 using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
+using FluentNHibernate.Mapping;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Mapping
 {
@@ -16,17 +17,17 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Map
 
             HasMany(e => e.RefreshTokens, "UserId");
 
-            //HasMany(e => e.Roles)
-            //    .Table("UserRole")
-            //    .KeyColumn("UserId")
-            //    .Not.KeyNullable()
-            //    .Not.KeyUpdate()
-            //    .Not.Inverse()
-            //    .Component(c => c.Map(x => x.Id, "RoleId"))
-            //    .Access
-            //        .CamelCaseField(Prefix.Underscore)
-            //    .Cascade
-            //        .AllDeleteOrphan();
+            HasMany(e => e.Roles)
+                .Table("UserRole")
+                .KeyColumn("UserId")
+                .Not.KeyNullable()
+                .Not.KeyUpdate()
+                .Not.Inverse()
+                .Component(c => c.Map(x => x.Id, "RoleId"))
+                .Access
+                    .CamelCaseField(Prefix.Underscore)
+                .Cascade
+                    .AllDeleteOrphan();
 
             Map(e => e.LastLogin);
             Map(e => e.FailedLoginAttempts);

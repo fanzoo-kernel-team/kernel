@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints;
@@ -58,6 +59,16 @@ namespace Fanzoo.Kernel.Testing.Integration
             Assert.NotNull(details);
 
             Assert.True(details.Count() > 1);
+        }
+
+        [Fact]
+        public async Task Test_Must_Be_In_Administrator_Role()
+        {
+            using var client = await LoginAsync("bob@fanzootechnology.com", "Test123!");
+
+            var result = await client.GetAsync("/requires-administrator-role");
+
+            Assert.True(result.StatusCode == HttpStatusCode.Forbidden);
         }
 
         private async Task<HttpClient> LoginAsync(string username, string password)
