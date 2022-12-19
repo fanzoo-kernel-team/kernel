@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
 using Fanzoo.Kernel.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,17 +7,12 @@ namespace Fanzoo.Kernel.DependencyInjection
 {
     public static partial class ServiceProviderExtensions
     {
-        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUser, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(this IServiceCollection services, string jwtPrivateKey)
-            where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<TUser, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
-            where TUser : IUser<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, string jwtPrivateKey)
+            where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>
             where TUserIdentifier : IdentifierValue<TUserIdentifierPrimitive>
             where TUserIdentifierPrimitive : notnull, new()
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
-            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
-            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
-            where TTokenPrimitive : notnull, new()
-
         {
             services
                 .AddControllers()
@@ -34,7 +28,7 @@ namespace Fanzoo.Kernel.DependencyInjection
 
             services
                 .AddTransient<IPasswordHashingService, IdentityPasswordHashingService>()
-                .AddTransient<IRESTApiUserAuthenticationService<TUser, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>, TUserAuthenticationService>()
+                .AddTransient<IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>, TUserAuthenticationService>()
                 .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

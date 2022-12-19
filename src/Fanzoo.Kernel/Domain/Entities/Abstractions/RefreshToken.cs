@@ -1,5 +1,31 @@
 ﻿namespace Fanzoo.Kernel.Domain.Entities
 {
+    public interface IRefreshToken<out TIdentifier, TPrimitive> : IMutableEntity
+        where TIdentifier : IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
+
+    {
+        TIdentifier Id { get; }
+
+        RefreshTokenValue Token { get; }
+
+        DateTime Issued { get; }
+
+        DateTime ExpirationDate { get; }
+
+        IPAddressValue IPAddress { get; }
+
+        bool IsRevoked { get; }
+
+        DateTime? Revoked { get; }
+
+        bool IsExpired { get; }
+
+        bool IsActive { get; }
+
+        void Revoke();
+    }
+
     public abstract class RefreshToken<TIdentifier, TPrimitive> : Entity<TIdentifier, TPrimitive>, IRefreshToken<TIdentifier, TPrimitive>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()

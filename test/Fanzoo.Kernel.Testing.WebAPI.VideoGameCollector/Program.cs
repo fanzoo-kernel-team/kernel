@@ -1,8 +1,7 @@
 using System.Reflection;
 using Fanzoo.Kernel.Builder;
-using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
+using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
 using Microsoft.OpenApi.Models;
@@ -23,7 +22,7 @@ if (isStandAlone)
 
 var builder =
     WebApplication.CreateBuilder(args)
-        .AddRESTApiCore<RESTApiUserAuthenticationService, User, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue, Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid.RefreshToken, RefreshTokenIdentifierValue, Guid>()
+        .AddRESTApiCore<RESTApiUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>()
         .AddApplicationModulesFromAssembly(Assembly.GetExecutingAssembly())
         .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
         .AddFrameworkCoreFromAssemblies(addTypes =>

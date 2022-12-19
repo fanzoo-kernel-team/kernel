@@ -1,10 +1,11 @@
-﻿using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid;
+﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
+using Fanzoo.Kernel.Domain.Entities.Users;
 
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
+namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens
 {
-    public class User : Domain.Entities.RefreshTokens.Users.Guid.User
+    public class User : User<UserIdentifierValue, Guid, EmailUsernameValue, RefreshToken, RefreshTokenIdentifierValue, Guid>
     {
-        protected User() : base(10, 10) { }
+        protected User() : base(10, 5) { }
 
         public static ValueResult<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password)
         {

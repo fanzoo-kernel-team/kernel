@@ -1,8 +1,8 @@
-﻿using Fanzoo.Kernel.Domain.Values.Identifiers.Guid;
+﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
 
-namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Guid
+namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens
 {
-    public class RefreshToken : RefreshToken<RefreshTokenIdentifierValue, System.Guid>
+    public class RefreshToken : RefreshToken<RefreshTokenIdentifierValue, Guid>
     {
         public static ValueResult<RefreshToken, Error> Create(DateTime expirationDate, IPAddressValue ipAddress) =>
             expirationDate <= SystemDateTime.Now

@@ -1,6 +1,24 @@
 ﻿#pragma warning disable S3875 // "operator==" should not be overloaded on reference types
 namespace Fanzoo.Kernel.Domain.Entities
 {
+    public interface IImmutableEntity { }
+
+    public interface IMutableEntity : IImmutableEntity { }
+
+    public interface ITrackableEntity
+    {
+        bool IsTransient { get; }
+
+        void SetAsLoadedOrSaved();
+    }
+
+    public interface IEntity<out TIdentifier, TPrimitive>
+    where TIdentifier : notnull, IdentifierValue<TPrimitive>
+    where TPrimitive : notnull, new()
+    {
+        TIdentifier Id { get; }
+    }
+
     public abstract class Entity<TIdentifier, TPrimitive> : IEntity<TIdentifier, TPrimitive>, ITrackableEntity
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()

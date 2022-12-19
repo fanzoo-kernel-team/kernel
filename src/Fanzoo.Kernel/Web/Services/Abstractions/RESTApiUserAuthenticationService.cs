@@ -1,14 +1,30 @@
 ﻿#pragma warning disable S101 // Types should be named in PascalCase
 
 using Fanzoo.Kernel.Data;
-using Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users;
+using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Fanzoo.Kernel.Web.Services
 {
+    public interface IRESTApiUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>
+        where TIdentifier : IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
+        where TUsername : IUsernameValue
+        where TPassword : IPasswordValue
+    {
+        ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password);
+
+        ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken);
+
+        ValueTask<UnitResult<Error>> RevokeAsync(string refreshToken);
+
+        ValueTask<UnitResult<Error>> RevokeAllAsync(TIdentifier identifier);
+
+    }
+
     public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive> : IDisposable, IAsyncDisposable,
-        IRESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+        IRESTApiUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>
             where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>
             where TPrimitive : notnull, new()
@@ -176,17 +192,32 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected abstract TIdentifier? GetClaimIdentifierOrDefault(string? claimValue);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>?> FindUserByUsernameAsync(TUsername username);
+        protected abstract ValueTask<TUser?> FindUserByUsernameAsync(TUsername username);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>?> FindUserByIdAsync(TIdentifier identifier);
+        protected abstract ValueTask<TUser?> FindUserByIdAsync(TIdentifier identifier);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>?> FindUserByTokenAsync(RefreshTokenValue token);
+        protected abstract ValueTask<TUser?> FindUserByTokenAsync(RefreshTokenValue token);
 
-        protected virtual async IAsyncEnumerable<Claim> GetClaimsAsync(IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> user)
+        protected virtual async IAsyncEnumerable<Claim> GetClaimsAsync(TUser user)
         {
             await ValueTask.CompletedTask;
 
             yield break;
+        }
+
+        internal static ValueTask<IList<Claim>> GetStandardClaimsAsync(TUser user)
+        {
+            var claims = new List<Claim>();
+
+            claims
+                .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
+                .AddClaim(ClaimTypes.Username, user.Username.Value)
+                .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
+                .AddClaim(JwtRegisteredClaimNames.Sub, user.Username.Value) // subject (required)
+                .AddClaim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()!) // token id is scoped to the user id
+                .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second
+
+            return ValueTask.FromResult((IList<Claim>)claims);
         }
 
         private async ValueTask SaveUserAsync()
@@ -203,17 +234,9 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected virtual ValueTask OnSaveUserAsync() => ValueTask.CompletedTask;
 
-        private async ValueTask<JwtSecurityToken> GenerateAccessTokenAsync(IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> user)
+        internal virtual async ValueTask<JwtSecurityToken> GenerateAccessTokenAsync(TUser user)
         {
-            var claims = new List<Claim>();
-
-            claims
-                .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
-                .AddClaim(ClaimTypes.Username, user.Username.Value)
-                .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
-                .AddClaim(JwtRegisteredClaimNames.Sub, user.Username.Value) // subject (required)
-                .AddClaim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()!) // token id is scoped to the user id
-                .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second
+            var claims = await GetStandardClaimsAsync(user);
 
             //add application claims
             await foreach (var claim in GetClaimsAsync(user))
@@ -221,15 +244,17 @@ namespace Fanzoo.Kernel.Web.Services
                 claims.Add(claim);
             }
 
-            return new(
+            return await CreateJwtTokenAsync(claims);
+        }
+
+        internal ValueTask<JwtSecurityToken> CreateJwtTokenAsync(IEnumerable<Claim> claims) => ValueTask.FromResult<JwtSecurityToken>(new(
                 _settings.Issuer,
                 _settings.Audience,
                 claims,
                 expires: SystemDateTime.Now.AddMinutes(_settings.AccessTokenTTLMinutes),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Convert.FromBase64String(_settings.Secret)), SecurityAlgorithms.HmacSha256));
-        }
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Convert.FromBase64String(_settings.Secret)), SecurityAlgorithms.HmacSha256)));
 
-        private async ValueTask<(JwtSecurityToken AccessToken, IRefreshToken<TTokenIdentifier, TTokenPrimitive> RefreshToken)> GetTokensAsync(IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> user)
+        private async ValueTask<(JwtSecurityToken AccessToken, TRefreshToken RefreshToken)> GetTokensAsync(TUser user)
         {
             var accessToken = await GenerateAccessTokenAsync(user);
 
@@ -266,6 +291,41 @@ namespace Fanzoo.Kernel.Web.Services
 
                 _disposed = true;
             }
+        }
+    }
+
+    public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
+        RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TPassword : IPasswordValue
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
+            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+            where TTokenPrimitive : notnull, new()
+            where TRoleValue : IRoleValue<TRolePrimitive>
+            where TRolePrimitive : notnull
+    {
+        protected RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(settings, httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
+
+        internal override async ValueTask<JwtSecurityToken> GenerateAccessTokenAsync(TUser user)
+        {
+            var claims = await GetStandardClaimsAsync(user);
+
+            //add roles
+            foreach (var role in user.Roles)
+            {
+                claims.AddClaim(System.Security.Claims.ClaimTypes.Role, role.Name);
+            }
+
+            //add application claims
+            await foreach (var claim in GetClaimsAsync(user))
+            {
+                claims.Add(claim);
+            }
+
+            return await CreateJwtTokenAsync(claims);
         }
     }
 }

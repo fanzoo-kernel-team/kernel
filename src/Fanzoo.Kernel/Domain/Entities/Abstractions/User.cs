@@ -1,7 +1,87 @@
-﻿using Fanzoo.Kernel.Domain.Entities.Users;
-
-namespace Fanzoo.Kernel.Domain.Entities.Users
+﻿namespace Fanzoo.Kernel.Domain.Entities.Users
 {
+    public interface IUser<out TIdentifier, TPrimitive, out TUsername> : IMutableEntity
+    where TIdentifier : IdentifierValue<TPrimitive>
+    where TPrimitive : notnull, new()
+    where TUsername : IUsernameValue
+    {
+        TIdentifier Id { get; }
+
+        TUsername Username { get; }
+
+        EmailValue Email { get; }
+
+        HashedPasswordValue Password { get; }
+
+        bool IsLockedOut { get; }
+
+        bool IsActive { get; }
+
+        DateTime LastAuthenticationChange { get; }
+
+        void RecordValidLogin();
+
+        void RecordInvalidLogin();
+
+        void SignOut();
+
+        void Lock();
+
+        void Unlock();
+
+        void UpdatePassword(HashedPasswordValue password);
+
+        bool RequiresAuthentication(DateTime persistedLastAuthenticationChange);
+    }
+
+    public interface IUser<out TIdentifier, TPrimitive, out TUsername, TRoleValue, TRolePrimitive> : IUser<TIdentifier, TPrimitive, TUsername>
+        where TIdentifier : IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
+        where TUsername : IUsernameValue
+        where TRoleValue : IRoleValue<TRolePrimitive>
+        where TRolePrimitive : notnull
+    {
+        IEnumerable<TRoleValue> Roles { get; }
+
+        bool HasRole(TRoleValue role);
+
+        void AddRole(TRoleValue role);
+
+        bool CanAddRole(TRoleValue role);
+    }
+
+    public interface IUser<out TIdentifier, TPrimitive, out TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> : IUser<TIdentifier, TPrimitive, TUsername>
+        where TIdentifier : IdentifierValue<TPrimitive>
+        where TPrimitive : notnull, new()
+        where TUsername : IUsernameValue
+        where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
+        where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+        where TTokenPrimitive : notnull, new()
+    {
+        IEnumerable<TRefreshToken> RefreshTokens { get; }
+
+        TRefreshToken AddRefreshToken(DateTime expirationDate, IPAddressValue ipAddress);
+
+        void RevokeAllTokens();
+
+        void RevokeToken(RefreshTokenValue token);
+    }
+
+    public interface IUser<out TIdentifier, TPrimitive, out TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
+        IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>,
+        IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TRoleValue : IRoleValue<TRolePrimitive>
+            where TRolePrimitive : notnull
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
+            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+            where TTokenPrimitive : notnull, new()
+    {
+
+    }
+
     public abstract class User<TIdentifier, TPrimitive, TUsername> : AggregateRoot<TIdentifier, TPrimitive>, IUser<TIdentifier, TPrimitive, TUsername>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
@@ -130,7 +210,7 @@ namespace Fanzoo.Kernel.Domain.Entities.Users
         protected virtual void OnResetPassword() { }
     }
 
-    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive> : User<TIdentifier, TPrimitive, TUsername>
+    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive> : User<TIdentifier, TPrimitive, TUsername>, IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
@@ -143,7 +223,7 @@ namespace Fanzoo.Kernel.Domain.Entities.Users
 
         public virtual IEnumerable<TRoleValue> Roles => _roles;
 
-        public virtual bool InRole(TRoleValue role) => _roles.Contains(role);
+        public virtual bool HasRole(TRoleValue role) => _roles.Contains(role);
 
         public virtual void AddRole(TRoleValue role)
         {
@@ -157,13 +237,9 @@ namespace Fanzoo.Kernel.Domain.Entities.Users
             }
         }
 
-        protected abstract bool CanAddRole(TRoleValue role);
-
+        public abstract bool CanAddRole(TRoleValue role);
     }
-}
 
-namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
-{
     public abstract class User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
         User<TIdentifier, TPrimitive, TUsername>,
         IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
@@ -241,15 +317,17 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
         }
     }
 
-    public abstract class User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive, TRoleValue, TRolePrimitive> : User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
-        where TIdentifier : IdentifierValue<TPrimitive>, new()
-        where TPrimitive : notnull, new()
-        where TUsername : IUsernameValue
-        where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
-        where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
-        where TTokenPrimitive : notnull, new()
-        where TRoleValue : IRoleValue<TRolePrimitive>
-        where TRolePrimitive : notnull, new()
+    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
+        User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>,
+        IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>, new()
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
+            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+            where TTokenPrimitive : notnull, new()
+            where TRoleValue : IRoleValue<TRolePrimitive>
+            where TRolePrimitive : notnull, new()
     {
         private readonly IList<TRoleValue> _roles = new List<TRoleValue>();
 
@@ -257,7 +335,7 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
 
         public virtual IEnumerable<TRoleValue> Roles => _roles;
 
-        public virtual bool InRole(TRoleValue role) => _roles.Contains(role);
+        public virtual bool HasRole(TRoleValue role) => _roles.Contains(role);
 
         public virtual void AddRole(TRoleValue role)
         {
@@ -271,7 +349,7 @@ namespace Fanzoo.Kernel.Domain.Entities.RefreshTokens.Users
             }
         }
 
-        protected abstract bool CanAddRole(TRoleValue role);
+        public abstract bool CanAddRole(TRoleValue role);
 
     }
 }
