@@ -6,7 +6,7 @@ namespace Fanzoo.Kernel.Builder
 {
     public static class WebApplicationExtensions
     {
-        public static WebApplication UseWebCore(this WebApplication application)
+        private static WebApplication UseWebCore(this WebApplication application)
         {
             application
                 .UseHsts()
@@ -50,8 +50,6 @@ namespace Fanzoo.Kernel.Builder
             application.UseMiddleware<ExceptionHandlerMiddleware>();
 
             application.UseWebCore();
-
-            application.MapControllers();
 
             return application;
         }

@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Fanzoo.Kernel.Web.Services;
+﻿using Fanzoo.Kernel.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -7,6 +6,11 @@ namespace Fanzoo.Kernel.DependencyInjection
 {
     public static partial class ServiceProviderExtensions
     {
+        public static IServiceCollection AddRESTApiCore(this IServiceCollection services)
+        {
+            return services.AddCors();
+        }
+
         public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, string jwtPrivateKey)
             where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>
             where TUserIdentifier : IdentifierValue<TUserIdentifierPrimitive>
@@ -15,20 +19,10 @@ namespace Fanzoo.Kernel.DependencyInjection
             where TPassword : IPasswordValue
         {
             services
-                .AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-
-#if DEBUG
-                    options.JsonSerializerOptions.WriteIndented = true;
-#endif
-
-                });
-
-            services
                 .AddTransient<IPasswordHashingService, IdentityPasswordHashingService>()
                 .AddTransient<IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>, TUserAuthenticationService>()
+                .AddCors()
+                .AddAuthorization()
                 .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,7 +30,6 @@ namespace Fanzoo.Kernel.DependencyInjection
                 })
                 .AddJwtBearer(options =>
                 {
-                    //TODO: figure out how to get issuer and audience validation working
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
@@ -46,8 +39,7 @@ namespace Fanzoo.Kernel.DependencyInjection
                         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(jwtPrivateKey))
                     };
 
-                    //TODO: figure out how to switch these based on development environment
-                    //helpful for debugging token issues
+#if DEBUG
                     options.Events = new JwtBearerEvents
                     {
                         OnChallenge = context =>
@@ -67,6 +59,7 @@ namespace Fanzoo.Kernel.DependencyInjection
                             return Task.CompletedTask;
                         },
                     };
+#endif
                 });
 
             return services;
