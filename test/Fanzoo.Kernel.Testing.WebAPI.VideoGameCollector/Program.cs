@@ -33,18 +33,6 @@ var builder =
 
 var application = builder.Build();
 
-application.MapGet("/heartbeat", () =>
-{
-    return Results.Ok();
-});
-
-application.MapGet("/requires-administrator-role", () =>
-{
-    return Results.Ok();
-})
-    .RequireAuthorization(policy => policy.RequireRole(StringCatalog.Roles.Administrator));
-
-
 if (application.Environment.IsDevelopment())
 {
     application.UseSwagger();
