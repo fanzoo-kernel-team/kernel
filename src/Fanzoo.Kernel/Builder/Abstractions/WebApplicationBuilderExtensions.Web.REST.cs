@@ -11,8 +11,6 @@ namespace Fanzoo.Kernel.Builder
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
         {
-            //TODO: is there an alternate way to get the secret key from the config without hard-coded values??
-
             builder.Services
                 .AddWebCore()
                 .AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(builder.Configuration["Jwt:Secret"] ?? throw new ArgumentException("Configuration not found."));

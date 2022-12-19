@@ -48,9 +48,9 @@
             return this;
         }
 
-        public ApplicationConfigurationBuilder AddSettings(IDictionary<string, string> settings)
+        public ApplicationConfigurationBuilder AddSettings(IDictionary<string, string?> settings)
         {
-            _keyValues = new Dictionary<string, string>(_keyValues.Union(settings));
+            _keyValues = new(_keyValues.Union(settings));
 
             return this;
         }
