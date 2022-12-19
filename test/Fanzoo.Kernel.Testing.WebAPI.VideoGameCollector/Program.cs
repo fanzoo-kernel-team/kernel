@@ -1,6 +1,6 @@
 using System.Reflection;
 using Fanzoo.Kernel.Builder;
-using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
+using Fanzoo.Kernel.Defaults.Builder;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
@@ -22,7 +22,7 @@ if (isStandAlone)
 
 var builder =
     WebApplication.CreateBuilder(args)
-        .AddRESTApiCore<RESTApiUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>()
+        .AddRESTApiCore<RESTApiUserAuthenticationService>()
         .AddApplicationModulesFromAssembly(Assembly.GetExecutingAssembly())
         .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
         .AddFrameworkCoreFromAssemblies(addTypes =>
