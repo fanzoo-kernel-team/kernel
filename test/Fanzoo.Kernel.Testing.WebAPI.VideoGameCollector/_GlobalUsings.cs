@@ -1,6 +1,12 @@
 ﻿global using Fanzoo.Kernel.Commands;
 global using Fanzoo.Kernel.Data;
+global using Fanzoo.Kernel.Data.Mapping;
 global using Fanzoo.Kernel.Domain.Entities;
 global using Fanzoo.Kernel.Domain.Values;
 global using Fanzoo.Kernel.Events;
+global using Fanzoo.Kernel.Queries;
+global using Fanzoo.Kernel.Services;
 global using FluentMigrator;
+global using FluentNHibernate.Mapping;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.AspNetCore.Mvc;

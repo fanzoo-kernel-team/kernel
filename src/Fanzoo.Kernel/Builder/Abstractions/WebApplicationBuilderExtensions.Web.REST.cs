@@ -26,5 +26,12 @@ namespace Fanzoo.Kernel.Builder
 
             return builder;
         }
+
+        public static WebApplicationBuilder AddSwagger(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddSwagger();
+
+            return builder;
+        }
     }
 }

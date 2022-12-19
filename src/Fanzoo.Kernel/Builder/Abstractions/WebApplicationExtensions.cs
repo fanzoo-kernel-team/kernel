@@ -1,6 +1,8 @@
 ﻿using Fanzoo.Kernel.Web.Middleware;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Fanzoo.Kernel.Builder
 {
@@ -50,6 +52,14 @@ namespace Fanzoo.Kernel.Builder
             application.UseMiddleware<ExceptionHandlerMiddleware>();
 
             application.UseWebCore();
+
+            return application;
+        }
+
+        public static WebApplication UseSwagger(this WebApplication application, Action<SwaggerOptions>? swaggerOptions = null, Action<SwaggerUIOptions>? swaggerUIOptions = null)
+        {
+            SwaggerBuilderExtensions.UseSwagger(application, swaggerOptions);
+            application.UseSwaggerUI(swaggerUIOptions);
 
             return application;
         }

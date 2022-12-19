@@ -1,8 +1,4 @@
-﻿using Fanzoo.Kernel.Queries;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Queries;
-using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints
 {
     public static class GetByName
     {

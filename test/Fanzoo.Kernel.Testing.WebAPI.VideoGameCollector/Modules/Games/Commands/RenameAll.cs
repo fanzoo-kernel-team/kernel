@@ -1,6 +1,4 @@
-﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Data.Repositories;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Commands
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Commands
 {
     public record RenameAllCommand(string OldName, string NewName) : ICommand;
 

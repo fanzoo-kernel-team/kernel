@@ -1,7 +1,4 @@
-﻿using Fanzoo.Kernel.Data.Mapping;
-using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities;
-using FluentNHibernate.Mapping;
+﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Mapping
 {

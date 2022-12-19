@@ -1,7 +1,4 @@
-﻿using Fanzoo.Kernel.Queries;
-using Fanzoo.Kernel.Services;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Queries
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Queries
 {
     public record GetAllByNameQuery(string Name) : IQuery;
 

@@ -1,18 +1,13 @@
-﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Entities
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Entities
 {
     public class Game : AggregateRoot<GameIdentifierValue, Guid>, IMutableEntity
     {
         protected Game() { }
 
-        public static Game Create(string name)
+        public static Game Create(string name) => new()
         {
-            return new()
-            {
-                Name = new(name)
-            };
-        }
+            Name = new(name)
+        };
 
         public GameNameValue Name { get; set; } = default!;
     }

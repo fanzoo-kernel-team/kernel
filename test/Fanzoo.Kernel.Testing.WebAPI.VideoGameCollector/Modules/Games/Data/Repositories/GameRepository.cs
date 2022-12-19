@@ -1,6 +1,4 @@
-﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Entities;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values;
-using NHibernate.Linq;
+﻿using NHibernate.Linq;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Data.Repositories
 {
