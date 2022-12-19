@@ -1,7 +1,4 @@
-﻿using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Commands;
-using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints
+﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints
 {
     public record struct RenameAllRequest(string OldName, string NewName);
 

@@ -54,6 +54,14 @@ namespace Fanzoo.Kernel.Builder
             return application;
         }
 
+        public static WebApplication UseSwagger(this WebApplication application)
+        {
+            SwaggerBuilderExtensions.UseSwagger(application);
+            application.UseSwaggerUI();
+
+            return application;
+        }
+
         public static WebApplication UseRazorPagesForcePasswordChangeMiddleware(this WebApplication application, RazorPagesForcePasswordChangeMiddlewareOptions options)
         {
             application.UseMiddleware<RazorPagesForcePasswordChangeMiddleware>(options);

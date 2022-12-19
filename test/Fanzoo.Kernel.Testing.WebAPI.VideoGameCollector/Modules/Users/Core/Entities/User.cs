@@ -1,5 +1,4 @@
 ﻿using Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Values;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Entities
 {

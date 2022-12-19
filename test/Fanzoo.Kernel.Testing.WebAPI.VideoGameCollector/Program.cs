@@ -4,7 +4,6 @@ using Fanzoo.Kernel.Defaults.Builder;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
-using Microsoft.OpenApi.Models;
 
 var isStandAlone = Environment.GetEnvironmentVariable("RUN_MODE") == "Stand-alone";
 
@@ -23,6 +22,7 @@ if (isStandAlone)
 var builder =
     WebApplication.CreateBuilder(args)
         .AddRESTApiCore<RESTApiUserAuthenticationService>()
+        .AddSwagger()
         .AddApplicationModulesFromAssembly(Assembly.GetExecutingAssembly())
         .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
         .AddFrameworkCoreFromAssemblies(addTypes =>
@@ -30,36 +30,6 @@ var builder =
                 .FromAssembly(Assembly.GetExecutingAssembly()))
         .AddSetting<JwtSecurityTokenSettings>("Jwt")
         .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly());
-
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Enter Access Token",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            }, new List<string>()
-        }
-    });
-});
-
 
 var application = builder.Build();
 
@@ -78,7 +48,6 @@ application.MapGet("/requires-administrator-role", () =>
 if (application.Environment.IsDevelopment())
 {
     application.UseSwagger();
-    application.UseSwaggerUI();
 }
 
 if (isStandAlone)

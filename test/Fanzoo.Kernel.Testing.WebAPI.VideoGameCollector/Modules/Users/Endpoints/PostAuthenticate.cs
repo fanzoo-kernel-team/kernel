@@ -1,7 +1,5 @@
 ﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
 using Fanzoo.Kernel.Web.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Endpoints
 {
