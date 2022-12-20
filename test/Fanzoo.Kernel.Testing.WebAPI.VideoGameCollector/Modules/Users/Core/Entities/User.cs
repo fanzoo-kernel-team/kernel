@@ -6,6 +6,6 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Ent
     {
         protected User() : base(10, 5) { }
 
-        public override bool CanAddRole(ApplicationRoleValue role) => Roles.Count() == 0;
+        public override bool CanAddRole(ApplicationRoleValue role) => !Roles.Any();
     }
 }

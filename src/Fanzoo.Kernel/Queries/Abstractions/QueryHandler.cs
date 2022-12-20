@@ -1,15 +1,17 @@
 ﻿using Dapper;
-using Fanzoo.Kernel.Configuration;
-using Fanzoo.Kernel.Services;
+using Fanzoo.Kernel.Logging;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Fanzoo.Kernel.Queries
 {
+    public interface IQueryHandler<IQuery, ResultType>
+    {
+        Task<QueryResult<ResultType>> HandleAsync(IQuery query);
+    }
+
     public abstract class QueryHandler<TQuery, ResultType> : IQueryHandler<TQuery, ResultType> where TQuery : IQuery
     {
-        private readonly ILogger _logger;
         private readonly IDynamicMappingService _mapper;
         protected readonly IConfiguration _configuration;
         protected readonly IEmbeddedResourceReaderService? _embeddedResourceReaderService;
@@ -21,29 +23,34 @@ namespace Fanzoo.Kernel.Queries
             _embeddedResourceReaderService = embeddedResourceReaderService;
             _embeddedResourceLocator = embeddedResourceLocator;
 
-            _logger = Log.ForContext<TQuery>();
-
             _mapper = mapper;
         }
 
         protected QueryHandler(IConfiguration configuration, IDynamicMappingService mapper)
         {
             _configuration = configuration;
-            _logger = Log.ForContext<TQuery>();
             _mapper = mapper;
         }
 
+        protected ILogger Logger => Log.Logger;
+
         public async Task<QueryResult<ResultType>> HandleAsync(TQuery query)
         {
+            Logger.QueryInformation<TQuery>("Begin ---------->");
+
             try
             {
                 return await OnHandleAsync(query);
             }
             catch (Exception e)
             {
-                _logger.Error(e, "An error occurred processing a QueryHandler");
+                Logger.QueryException<TQuery>(e);
 
                 return QueryResult<ResultType>.Fail(e);
+            }
+            finally
+            {
+                Logger.QueryInformation<TQuery>("<---------- End");
             }
         }
 
@@ -51,19 +58,11 @@ namespace Fanzoo.Kernel.Queries
 
         protected async Task<QueryResult<IEnumerable<BaseType>>> QueryFromScriptAsync<BaseType>(string script, object? parameters = null)
         {
-            if (_embeddedResourceLocator is null)
-            {
-                throw new InvalidOperationException(nameof(_embeddedResourceLocator) + "not initialized.");
-            }
-
-            if (_embeddedResourceReaderService is null)
-            {
-                throw new InvalidOperationException(nameof(_embeddedResourceReaderService) + "not initialized.");
-            }
-
             using var connection = GetConnection();
 
-            var sql = await _embeddedResourceReaderService.ReadEmbeddedResourceFileAsync(script, _embeddedResourceLocator.Assembly);
+            var sql = await GetSqlAsync(script);
+
+            Logger.QueryInformation<TQuery>($"Executing SQL:\r\n{sql}");
 
             var results = await connection.QueryAsync<dynamic>(sql, parameters);
 
@@ -74,6 +73,8 @@ namespace Fanzoo.Kernel.Queries
         {
             using var connection = GetConnection();
 
+            Logger.QueryInformation<TQuery>($"Executing SQL:\r\n{sql}");
+
             var results = await connection.QueryAsync<dynamic>(sql, parameters);
 
             return QueryResult<IEnumerable<BaseType>>.Success(_mapper.Map<BaseType>(results));
@@ -81,19 +82,11 @@ namespace Fanzoo.Kernel.Queries
 
         protected async Task<QueryResult<BaseType>> QuerySingleFromScriptAsync<BaseType>(string script, object? parameters = null)
         {
-            if (_embeddedResourceLocator is null)
-            {
-                throw new InvalidOperationException(nameof(_embeddedResourceLocator) + "not initialized.");
-            }
-
-            if (_embeddedResourceReaderService is null)
-            {
-                throw new InvalidOperationException(nameof(_embeddedResourceReaderService) + "not initialized.");
-            }
-
             using var connection = GetConnection();
 
-            var sql = await _embeddedResourceReaderService.ReadEmbeddedResourceFileAsync(script, _embeddedResourceLocator.Assembly);
+            var sql = await GetSqlAsync(script);
+
+            Logger.QueryInformation<TQuery>($"Executing SQL:\r\n{sql}");
 
             var results = await connection.QueryAsync<dynamic>(sql, parameters);
 
@@ -103,6 +96,8 @@ namespace Fanzoo.Kernel.Queries
         protected async Task<QueryResult<BaseType>> QuerySingleFromSqlAsync<BaseType>(string sql, object? parameters = null)
         {
             using var connection = GetConnection();
+
+            Logger.QueryInformation<TQuery>($"Executing SQL:\r\n{sql}");
 
             var results = await connection.QueryAsync<dynamic>(sql, parameters);
 

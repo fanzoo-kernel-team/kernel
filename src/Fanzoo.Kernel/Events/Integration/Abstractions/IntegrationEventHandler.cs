@@ -1,8 +1,11 @@
 ﻿using Fanzoo.Kernel.Commands;
 using Fanzoo.Kernel.Data;
+using Fanzoo.Kernel.Logging;
+using Serilog;
 
 namespace Fanzoo.Kernel.Events.Integration
 {
+    public interface IIntegrationEventHandler<in TEvent> : IEventHandler<TEvent> where TEvent : IEvent { }
 
     public abstract class IntegrationEventHandler<TEvent> : IIntegrationEventHandler<TEvent> where TEvent : IEvent
     {
@@ -21,8 +24,12 @@ namespace Fanzoo.Kernel.Events.Integration
             _unitOfWork = unitOfWorkFactory.Open();
         }
 
+        protected ILogger Logger => Log.Logger;
+
         public async ValueTask HandleAsync(TEvent @event)
         {
+            Logger.EventInformation<TEvent>("Begin ---------->");
+
             try
             {
                 await OnHandleAsync(@event);
@@ -49,9 +56,15 @@ namespace Fanzoo.Kernel.Events.Integration
 
                 await _unitOfWork.CommitAsync();
             }
-            catch
+            catch (Exception e)
             {
                 await _unitOfWork.RollbackAsync();
+
+                Logger.EventException<TEvent>(e);
+            }
+            finally
+            {
+                Logger.EventInformation<TEvent>("<---------- End");
             }
         }
 

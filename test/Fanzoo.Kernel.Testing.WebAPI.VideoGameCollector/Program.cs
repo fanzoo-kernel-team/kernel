@@ -29,7 +29,8 @@ var builder =
             addTypes
                 .FromAssembly(Assembly.GetExecutingAssembly()))
         .AddSetting<JwtSecurityTokenSettings>("Jwt")
-        .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly());
+        .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly())
+        .AddLogging();
 
 var application = builder.Build();
 

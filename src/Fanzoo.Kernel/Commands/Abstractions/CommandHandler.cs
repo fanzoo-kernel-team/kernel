@@ -1,5 +1,7 @@
 ﻿using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Events;
+using Fanzoo.Kernel.Logging;
+using Serilog;
 
 namespace Fanzoo.Kernel.Commands;
 
@@ -20,8 +22,12 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
         _unitOfWork = unitOfWorkFactory.Open();
     }
 
+    protected ILogger Logger => Log.Logger;
+
     public async Task<CommandResult<TResult>> HandleAsync(TCommand command)
     {
+        Logger.CommandInformation<TCommand>("Begin ---------->");
+
         try
         {
             var result = await OnHandleAsync(command);
@@ -59,13 +65,13 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
         {
             await _unitOfWork.RollbackAsync();
 
-            return CommandResult<TResult>.Fail(e);
-        }
-        catch (Exception e)
-        {
-            await _unitOfWork.RollbackAsync();
+            Logger.CommandException<TCommand>(e);
 
             return CommandResult<TResult>.Fail(e);
+        }
+        finally
+        {
+            Logger.CommandInformation<TCommand>("<---------- End");
         }
     }
 
@@ -92,8 +98,12 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
         _unitOfWork = unitOfWorkFactory.Open();
     }
 
+    protected ILogger Logger => Log.Logger;
+
     public async Task<CommandResult> HandleAsync(TCommand command)
     {
+        Logger.CommandInformation<TCommand>("Begin ---------->");
+
         try
         {
             var result = await OnHandleAsync(command);
@@ -127,17 +137,17 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
 
             return result;
         }
-        catch (KernelErrorException e)
-        {
-            await _unitOfWork.RollbackAsync();
-
-            return CommandResult.Fail(e);
-        }
         catch (Exception e)
         {
             await _unitOfWork.RollbackAsync();
 
+            Logger.CommandException<TCommand>(e);
+
             return CommandResult.Fail(e);
+        }
+        finally
+        {
+            Logger.CommandInformation<TCommand>("<---------- End");
         }
     }
 
