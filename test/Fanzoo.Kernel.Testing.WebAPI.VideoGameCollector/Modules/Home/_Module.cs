@@ -1,4 +1,5 @@
 ﻿using Fanzoo.Kernel.Builder;
+using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users
 {
@@ -18,6 +19,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users
                 return Results.Ok();
             })
                 .RequireAuthorization(policy => policy.RequireRole(StringCatalog.Roles.Administrator));
+
+            group.MapPost("/post-test", PostCreate.HandleAsync);
 
             return endpoints;
         }

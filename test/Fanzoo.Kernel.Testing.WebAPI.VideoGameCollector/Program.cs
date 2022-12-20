@@ -4,6 +4,7 @@ using Fanzoo.Kernel.Defaults.Builder;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
+using Serilog;
 
 var isStandAlone = Environment.GetEnvironmentVariable("RUN_MODE") == "Stand-alone";
 
@@ -30,6 +31,16 @@ var builder =
                 .FromAssembly(Assembly.GetExecutingAssembly()))
         .AddSetting<JwtSecurityTokenSettings>("Jwt")
         .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly());
+
+//everything here is for testing Serilog and should be moved into kernel
+builder.Logging.ClearProviders();
+
+builder.Host.UseSerilog((hostContext, services, configuration) =>
+{
+    configuration
+        //.WriteTo.File("serilog-file.txt")
+        .WriteTo.Console();
+});
 
 var application = builder.Build();
 

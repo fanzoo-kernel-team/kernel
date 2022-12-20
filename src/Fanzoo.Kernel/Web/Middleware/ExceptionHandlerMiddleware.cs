@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Serilog;
 
 namespace Fanzoo.Kernel.Web.Middleware
 {
@@ -21,8 +22,10 @@ namespace Fanzoo.Kernel.Web.Middleware
             {
                 await HandleResultExceptionAsync(context, e);
             }
-            catch
+            catch (Exception e)
             {
+                Log.Logger.Error(e, "An unhandled exception resulting in a 500 Internal Server Error was thrown:");
+
                 await HandleExceptionAsync(context);
             }
         }
