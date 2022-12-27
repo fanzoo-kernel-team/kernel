@@ -18,6 +18,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Session
 
             group.MapPost("/tokens/refresh", PostRefreshToken.HandleAsync);
 
+            group.MapPost("/tokens/revoke", PostRevokeToken.HandleAsync);
+
             return endpoints;
         }
 
