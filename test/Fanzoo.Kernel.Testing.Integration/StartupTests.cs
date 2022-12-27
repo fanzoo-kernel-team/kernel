@@ -110,6 +110,21 @@ namespace Fanzoo.Kernel.Testing.Integration
 
         }
 
+        [Fact]
+        public async Task Test_Can_Revoke_Token()
+        {
+            var (client, response) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+
+            var result = await client.PostAsJsonAsync("/session/tokens/revoke", new RevokeTokenRequest(response.RefreshToken));
+
+            result.EnsureSuccessStatusCode();
+
+            //make sure we can't reuse the refresh token
+            result = await client.PostAsJsonAsync("/session/tokens/refresh", new RefreshTokenRequest(response.RefreshToken));
+
+            Assert.True(!result.IsSuccessStatusCode);
+        }
+
         private async Task<(HttpClient Client, AuthenticationResponse Response)> LoginAsync(string username, string password)
         {
             var client = _factory.CreateClient();
