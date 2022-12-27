@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Fanzoo.Kernel.Defaults.Web.Endpoints.Session;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Endpoints;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Queries;
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Endpoints;
 using Xunit;
 
 namespace Fanzoo.Kernel.Testing.Integration
@@ -28,7 +28,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Create_Game()
         {
-            using var client = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
 
             (await client
                     .PostAsync("/games?name=Pitfall", null))
@@ -38,7 +38,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Update_Many()
         {
-            using var client = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
 
             (await client
                     .PostAsync("/games?name=Pitfall", null))
@@ -64,33 +64,65 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Must_Be_In_Administrator_Role()
         {
-            using var client = await LoginAsync("bob@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("bob@fanzootechnology.com", "Test123!");
 
             var result = await client.GetAsync("/requires-administrator-role");
 
             Assert.True(result.StatusCode == HttpStatusCode.Forbidden);
         }
 
-        private async Task<HttpClient> LoginAsync(string username, string password)
+        [Fact]
+        public async Task Test_Can_Refresh_Token()
         {
-            var client = _factory.CreateClient();
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
 
-            var result = await client.PostAsJsonAsync("/account/authenticate", new AuthenticationRequest(username, password));
+            //wait a few seconds for the token to expire
+            Thread.Sleep(2000);
+
+            //make sure the old one fails
+            var result = await client.GetAsync("/requires-administrator-role");
+
+            Assert.True(!result.IsSuccessStatusCode);
+
+            AuthenticationResponse response;
+
+            //re-authenticate
+            (client, response) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+
+            //refresh the token
+            result = await client.PostAsJsonAsync("/session/tokens/refresh", new RefreshTokenRequest(response.RefreshToken));
+
+            //get a new set of tokens
+            var tokenResponse = await result.Content.ReadFromJsonAsync<RefreshTokenResponse>();
+
+            //reset the header
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+
+            //make sure it works now
+            result = await client.GetAsync("/requires-administrator-role");
 
             result.EnsureSuccessStatusCode();
 
-            var token = await result.Content.ReadAsStringAsync();
+            //make sure we can't reuse the refresh token
+            result = await client.PostAsJsonAsync("/session/tokens/refresh", new RefreshTokenRequest(response.RefreshToken));
 
-            //responses are always considered json and the plain text string has quotes added
-            //this only happens when running tests and is handled properly elsewhere
-            //furthermore the test application is lazy and only returning a string for the token whereas a real-world application would not
-            //the result is this code
+            Assert.True(!result.IsSuccessStatusCode);
 
-            token = token.Replace("\"", "");
+        }
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        private async Task<(HttpClient Client, AuthenticationResponse Response)> LoginAsync(string username, string password)
+        {
+            var client = _factory.CreateClient();
 
-            return client;
+            var result = await client.PostAsJsonAsync("/session/authenticate", new AuthenticationRequest(username, password));
+
+            result.EnsureSuccessStatusCode();
+
+            var response = await result.Content.ReadFromJsonAsync<AuthenticationResponse>();
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.AccessToken);
+
+            return (client, response);
         }
 
         //TODO: move these to the new solution files when complete

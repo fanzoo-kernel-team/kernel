@@ -34,6 +34,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\kernel-nuget.yml = .github\workflows\kernel-nuget.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanzoo.Kernel.Testing.VideoGameCollector.Web.Client", "test\Fanzoo.Kernel.Testing.VideoGameCollector.Web.Client\Fanzoo.Kernel.Testing.VideoGameCollector.Web.Client.csproj", "{90D72A58-13DD-4D23-BF2F-D2673ADE06D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server", "test\Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server\Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server.csproj", "{6E3003E2-9F1D-4618-BEF7-3D0655A19750}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +64,14 @@ Global
 		{D17DBE4C-1AD6-4068-AFB9-7CA230ADBB45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D17DBE4C-1AD6-4068-AFB9-7CA230ADBB45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D17DBE4C-1AD6-4068-AFB9-7CA230ADBB45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90D72A58-13DD-4D23-BF2F-D2673ADE06D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D72A58-13DD-4D23-BF2F-D2673ADE06D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90D72A58-13DD-4D23-BF2F-D2673ADE06D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90D72A58-13DD-4D23-BF2F-D2673ADE06D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E3003E2-9F1D-4618-BEF7-3D0655A19750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E3003E2-9F1D-4618-BEF7-3D0655A19750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E3003E2-9F1D-4618-BEF7-3D0655A19750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E3003E2-9F1D-4618-BEF7-3D0655A19750}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +84,8 @@ Global
 		{C8AA6E78-58E0-459A-9919-128E9AE793D9} = {01433CBB-CA04-4B48-A25C-E104737D120C}
 		{725E8FF0-7792-48C0-9D8F-F1877C932371} = {EA7B85C7-B096-417D-A35F-587BA2E8A2C0}
 		{D589E6D8-AA28-4089-BCDE-00AA26027F52} = {725E8FF0-7792-48C0-9D8F-F1877C932371}
+		{90D72A58-13DD-4D23-BF2F-D2673ADE06D9} = {8D37ABAF-7119-45A1-AD37-F885DCED4A1D}
+		{6E3003E2-9F1D-4618-BEF7-3D0655A19750} = {8D37ABAF-7119-45A1-AD37-F885DCED4A1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA21DCB8-F8EE-48DD-9758-8533FDD0839F}

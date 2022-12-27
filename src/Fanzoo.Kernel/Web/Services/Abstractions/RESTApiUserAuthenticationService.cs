@@ -50,6 +50,7 @@ namespace Fanzoo.Kernel.Web.Services
 
             //open the unit of work
             _unitOfWorkFactory.Open();
+
         }
 
         public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password)
@@ -126,6 +127,8 @@ namespace Fanzoo.Kernel.Web.Services
             }
 
             var (accessToken, newRefreshToken) = await GetTokensAsync(user);
+
+            token.Revoke();
 
             await SaveUserAsync();
 

@@ -1,6 +1,4 @@
-﻿using Fanzoo.Kernel.Web.Services;
-
-namespace Fanzoo.Kernel.Builder
+﻿namespace Fanzoo.Kernel.Builder
 {
     public static partial class WebApplicationBuilderExtensions
     {
@@ -11,9 +9,12 @@ namespace Fanzoo.Kernel.Builder
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
         {
+            var jwtSecret = builder.Configuration["Jwt:Secret"] ?? throw new ArgumentException("Configuration not found.");
+            var clockSkewMinutes = double.Parse(builder.Configuration["Jwt:ClockSkewMinutes"] ?? throw new ArgumentException("Configuration not found."));
+
             builder.Services
                 .AddWebCore()
-                .AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(builder.Configuration["Jwt:Secret"] ?? throw new ArgumentException("Configuration not found."));
+                .AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(jwtSecret, clockSkewMinutes);
 
             return builder;
         }

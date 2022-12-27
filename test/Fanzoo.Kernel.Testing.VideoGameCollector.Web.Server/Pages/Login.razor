@@ -1,0 +1,58 @@
+﻿@page "/login"
+@inject HttpClient HttpClient
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<p>Login below</p>
+
+<EditForm Model="@this" class="form-horizontal py-5" OnValidSubmit="@LoginAsync">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="username" class="form-label">User name</label>
+        <InputText id="username" class="form-control" @bind-Value="Username" />
+        <ValidationMessage For="@(() => Username)" />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <InputText id="password" type="password" class="form-control" @bind-Value="Password" />
+        <ValidationMessage For="@(() => Password)" />
+    </div>
+    <div>
+        <button class="btn btn-primary">Login</button>
+    </div>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(Token))
+{
+    <div class="alert" style="width: 675px; word-wrap: break-word;" >@Token</div>
+}
+
+@code {
+    string? Token; 
+
+    [Required]
+    [StringLength(256)]
+    public string? Username { get; set; }
+
+    [Required]
+    [StringLength(32, MinimumLength = 6, ErrorMessage = "The password must be between 6 and 32 characters long.")]
+    [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[^a-zA-Z\\d]).*$",
+        MatchTimeoutInMilliseconds = 1000,
+        ErrorMessage = "The password must contain a lower-case letter, an upper-case letter, a digit and a special character.")]
+    public string? Password { get; set; }
+
+    public record LoginRequest(string? Username, string? Password);
+
+    async Task LoginAsync()
+    {
+        var result = await HttpClient.PostAsJsonAsync("/account/authenticate", new LoginRequest(Username, Password));
+
+        result.EnsureSuccessStatusCode();
+
+        var token = await result.Content.ReadAsStringAsync();
+
+        Token = token.Replace("\"", "");
+    }
+}
