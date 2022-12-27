@@ -6,11 +6,15 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Rep
     public interface IUserRepository : IRepository<User, UserIdentifierValue, Guid>
     {
         ValueTask<User?> FindByUsername(EmailUsernameValue username);
+
+        ValueTask<User?> FindByRefreshToken(RefreshTokenValue refreshToken);
     }
 
     public class UserRepository : NHibernateRepositoryCore<User, UserIdentifierValue, Guid>, IUserRepository
     {
         public UserRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory) { }
+
+        public async ValueTask<User?> FindByRefreshToken(RefreshTokenValue refreshToken) => await Query.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
 
         public async ValueTask<User?> FindByUsername(EmailUsernameValue username) => await Query.SingleOrDefaultAsync(u => u.Username == username);
     }
