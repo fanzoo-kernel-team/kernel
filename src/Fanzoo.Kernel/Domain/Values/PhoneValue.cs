@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class PhoneValue : StringValue
+    public sealed class PhoneValue : RequiredStringValue
     {
         private PhoneValue() { } //ORM
 
@@ -28,6 +28,8 @@
         }
 
         public override string ToString() => Value.Format("{0:(###) ###-####}");
+
+        public static implicit operator PhoneValue(string value) => new(value);
 
         private const string PhonePattern = @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
     }

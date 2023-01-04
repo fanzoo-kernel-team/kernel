@@ -8,8 +8,6 @@
 
         protected StringValue(string value, int maxSize) : base(value)
         {
-            Guard.Against.NullOrWhiteSpace(value, nameof(value));
-
             Guard.Against.ExceedsMaxValue(value.Length, maxSize, nameof(value));
         }
     }

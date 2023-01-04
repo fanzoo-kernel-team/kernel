@@ -2,7 +2,7 @@
 
 namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class RefreshTokenValue : StringValue
+    public sealed class RefreshTokenValue : RequiredStringValue
     {
         private RefreshTokenValue() { } //ORM
 
@@ -31,5 +31,8 @@ namespace Fanzoo.Kernel.Domain.Values
 
             return new RefreshTokenValue(token);
         }
+
+        public static implicit operator RefreshTokenValue(string value) => new(value);
+
     }
 }
