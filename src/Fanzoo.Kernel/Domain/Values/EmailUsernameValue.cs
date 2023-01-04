@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class EmailUsernameValue : StringValue, IUsernameValue
+    public sealed class EmailUsernameValue : RequiredStringValue, IUsernameValue
     {
         public const int MAX_SIZE = 254;
 

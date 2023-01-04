@@ -4,7 +4,7 @@
     {
         public static class ValueObjects
         {
-            public static class DefaultStringValue
+            public static class StringValue
             {
                 public static Error InvalidFormat => new("invalid.string.format", "Invalid string format.");
             }
@@ -12,6 +12,11 @@
             public static class EmailValue
             {
                 public static Error InvalidFormat => new("invalid.email.format", "Invalid email format.");
+            }
+
+            public static class UrlValue
+            {
+                public static Error InvalidFormat => new("invalid.url.format", "Invalid url format.");
             }
 
             public static class PhoneValue

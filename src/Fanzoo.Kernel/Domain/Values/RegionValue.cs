@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class RegionValue : StringValue
+    public sealed class RegionValue : RequiredStringValue
     {
         private RegionValue() { } //ORM
 
