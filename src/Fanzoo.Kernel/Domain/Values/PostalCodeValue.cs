@@ -1,7 +1,7 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
     //TODO: support different regions
-    public sealed class PostalCodeValue : StringValue
+    public sealed class PostalCodeValue : RequiredStringValue
     {
         private PostalCodeValue() { } //ORM
 
@@ -21,5 +21,8 @@
 
             return isValid ? new PostalCodeValue(postalCode) : Errors.ValueObjects.PostalCodeValue.InvalidFormat;
         }
+
+        public static implicit operator PostalCodeValue(string value) => new(value);
+
     }
 }

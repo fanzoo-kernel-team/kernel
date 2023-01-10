@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Core.Values
 {
-    public class GameNameValue : StringValue
+    public class GameNameValue : RequiredStringValue
     {
         private GameNameValue() { } //ORM
 

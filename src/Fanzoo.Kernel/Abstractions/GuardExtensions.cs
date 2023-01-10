@@ -11,7 +11,7 @@ namespace Fanzoo.Kernel
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException(argument);
+                throw new ArgumentNullException(argument);
             }
         }
 
@@ -94,8 +94,8 @@ namespace Fanzoo.Kernel
                 throw new ArgumentException(argument);
             }
         }
-        
-        public static void InvalidPrefix(this Guard guard, string  value, string checkFor, string argument)
+
+        public static void InvalidPrefix(this Guard guard, string value, string checkFor, string argument)
         {
             if (!value.StartsWith(checkFor))
             {
@@ -113,7 +113,7 @@ namespace Fanzoo.Kernel
             try
             {
                 // Examines the domain part of the email and normalizes it.
-                string DomainMapper(Match match)
+                static string DomainMapper(Match match)
                 {
                     // Use IdnMapping class to convert Unicode domain names.
                     var idn = new IdnMapping();
@@ -149,6 +149,14 @@ namespace Fanzoo.Kernel
             catch (RegexMatchTimeoutException)
             {
                 throw new ArgumentException(argument);
+            }
+        }
+
+        public static void InvalidUrlFormat(this Guard guard, string url, string argument)
+        {
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                throw new UriFormatException();
             }
         }
     }

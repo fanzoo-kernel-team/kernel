@@ -1,5 +1,5 @@
-﻿using Fanzoo.Kernel.Domain.Values;
-using Fanzoo.Kernel.Domain.Values.Stripe;
+﻿using Fanzoo.Kernel.Defaults.Domain.Values;
+using Fanzoo.Kernel.Domain.Values;
 using Xunit;
 
 namespace Fanzoo.Kernel.Tests
@@ -130,9 +130,9 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.True(NameValue.Create(validFirstName, invalidName).IsFailure);
 
-            Assert.Throws<ArgumentException>(() => new NameValue(invalidName, validLastName));
+            Assert.Throws<ArgumentNullException>(() => new NameValue(invalidName, validLastName));
 
-            Assert.Throws<ArgumentException>(() => new NameValue(validFirstName, invalidName));
+            Assert.Throws<ArgumentNullException>(() => new NameValue(validFirstName, invalidName));
 
             Assert.NotNull(new NameValue(validFirstName, validLastName));
 
@@ -165,9 +165,9 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.True(AddressValue.Create(validPrimaryAddress, testingSecondaryAddressBlank, invalidCity, testingRegion.Value, testingPostalCode.Value).IsFailure);
 
-            Assert.Throws<ArgumentException>(() => new AddressValue(invalidPrimaryAddress, testingSecondaryAddressBlank, validCity, testingRegion.Value, testingPostalCode.Value));
+            Assert.Throws<ArgumentNullException>(() => new AddressValue(invalidPrimaryAddress, testingSecondaryAddressBlank, validCity, testingRegion.Value, testingPostalCode.Value));
 
-            Assert.Throws<ArgumentException>(() => new AddressValue(validPrimaryAddress, testingSecondaryAddressBlank, invalidCity, testingRegion.Value, testingPostalCode.Value));
+            Assert.Throws<ArgumentNullException>(() => new AddressValue(validPrimaryAddress, testingSecondaryAddressBlank, invalidCity, testingRegion.Value, testingPostalCode.Value));
 
             Assert.NotNull(new AddressValue(validPrimaryAddress, testingSecondaryAddressBlank, validCity, testingRegion.Value, testingPostalCode.Value));
         }
@@ -238,7 +238,7 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.Throws<ArgumentException>(() => new IPAddressValue(invalidIPAddress));
 
-            Assert.Throws<ArgumentException>(() => new IPAddressValue(emptyIPAddress));
+            Assert.Throws<ArgumentNullException>(() => new IPAddressValue(emptyIPAddress));
 
             Assert.NotNull(new IPAddressValue(validIPAddress));
         }
@@ -262,7 +262,7 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.Throws<ArgumentException>(() => new PostalCodeValue(invalidPostalCode));
 
-            Assert.Throws<ArgumentException>(() => new PostalCodeValue(emptyPostalCode));
+            Assert.Throws<ArgumentNullException>(() => new PostalCodeValue(emptyPostalCode));
 
             Assert.NotNull(new PostalCodeValue(validPostalCode));
         }
@@ -286,59 +286,279 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.Throws<ArgumentException>(() => new RefreshTokenValue(invalidbase64string));
 
-            Assert.Throws<ArgumentException>(() => new RefreshTokenValue(emptyBase64String));
+            Assert.Throws<ArgumentNullException>(() => new RefreshTokenValue(emptyBase64String));
 
             Assert.NotNull(new RefreshTokenValue(validBase64string));
         }
 
         [Fact]
-        public void Test_StripeCustomerIdentifierValue()
+        public void Test_MaxString_Value()
         {
-            var validStripeIdentifier = "cus_123456789";
+            var test = "some test string";
 
-            var invalidStripeIdentifier = "123456789";
+            Assert.True(MaxStringValue.Create(test).IsSuccessful);
 
-            var emptyStripeIdentifier = "";
+            Assert.True(MaxStringValue.Create(test).Value == test);
 
-            var stripeIdentifier = StripeCustomerIdentifierValue.Create(validStripeIdentifier).Value;
+            MaxStringValue maxString = test;
 
-            Assert.True(stripeIdentifier.Value == validStripeIdentifier);
+            Assert.True(maxString == test);
 
-            Assert.True(StripeCustomerIdentifierValue.Create(invalidStripeIdentifier).IsFailure);
+            string testString = maxString;
 
-            Assert.True(StripeCustomerIdentifierValue.Create(emptyStripeIdentifier).IsFailure);
+            Assert.True(testString == test);
 
-            Assert.Throws<ArgumentException>(() => new StripeCustomerIdentifierValue(invalidStripeIdentifier));
-
-            Assert.Throws<ArgumentException>(() => new StripeCustomerIdentifierValue(emptyStripeIdentifier));
-
-            Assert.NotNull(new StripeCustomerIdentifierValue(validStripeIdentifier));
-
+            Assert.True(maxString != "blah");
         }
 
         [Fact]
-        public void Test_StripePaymentIntentIdentifierValue()
+        public void Test_MaxRequiredString_Value()
         {
-            var validStripeIdentifier = "pi_123456789";
+            var test = "some test string";
 
-            var invalidStripeIdentifier = "123456789";
+            Assert.True(MaxRequiredStringValue.Create(test).IsSuccessful);
 
-            var emptyStripeIdentifier = "";
+            Assert.True(MaxRequiredStringValue.Create(test).Value == test);
 
-            var stripeIdentifier = StripePaymentIntentIdentifierValue.Create(validStripeIdentifier).Value;
+            MaxRequiredStringValue maxString = test;
 
-            Assert.True(stripeIdentifier.Value == validStripeIdentifier);
+            Assert.True(maxString == test);
 
-            Assert.True(StripePaymentIntentIdentifierValue.Create(invalidStripeIdentifier).IsFailure);
+            string testString = maxString;
 
-            Assert.True(StripePaymentIntentIdentifierValue.Create(emptyStripeIdentifier).IsFailure);
+            Assert.True(testString == test);
 
-            Assert.Throws<ArgumentException>(() => new StripePaymentIntentIdentifierValue(invalidStripeIdentifier));
+            Assert.True(maxString != "blah");
 
-            Assert.Throws<ArgumentException>(() => new StripePaymentIntentIdentifierValue(emptyStripeIdentifier));
+            Assert.Throws<ArgumentNullException>(() => new MaxRequiredStringValue(""));
 
-            Assert.NotNull(new StripePaymentIntentIdentifierValue(validStripeIdentifier));
-
+            Assert.True(MaxRequiredStringValue.Create("").IsFailure);
         }
+
+        [Fact]
+        public void Test_DefaultString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(DefaultStringValue.Create(test).IsSuccessful);
+
+            Assert.True(DefaultStringValue.Create(test).Value == test);
+
+            DefaultStringValue DefaultString = test;
+
+            Assert.True(DefaultString == test);
+
+            string testString = DefaultString;
+
+            Assert.True(testString == test);
+
+            Assert.True(DefaultString != "blah");
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Default + 1);
+
+            Assert.True(DefaultStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_DefaultRequiredString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(DefaultRequiredStringValue.Create(test).IsSuccessful);
+
+            Assert.True(DefaultRequiredStringValue.Create(test).Value == test);
+
+            DefaultRequiredStringValue DefaultString = test;
+
+            Assert.True(DefaultString == test);
+
+            string testString = DefaultString;
+
+            Assert.True(testString == test);
+
+            Assert.True(DefaultString != "blah");
+
+            Assert.Throws<ArgumentNullException>(() => new DefaultRequiredStringValue(""));
+
+            Assert.True(DefaultRequiredStringValue.Create("").IsFailure);
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Default + 1);
+
+            Assert.True(DefaultRequiredStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_ShortString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(ShortStringValue.Create(test).IsSuccessful);
+
+            Assert.True(ShortStringValue.Create(test).Value == test);
+
+            ShortStringValue ShortString = test;
+
+            Assert.True(ShortString == test);
+
+            string testString = ShortString;
+
+            Assert.True(testString == test);
+
+            Assert.True(ShortString != "blah");
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Short + 1);
+
+            Assert.True(ShortStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_ShortRequiredString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(ShortRequiredStringValue.Create(test).IsSuccessful);
+
+            Assert.True(ShortRequiredStringValue.Create(test).Value == test);
+
+            ShortRequiredStringValue ShortString = test;
+
+            Assert.True(ShortString == test);
+
+            string testString = ShortString;
+
+            Assert.True(testString == test);
+
+            Assert.True(ShortString != "blah");
+
+            Assert.Throws<ArgumentNullException>(() => new ShortRequiredStringValue(""));
+
+            Assert.True(ShortRequiredStringValue.Create("").IsFailure);
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Short + 1);
+
+            Assert.True(ShortRequiredStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_LongString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(LongStringValue.Create(test).IsSuccessful);
+
+            Assert.True(LongStringValue.Create(test).Value == test);
+
+            LongStringValue LongString = test;
+
+            Assert.True(LongString == test);
+
+            string testString = LongString;
+
+            Assert.True(testString == test);
+
+            Assert.True(LongString != "blah");
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Long + 1);
+
+            Assert.True(LongStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_LongRequiredString_Value()
+        {
+            var test = "some test string";
+
+            Assert.True(LongRequiredStringValue.Create(test).IsSuccessful);
+
+            Assert.True(LongRequiredStringValue.Create(test).Value == test);
+
+            LongRequiredStringValue LongString = test;
+
+            Assert.True(LongString == test);
+
+            string testString = LongString;
+
+            Assert.True(testString == test);
+
+            Assert.True(LongString != "blah");
+
+            Assert.Throws<ArgumentNullException>(() => new LongRequiredStringValue(""));
+
+            Assert.True(LongRequiredStringValue.Create("").IsFailure);
+
+            var tooLong = new string('a', DatabaseCatalog.FieldLength.Long + 1);
+
+            Assert.True(LongRequiredStringValue.Create(tooLong).IsFailure);
+        }
+
+        [Fact]
+        public void Test_Url_Value()
+        {
+            var valid = "https://www.microsoft.com";
+
+            Assert.True(UrlValue.Create(valid).IsSuccessful);
+
+            Assert.True(UrlValue.Create(valid).Value == valid);
+
+            var tooLong = valid + "/" + new string('a', 3000);
+
+            Assert.True(UrlValue.Create(tooLong).IsFailure);
+
+            Assert.True(new UrlValue(valid) == valid);
+
+            UrlValue urlValue = valid;
+
+            Assert.True(urlValue == valid);
+        }
+
+        //[Fact]
+        //public void Test_StripeCustomerIdentifierValue()
+        //{
+        //    var validStripeIdentifier = "cus_123456789";
+
+        //    var invalidStripeIdentifier = "123456789";
+
+        //    var emptyStripeIdentifier = "";
+
+        //    var stripeIdentifier = StripeCustomerIdentifierValue.Create(validStripeIdentifier).Value;
+
+        //    Assert.True(stripeIdentifier.Value == validStripeIdentifier);
+
+        //    Assert.True(StripeCustomerIdentifierValue.Create(invalidStripeIdentifier).IsFailure);
+
+        //    Assert.True(StripeCustomerIdentifierValue.Create(emptyStripeIdentifier).IsFailure);
+
+        //    Assert.Throws<ArgumentNullException>(() => new StripeCustomerIdentifierValue(invalidStripeIdentifier));
+
+        //    Assert.Throws<ArgumentNullException>(() => new StripeCustomerIdentifierValue(emptyStripeIdentifier));
+
+        //    Assert.NotNull(new StripeCustomerIdentifierValue(validStripeIdentifier));
+
+        //}
+
+        //[Fact]
+        //public void Test_StripePaymentIntentIdentifierValue()
+        //{
+        //    var validStripeIdentifier = "pi_123456789";
+
+        //    var invalidStripeIdentifier = "123456789";
+
+        //    var emptyStripeIdentifier = "";
+
+        //    var stripeIdentifier = StripePaymentIntentIdentifierValue.Create(validStripeIdentifier).Value;
+
+        //    Assert.True(stripeIdentifier.Value == validStripeIdentifier);
+
+        //    Assert.True(StripePaymentIntentIdentifierValue.Create(invalidStripeIdentifier).IsFailure);
+
+        //    Assert.True(StripePaymentIntentIdentifierValue.Create(emptyStripeIdentifier).IsFailure);
+
+        //    Assert.Throws<ArgumentNullException>(() => new StripePaymentIntentIdentifierValue(invalidStripeIdentifier));
+
+        //    Assert.Throws<ArgumentNullException>(() => new StripePaymentIntentIdentifierValue(emptyStripeIdentifier));
+
+        //    Assert.NotNull(new StripePaymentIntentIdentifierValue(validStripeIdentifier));
+
+        //}
     }
 }

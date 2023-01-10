@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values.Stripe
 {
-    public sealed class StripeCustomerIdentifierValue : StringValue
+    public sealed class StripeCustomerIdentifierValue : RequiredStringValue
     {
         private StripeCustomerIdentifierValue() { } //ORM
 

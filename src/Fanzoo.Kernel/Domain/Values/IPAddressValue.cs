@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class IPAddressValue : StringValue
+    public sealed class IPAddressValue : RequiredStringValue
     {
         private IPAddressValue() { } //ORM
 
@@ -22,7 +22,9 @@
                 ? new IPAddressValue(ipAddress)
                 : Errors.ValueObjects.IPAddressValue.InvalidFormat;
         }
-        
+
+        public static implicit operator IPAddressValue(string value) => new(value);
+
         private const string IPAddressPattern = @"^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
     }
 }

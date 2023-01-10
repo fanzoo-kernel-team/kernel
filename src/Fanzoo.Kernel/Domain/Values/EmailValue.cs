@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class EmailValue : StringValue
+    public sealed class EmailValue : RequiredStringValue
     {
         public const int MAX_SIZE = 254;
 
@@ -29,5 +29,8 @@
             return isValid ? new EmailValue(email) : Errors.ValueObjects.EmailValue.InvalidFormat;
 
         }
+
+        public static implicit operator EmailValue(string value) => new(value);
+
     }
 }

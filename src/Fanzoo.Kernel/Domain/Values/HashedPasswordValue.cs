@@ -1,6 +1,6 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    public sealed class HashedPasswordValue : StringValue
+    public sealed class HashedPasswordValue : RequiredStringValue
     {
         private HashedPasswordValue() { } //ORM
 
@@ -13,5 +13,8 @@
             Check.For.Base64String(hashedPassword).IsValid
                 ? new HashedPasswordValue(hashedPassword)
                 : Errors.ValueObjects.HashedPasswordValue.InvalidFormat;
+
+        public static implicit operator HashedPasswordValue(string value) => new(value);
+
     }
 }

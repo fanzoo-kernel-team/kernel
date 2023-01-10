@@ -44,7 +44,7 @@ namespace Fanzoo.Kernel
             try
             {
                 // Examines the domain part of the email and normalizes it.
-                string DomainMapper(Match match)
+                static string DomainMapper(Match match)
                 {
                     // Use IdnMapping class to convert Unicode domain names.
                     var idn = new IdnMapping();
@@ -77,6 +77,8 @@ namespace Fanzoo.Kernel
                 return check.Resolve(false);
             }
         }
+
+        public static ICheckResult ValidUrlFormat(this Check check, string url) => check.Resolve(Uri.IsWellFormedUriString(url, UriKind.Absolute));
 
         public static ICheckResult ValidPhoneFormat(this Check check, string phone) => NonMatchingRegex(check, phone, PhonePattern);
 
