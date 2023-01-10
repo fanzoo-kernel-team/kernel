@@ -511,6 +511,28 @@ namespace Fanzoo.Kernel.Tests
             Assert.True(urlValue == valid);
         }
 
+        [Fact]
+        public void Test_CssColorValue()
+        {
+            var validName = "green";
+            var invalidName = "supergreen";
+
+            var validHex1 = "#ffffff";
+            var validHex2 = "#aa0";
+            var invalidHex1 = "fff";
+            var invalidHex2 = "#fffffff";
+            var invalidHex3 = "#ffgg";
+
+            Assert.True(CssColorValue.Create(validName).IsSuccessful);
+            Assert.True(CssColorValue.Create(invalidName).IsFailure);
+
+            Assert.True(CssColorValue.Create(validHex1).IsSuccessful);
+            Assert.True(CssColorValue.Create(validHex2).IsSuccessful);
+            Assert.True(CssColorValue.Create(invalidHex1).IsFailure);
+            Assert.True(CssColorValue.Create(invalidHex2).IsFailure);
+            Assert.True(CssColorValue.Create(invalidHex3).IsFailure);
+        }
+
         //[Fact]
         //public void Test_StripeCustomerIdentifierValue()
         //{
