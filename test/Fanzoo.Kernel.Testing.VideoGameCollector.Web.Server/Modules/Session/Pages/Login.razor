@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@inject HttpClient HttpClient
+@inject ISessionClient Client
 
 <PageTitle>Login</PageTitle>
 
@@ -30,6 +30,7 @@
 }
 
 @code {
+
     string? Token; 
 
     [Required]
@@ -43,16 +44,10 @@
         ErrorMessage = "The password must contain a lower-case letter, an upper-case letter, a digit and a special character.")]
     public string? Password { get; set; }
 
-    public record LoginRequest(string? Username, string? Password);
-
     async Task LoginAsync()
     {
-        var result = await HttpClient.PostAsJsonAsync("/account/authenticate", new LoginRequest(Username, Password));
+        var response = await Client.AuthenticateAsync(new(Username, Password));
 
-        result.EnsureSuccessStatusCode();
-
-        var token = await result.Content.ReadAsStringAsync();
-
-        Token = token.Replace("\"", "");
+        Token = response.AccessToken;
     }
 }
