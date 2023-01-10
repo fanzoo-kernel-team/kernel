@@ -83,6 +83,11 @@
                 public static Error InvalidFormat => new("invalid.ipaddress.format", "Invalid IP address format.");
             }
 
+            public static class CssColorValue
+            {
+                public static Error InvalidFormat => new("invalid.css-color.format", "Invalid css color format.");
+            }
+
             public static class StripePaymentIntentIdentifier
             {
                 public static Error InvalidFormat => new("invalid.stripe.paymentintentidentifier.format", "Invalid Stripe PaymentIntent identifier format.");
