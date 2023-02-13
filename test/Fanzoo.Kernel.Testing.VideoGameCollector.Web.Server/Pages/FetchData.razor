@@ -2,11 +2,19 @@
 @using Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server.Data
 @inject WeatherForecastService ForecastService
 
+
 <PageTitle>Weather forecast</PageTitle>
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
+
+<CascadingAuthenticationState>
+    <AuthorizeView Roles="Administrator">
+        <p>You are an admin!</p>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
 
 @if (forecasts == null)
 {

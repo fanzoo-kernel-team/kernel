@@ -12,4 +12,8 @@
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Fanzoo.Kernel\Fanzoo.Kernel.csproj" />
+  </ItemGroup>
+
 </Project>

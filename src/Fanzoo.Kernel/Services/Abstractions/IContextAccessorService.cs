@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
-
-namespace Fanzoo.Kernel.Services
+﻿namespace Fanzoo.Kernel.Services
 {
     public interface IContextAccessorService
     {
-        public ClaimsPrincipal? User { get; }
+        public ClaimsPrincipal? GetUser();
+
+        public ValueTask<ClaimsPrincipal?> GetUserAsync();
     }
 }

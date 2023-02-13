@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @inject ISessionClient Client
+@inject ILocalStorageService Storage
 
 <PageTitle>Login</PageTitle>
 
@@ -49,5 +50,7 @@
         var response = await Client.AuthenticateAsync(new(Username, Password));
 
         Token = response.AccessToken;
+
+        await Storage.SetAsync("accessToken", Token);
     }
 }

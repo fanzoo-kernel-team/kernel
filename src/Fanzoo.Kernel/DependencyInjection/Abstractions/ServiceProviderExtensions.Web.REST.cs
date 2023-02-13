@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Fanzoo.Kernel.DependencyInjection
@@ -8,7 +7,7 @@ namespace Fanzoo.Kernel.DependencyInjection
     {
         public static IServiceCollection AddRESTApiCore(this IServiceCollection services) => services.AddCors();
 
-        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, string jwtPrivateKey, double clockSkewMinutes)
+        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, JwtSecurityTokenSettings settings)
             where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>
             where TUserIdentifier : IdentifierValue<TUserIdentifierPrimitive>
             where TUserIdentifierPrimitive : notnull, new()
@@ -27,25 +26,7 @@ namespace Fanzoo.Kernel.DependencyInjection
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ClockSkew = TimeSpan.FromMinutes(clockSkewMinutes),
-                        LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
-                        {
-                            if (expires is null)
-                            {
-                                return false;
-                            }
-
-                            expires = expires.Value.Add(validationParameters.ClockSkew.Negate());
-
-                            return expires > SystemDateTime.Now;
-                        },
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(jwtPrivateKey))
-                    };
+                    options.TokenValidationParameters = settings.GetValidationParameters();
 
 #if DEBUG
                     options.Events = new JwtBearerEvents

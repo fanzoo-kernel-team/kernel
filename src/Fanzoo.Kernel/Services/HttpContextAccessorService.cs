@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-
-namespace Fanzoo.Kernel.Services
+﻿namespace Fanzoo.Kernel.Services
 {
     public class HttpContextAccessorService : IContextAccessorService
     {
@@ -12,6 +9,8 @@ namespace Fanzoo.Kernel.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
+        public ClaimsPrincipal? GetUser() => _httpContextAccessor.HttpContext?.User;
+
+        ValueTask<ClaimsPrincipal?> IContextAccessorService.GetUserAsync() => ValueTask.FromResult(_httpContextAccessor.HttpContext?.User);
     }
 }

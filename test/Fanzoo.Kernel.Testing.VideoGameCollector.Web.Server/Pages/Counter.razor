@@ -1,4 +1,7 @@
 ﻿@page "/counter"
+@using Fanzoo.Kernel.Services;
+
+@inject IContextAccessorService Context
 
 <PageTitle>Counter</PageTitle>
 
@@ -11,8 +14,10 @@
 @code {
     private int currentCount = 0;
 
-    private void IncrementCount()
+    private async void IncrementCount()
     {
+        var meh = await Context.GetUserAsync();
+
         currentCount++;
     }
 }

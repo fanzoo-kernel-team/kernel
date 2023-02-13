@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.JSInterop;
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 
@@ -19,7 +20,7 @@ namespace Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server.Modules.Session
                     .OrResult(r => r.StatusCode is >= HttpStatusCode.InternalServerError or HttpStatusCode.RequestTimeout)
                         .WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5))); //TODO: add short-circuiting 
 
-            services.AddSingleton<ISessionClient, SessionClient>();
+            services.AddScoped<ISessionClient, SessionClient>();
         }
     }
 
@@ -32,6 +33,6 @@ namespace Fanzoo.Kernel.Testing.VideoGameCollector.Web.Server.Modules.Session
     {
         public const string Name = "session";
 
-        public SessionClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory, Name) { }
+        public SessionClient(IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime) : base(httpClientFactory, Name) { }
     }
 }
