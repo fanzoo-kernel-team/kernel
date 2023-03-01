@@ -22,7 +22,7 @@
                 .ToDigits()
                     .TrimStart('1');
 
-            return Check.For.ValidPhoneFormat(digits).IsValid
+            return Check.For.IsValidPhoneFormat(digits)
                 ? new PhoneValue(digits)
                 : Errors.ValueObjects.PhoneValue.InvalidFormat;
         }

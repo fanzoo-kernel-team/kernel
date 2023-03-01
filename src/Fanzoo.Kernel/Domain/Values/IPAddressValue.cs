@@ -13,10 +13,9 @@
         public static ValueResult<IPAddressValue, Error> Create(string ipAddress)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(ipAddress)
-                    .And
-                    .ValidIPAddress(ipAddress)
-                    .IsValid;
+                .NotNullOrWhiteSpace(ipAddress)
+                .And
+                .IsValidIPAddress(ipAddress);
 
             return isValid
                 ? new IPAddressValue(ipAddress)

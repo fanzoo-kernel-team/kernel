@@ -7,10 +7,9 @@
         public static ValueResult<DefaultStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .Null(value)
+                .NotNull(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Default)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Default);
 
             return isValid ? new DefaultStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }
@@ -25,10 +24,9 @@
         public static ValueResult<DefaultRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(value)
+                .NotNullOrWhiteSpace(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Default)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Default);
 
             return isValid ? new DefaultRequiredStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }

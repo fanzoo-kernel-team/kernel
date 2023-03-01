@@ -18,12 +18,11 @@
             email = email.ToLower().Trim();
 
             var isValid = Check.For
-                .NullOrWhiteSpace(email)
+                .NotNullOrWhiteSpace(email)
                 .And
-                .ExceedsMaxValue(email.Length, MAX_SIZE)
+                .LessThanOrEqual(email.Length, MAX_SIZE)
                 .And
-                .ValidEmailFormat(email)
-                    .IsValid;
+                .IsValidEmailFormat(email);
 
 
             return isValid ? new EmailValue(email) : Errors.ValueObjects.EmailValue.InvalidFormat;
