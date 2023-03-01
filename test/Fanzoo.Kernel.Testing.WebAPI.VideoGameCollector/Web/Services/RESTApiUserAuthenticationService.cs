@@ -20,6 +20,6 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services
 
         protected override async ValueTask<User<ApplicationRoleValue>?> FindUserByUsernameAsync(EmailUsernameValue username) => await _userRepository.FindByUsername(username);
 
-        protected override UserIdentifierValue? GetClaimIdentifierOrDefault(string? claimValue) => throw new NotImplementedException();
+        protected override UserIdentifierValue? FindClaimIdentifier(string? claimValue) => throw new NotImplementedException();
     }
 }

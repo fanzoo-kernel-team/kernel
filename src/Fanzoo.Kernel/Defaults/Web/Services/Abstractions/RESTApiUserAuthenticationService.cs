@@ -2,8 +2,6 @@
 
 using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens;
-using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
-using Fanzoo.Kernel.Web.Services;
 using Microsoft.Extensions.Options;
 
 namespace Fanzoo.Kernel.Defaults.Web.Services

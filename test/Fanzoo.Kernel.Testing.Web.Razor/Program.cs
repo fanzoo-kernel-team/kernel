@@ -1,25 +1,47 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Reflection;
+using Fanzoo.Kernel.Builder;
+using Fanzoo.Kernel.Defaults.Builder;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+var isStandAlone = Environment.GetEnvironmentVariable("RUN_MODE") == "Stand-alone";
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (isStandAlone)
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    Console.WriteLine("Spinning up temp database...");
+
+    //temp db stuff
+    LocalDbHelper.StartUpInstance("kernel-test-instance", "videogames");
+    LocalDbHelper.CreateDatabase("kernel-test-instance", "videogames");
+
+    Console.WriteLine("Done.");
+
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+var application = WebApplication.CreateBuilder(args)
+    .AddRazorPagesCore<RazorPagesUserAuthenticationService>()
+    .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
+    .AddFrameworkCoreFromAssemblies(addTypes =>
+        addTypes
+            .FromAssembly(Assembly.GetExecutingAssembly()))
+    .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly())
+    .AddLogging()
+        .Build();
 
-app.UseRouting();
+if (isStandAlone)
+{
+    //clean up db stuff when the app stops
+    application.Lifetime.ApplicationStopping.Register(() =>
+    {
+        Console.WriteLine("Shutting down temp database...");
 
-app.UseAuthorization();
+        LocalDbHelper.CleanUpInstance("kernel-instance");
 
-app.MapRazorPages();
+        Console.WriteLine("Done.");
 
-app.Run();
+    });
+}
+
+application
+    .UseRazorPagesCore()
+    .UseRazorPagesForcePasswordChangeMiddleware(new("/account/changepassword", "/account/logout"))
+    .RunWithMigrations();
+

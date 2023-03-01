@@ -1,0 +1,9 @@
+﻿global using Fanzoo.Kernel.Data;
+global using Fanzoo.Kernel.Data.Mapping;
+global using Fanzoo.Kernel.Domain.Values;
+global using Fanzoo.Kernel.Services;
+global using Fanzoo.Kernel.Testing.Web.Razor;
+global using Fanzoo.Kernel.Testing.Web.Razor.Web.Services;
+global using FluentMigrator;
+global using FluentNHibernate.Mapping;
+global using Microsoft.AspNetCore.Mvc;
