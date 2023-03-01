@@ -13,10 +13,9 @@
         public static ValueResult<StripeCustomerIdentifierValue, Error> Create(string stripeCustomerIdentifier)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(stripeCustomerIdentifier)
+                .NotNullOrWhiteSpace(stripeCustomerIdentifier)
                 .And
-                .StartsWith(stripeCustomerIdentifier, "cus_")
-                    .IsValid;
+                .StartsWith(stripeCustomerIdentifier, "cus_");
 
             return isValid ? new StripeCustomerIdentifierValue(stripeCustomerIdentifier) : Errors.ValueObjects.StripeCustomerIdentifier.InvalidFormat;
 

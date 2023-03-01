@@ -10,7 +10,7 @@
         }
 
         public static ValueResult<HashedPasswordValue, Error> Create(string hashedPassword) =>
-            Check.For.Base64String(hashedPassword).IsValid
+            Check.For.IsBase64String(hashedPassword)
                 ? new HashedPasswordValue(hashedPassword)
                 : Errors.ValueObjects.HashedPasswordValue.InvalidFormat;
 

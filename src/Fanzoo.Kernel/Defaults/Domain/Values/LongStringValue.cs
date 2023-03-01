@@ -7,10 +7,9 @@
         public static ValueResult<LongStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .Null(value)
+                .NotNull(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Long)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Long);
 
             return isValid ? new LongStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }
@@ -25,10 +24,9 @@
         public static ValueResult<LongRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(value)
+                .NotNullOrWhiteSpace(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Long)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Long);
 
             return isValid ? new LongRequiredStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }

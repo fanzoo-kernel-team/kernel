@@ -14,7 +14,7 @@ namespace Fanzoo.Kernel.Domain.Values
         public MoneyValue(decimal amount, CurrencyValue currency)
         {
 
-            Guard.Against.LessThanMinCurrency(amount, 0m, nameof(amount));
+            Guard.Against.LessThan(amount, 0m, nameof(amount));
             Guard.Against.InvalidMinorUnits(amount, currency.MinorUnits, nameof(amount));
 
             Amount = amount;
@@ -24,7 +24,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public static ValueResult<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
         {
-            if (Check.For.LessThanMinValueValue(amount, 0).IsInvalid)
+            if (!Check.For.GreaterThanOrEqual(amount, 0))
             {
                 return Errors.ValueObjects.MoneyValue.GreaterThanOrEqualToZero;
             }

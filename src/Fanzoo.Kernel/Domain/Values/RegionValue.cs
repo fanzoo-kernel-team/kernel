@@ -11,10 +11,9 @@
             regionAbbreviation = regionAbbreviation.ToUpper();
 
             var isValid = Check.For
-                .NullOrWhiteSpace(regionAbbreviation)
+                .NotNullOrWhiteSpace(regionAbbreviation)
                 .And
-                .NotInList(GetRegions(), regionAbbreviation)
-                    .IsValid;
+                .IsInList(GetRegions(), regionAbbreviation);
 
             return isValid ? new RegionValue(regionAbbreviation) : Errors.ValueObjects.RegionValue.InvalidRegionCode;
         }

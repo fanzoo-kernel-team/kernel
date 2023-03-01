@@ -21,10 +21,9 @@ namespace Fanzoo.Kernel.Domain.Values
             password = password.Trim();
 
             var isValid = Check.For
-                .LengthLessThanMinimum(password, MinimumPasswordLength)
+                .LengthIsGreaterThanOrEqual(password, MinimumPasswordLength)
                 .And
-                .LengthExceedsMaximum(password, MaximumPasswordLength)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(password, MaximumPasswordLength);
 
             return isValid ? new PasswordValue(password) : Errors.ValueObjects.PasswordValue.InvalidFormat;
 

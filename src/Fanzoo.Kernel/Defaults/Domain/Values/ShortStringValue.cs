@@ -7,10 +7,9 @@
         public static ValueResult<ShortStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .Null(value)
+                .NotNull(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Short)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Short);
 
             return isValid ? new ShortStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }
@@ -25,10 +24,9 @@
         public static ValueResult<ShortRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(value)
+                .NotNullOrWhiteSpace(value)
                 .And
-                .LengthExceedsMaximum(value, DatabaseCatalog.FieldLength.Short)
-                    .IsValid;
+                .LengthIsLessThanOrEqual(value, DatabaseCatalog.FieldLength.Short);
 
             return isValid ? new ShortRequiredStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }
