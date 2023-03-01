@@ -18,12 +18,11 @@
             Url = Url.ToLower().Trim();
 
             var isValid = Check.For
-                .NullOrWhiteSpace(Url)
+                .NotNullOrWhiteSpace(Url)
                 .And
-                .ExceedsMaxValue(Url.Length, MAX_SIZE)
+                .LessThanOrEqual(Url.Length, MAX_SIZE)
                 .And
-                .ValidUrlFormat(Url)
-                    .IsValid;
+                .IsValidUrlFormat(Url);
 
 
             return isValid ? new UrlValue(Url) : Errors.ValueObjects.UrlValue.InvalidFormat;

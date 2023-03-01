@@ -20,12 +20,11 @@
             username = username.ToLower().Trim();
 
             var isValid = Check.For
-                .NullOrWhiteSpace(username)
+                .NotNullOrWhiteSpace(username)
                 .And
-                .ExceedsMaxValue(username.Length, MAX_SIZE)
+                .LessThanOrEqual(username.Length, MAX_SIZE)
                 .And
-                .ValidEmailFormat(username)
-                    .IsValid;
+                .IsValidEmailFormat(username);
 
             return isValid ? new EmailUsernameValue(username) : Errors.ValueObjects.UsernameValue.InvalidFormat;
         }

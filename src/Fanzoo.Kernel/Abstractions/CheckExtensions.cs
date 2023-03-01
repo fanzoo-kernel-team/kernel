@@ -8,33 +8,83 @@ namespace Fanzoo.Kernel
 
         private const string IPAddressPattern = @"^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
 
-        public static ICheckResult Null<T>(this Check check, T value) => check.Resolve(value is not null);
+        public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
-        public static ICheckResult NullOrWhiteSpace(this Check check, string value) => check.Resolve(!string.IsNullOrWhiteSpace(value));
+        public static Check IsNull<T>(this Check check, T value) => check.Resolve(value is null);
 
-        public static ICheckResult ExceedsMaxValue(this Check check, int value, int maximum) => check.Resolve(value <= maximum);
+        public static Check NotNullOrWhiteSpace(this Check check, string value) => check.Resolve(!string.IsNullOrWhiteSpace(value));
 
-        public static ICheckResult ExceedsMaxValue(this Check check, long value, long maximum) => check.Resolve(value <= maximum);
+        public static Check IsNullOrWhiteSpace(this Check check, string value) => check.Resolve(string.IsNullOrWhiteSpace(value));
 
-        public static ICheckResult ExceedsMaxValue(this Check check, decimal value, decimal maximum) => check.Resolve(value <= maximum);
+        public static Check LessThan(this Check check, int value, int maximum) => check.Resolve(value < maximum);
 
-        public static ICheckResult LessThanMinValueValue(this Check check, int value, int minimum) => check.Resolve(value >= minimum);
+        public static Check LessThan(this Check check, long value, long maximum) => check.Resolve(value < maximum);
 
-        public static ICheckResult LessThanMinValueValue(this Check check, long value, long minimum) => check.Resolve(value >= minimum);
+        public static Check LessThan(this Check check, decimal value, decimal maximum) => check.Resolve(value < maximum);
 
-        public static ICheckResult LessThanMinValueValue(this Check check, decimal value, decimal minimum) => check.Resolve(value >= minimum);
+        public static Check LessThanOrEqual(this Check check, int value, int maximum) => check.Resolve(value <= maximum);
 
-        public static ICheckResult LengthExceedsMaximum(this Check check, string value, int maximum) => check.Resolve(value.Length <= maximum);
+        public static Check LessThanOrEqual(this Check check, long value, long maximum) => check.Resolve(value <= maximum);
 
-        public static ICheckResult LengthLessThanMinimum(this Check check, string value, int minimum) => check.Resolve(value.Length >= minimum);
+        public static Check LessThanOrEqual(this Check check, decimal value, decimal maximum) => check.Resolve(value <= maximum);
 
-        public static ICheckResult NonMatchingRegex(this Check check, string value, string pattern) => check.Resolve(Regex.IsMatch(value, pattern));
+        public static Check GreaterThan(this Check check, int value, int maximum) => check.Resolve(value > maximum);
 
-        public static ICheckResult NotInList<T>(this Check check, IEnumerable<T> set, T search) => check.Resolve(set.Contains(search));
+        public static Check GreaterThan(this Check check, long value, long maximum) => check.Resolve(value > maximum);
 
-        public static ICheckResult Base64String(this Check check, string value) => check.Resolve(Convert.TryFromBase64String(value, new Span<byte>(new byte[value.Length]), out _));
+        public static Check GreaterThan(this Check check, decimal value, decimal maximum) => check.Resolve(value > maximum);
 
-        public static ICheckResult ValidEmailFormat(this Check check, string email)
+        public static Check GreaterThanOrEqual(this Check check, int value, int minimum) => check.Resolve(value >= minimum);
+
+        public static Check GreaterThanOrEqual(this Check check, long value, long minimum) => check.Resolve(value >= minimum);
+
+        public static Check GreaterThanOrEqual(this Check check, decimal value, decimal minimum) => check.Resolve(value >= minimum);
+
+        public static Check LengthIsLessThanOrEqual(this Check check, string value, int maximum) => check.Resolve(value.Length <= maximum);
+
+        public static Check LengthIsLessThan(this Check check, string value, int maximum) => check.Resolve(value.Length < maximum);
+
+        public static Check LengthIsGreaterThanOrEqual(this Check check, string value, int minimum) => check.Resolve(value.Length >= minimum);
+
+        public static Check LengthIsGreaterThan(this Check check, string value, int minimum) => check.Resolve(value.Length > minimum);
+
+        public static Check Matches(this Check check, string value, string pattern) => check.Resolve(Regex.IsMatch(value, pattern));
+
+        public static Check DoesNotMatch(this Check check, string value, string pattern) => check.Resolve(!Regex.IsMatch(value, pattern));
+
+        public static Check IsInList<T>(this Check check, IEnumerable<T> set, T search) => check.Resolve(set.Contains(search));
+
+        public static Check IsNotInList<T>(this Check check, IEnumerable<T> set, T search) => check.Resolve(!set.Contains(search));
+
+        public static Check IsBase64String(this Check check, string value) => check.Resolve(Convert.TryFromBase64String(value, new Span<byte>(new byte[value.Length]), out _));
+
+        public static Check IsNotBase64String(this Check check, string value) => !check.Resolve(Convert.TryFromBase64String(value, new Span<byte>(new byte[value.Length]), out _));
+
+        public static Check IsValidEmailFormat(this Check check, string email) => IsValidEmailFormatInternal(check, email);
+
+        public static Check IsNotValidEmailFormat(this Check check, string email) => !IsValidEmailFormatInternal(check, email);
+
+        public static Check IsValidUrlFormat(this Check check, string url) => check.Resolve(Uri.IsWellFormedUriString(url, UriKind.Absolute));
+
+        public static Check IsNotValidUrlFormat(this Check check, string url) => !check.Resolve(Uri.IsWellFormedUriString(url, UriKind.Absolute));
+
+        public static Check IsValidPhoneFormat(this Check check, string phone) => Matches(check, phone, PhonePattern);
+
+        public static Check IsNotValidPhoneFormat(this Check check, string phone) => !Matches(check, phone, PhonePattern);
+
+        public static Check IsEmpty(this Check check, Guid guid) => check.Resolve(guid == Guid.Empty);
+
+        public static Check IsNotEmpty(this Check check, Guid guid) => check.Resolve(guid != Guid.Empty);
+
+        public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(Regex.IsMatch(ipAddress, IPAddressPattern));
+
+        public static Check IsNotValidIPAddress(this Check check, string ipAddress) => !check.Resolve(Regex.IsMatch(ipAddress, IPAddressPattern));
+
+        public static Check StartsWith(this Check check, string value, string search) => check.Resolve(value.StartsWith(search));
+
+        public static Check DoesNotStartsWith(this Check check, string value, string search) => !check.Resolve(value.StartsWith(search));
+
+        private static Check IsValidEmailFormatInternal(Check check, string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -77,15 +127,5 @@ namespace Fanzoo.Kernel
                 return check.Resolve(false);
             }
         }
-
-        public static ICheckResult ValidUrlFormat(this Check check, string url) => check.Resolve(Uri.IsWellFormedUriString(url, UriKind.Absolute));
-
-        public static ICheckResult ValidPhoneFormat(this Check check, string phone) => NonMatchingRegex(check, phone, PhonePattern);
-
-        public static ICheckResult Empty(this Check check, Guid guid) => check.Resolve(guid != Guid.Empty);
-
-        public static ICheckResult ValidIPAddress(this Check check, string ipAddress) => check.Resolve(Regex.IsMatch(ipAddress, IPAddressPattern));
-
-        public static ICheckResult StartsWith(this Check check, string value, string search) => check.Resolve(value.StartsWith(search));
     }
 }

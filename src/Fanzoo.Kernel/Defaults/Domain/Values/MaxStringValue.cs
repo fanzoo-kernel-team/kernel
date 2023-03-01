@@ -6,9 +6,7 @@
 
         public static ValueResult<MaxStringValue, Error> Create(string value)
         {
-            var isValid = Check.For
-                .Null(value)
-                    .IsValid;
+            var isValid = Check.For.NotNull(value);
 
             return isValid ? new MaxStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }
@@ -22,9 +20,7 @@
 
         public static ValueResult<MaxRequiredStringValue, Error> Create(string value)
         {
-            var isValid = Check.For
-                .NullOrWhiteSpace(value)
-                    .IsValid;
+            var isValid = Check.For.NotNullOrWhiteSpace(value);
 
             return isValid ? new MaxRequiredStringValue(value) : Errors.ValueObjects.StringValue.InvalidFormat;
         }

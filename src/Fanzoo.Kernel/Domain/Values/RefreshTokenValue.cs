@@ -15,10 +15,9 @@ namespace Fanzoo.Kernel.Domain.Values
         public static ValueResult<RefreshTokenValue, Error> Create(string refreshToken)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(refreshToken)
+                .NotNullOrWhiteSpace(refreshToken)
                 .And
-                .Base64String(refreshToken)
-                    .IsValid;
+                .IsBase64String(refreshToken);
 
             return isValid
                 ? new RefreshTokenValue(refreshToken)

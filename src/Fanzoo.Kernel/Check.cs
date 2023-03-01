@@ -1,17 +1,6 @@
 ﻿namespace Fanzoo.Kernel
 {
-    public interface ICheckResult
-    {
-        public bool IsValid { get; }
-
-        public bool IsInvalid { get; }
-
-        public Check And { get; }
-
-        public Check Or { get; }
-    }
-
-    public class Check : ICheckResult
+    public class Check
     {
         private enum Operation
         {
@@ -20,25 +9,35 @@
         }
 
         private readonly Operation _operation;
+        private bool _resolved;
+        private bool _result;
 
-        private Check(bool result, Operation operation)
+        private Check(bool result, Operation operation, bool resolved = false)
         {
-            Result = result;
+            _result = result;
             _operation = operation;
+            _resolved = resolved;
         }
 
         public static Check For => new(true, Operation.And);
 
-        internal Check Resolve(bool result)
+        public Check Resolve(bool result)
         {
+            if (_resolved)
+            {
+                throw new InvalidOperationException("Check is already resolved.");
+            }
+
+            _resolved = true;
+
             switch (_operation)
             {
                 case Operation.And:
-                    Result &= result;
+                    _result &= result;
                     return this;
 
                 case Operation.Or:
-                    Result |= result;
+                    _result |= result;
                     return this;
 
                 default:
@@ -50,10 +49,10 @@
 
         public Check Or => new(Result, Operation.Or);
 
-        private bool Result { get; set; }
+        public bool Result => !_resolved ? throw new InvalidOperationException("Check is not resolved.") : _result;
 
-        public bool IsValid => Result;
+        public static implicit operator bool(Check check) => check.Result;
 
-        public bool IsInvalid => !Result;
+        public static implicit operator Check(bool result) => new(result, Operation.And, true);
     }
 }

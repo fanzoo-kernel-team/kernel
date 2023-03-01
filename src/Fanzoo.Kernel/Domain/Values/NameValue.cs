@@ -15,10 +15,9 @@
         public static ValueResult<NameValue, Error> Create(string firstName, string lastName)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(firstName)
+                .NotNullOrWhiteSpace(firstName)
                 .And
-                .NullOrWhiteSpace(lastName)
-                    .IsValid;
+                .NotNullOrWhiteSpace(lastName);
 
             return isValid ? new NameValue(firstName, lastName) : Errors.ValueObjects.NameValue.InvalidFormat;
         }

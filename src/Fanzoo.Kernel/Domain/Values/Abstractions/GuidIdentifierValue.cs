@@ -3,7 +3,7 @@
     public abstract class GuidIdentifierValue<TInheritor> : IdentifierValue<Guid> where TInheritor : GuidIdentifierValue<TInheritor>, new()
     {
         public static ValueResult<TInheritor, Error> Create(Guid id) =>
-            Check.For.Empty(id).IsValid ? new TInheritor() { Value = id } : Errors.ValueObjects.GuidIdentifierValue.GuidCannotBeEmpty;
+            Check.For.IsNotEmpty(id) ? new TInheritor() { Value = id } : Errors.ValueObjects.GuidIdentifierValue.GuidCannotBeEmpty;
 
         protected GuidIdentifierValue() : this(Guid.NewGuid()) { }
 

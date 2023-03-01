@@ -21,10 +21,9 @@ namespace Fanzoo.Kernel.Domain.Values
         public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(primaryAddress)
+                .NotNullOrWhiteSpace(primaryAddress)
                 .And
-                .NullOrWhiteSpace(city)
-                    .IsValid;
+                .NotNullOrWhiteSpace(city);
 
             return isValid
                 ? new AddressValue(primaryAddress, secondaryAddress, city, region, postalCode)

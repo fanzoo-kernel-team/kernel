@@ -13,10 +13,9 @@
         public static ValueResult<StripePaymentIntentIdentifierValue, Error> Create(string stripePaymentIntentIdentifier)
         {
             var isValid = Check.For
-                .NullOrWhiteSpace(stripePaymentIntentIdentifier)
+                .NotNullOrWhiteSpace(stripePaymentIntentIdentifier)
                 .And
-                .StartsWith(stripePaymentIntentIdentifier, "pi_")
-                    .IsValid;
+                .StartsWith(stripePaymentIntentIdentifier, "pi_");
 
             return isValid ? new StripePaymentIntentIdentifierValue(stripePaymentIntentIdentifier) : Errors.ValueObjects.StripePaymentIntentIdentifier.InvalidFormat;
 
