@@ -1,23 +1,47 @@
-﻿using Fanzoo.Kernel.Domain.Entities.Users;
+﻿using Fanzoo.Kernel.Data;
+using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fanzoo.Kernel.Web.Services
 {
-    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword> : IRazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
-        where TUser : IUser<TIdentifier, TPrimitive, TUsername>
+    public interface IRazorPagesUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>
         where TIdentifier : IdentifierValue<TPrimitive>
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
         where TPassword : IPasswordValue
     {
+        ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password);
+
+        ValueTask SignOutAsync(TIdentifier identifier);
+
+        public Task ValidateLastAuthenticationChangeAsync(CookieValidatePrincipalContext context);
+
+    }
+
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword> : IDisposable, IAsyncDisposable
+        IRazorPagesUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
+            where TUser : IUser<TIdentifier, TPrimitive, TUsername>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TPassword : IPasswordValue
+    {
         private readonly IPasswordHashingService _passwordHashingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService)
+        private bool _disposed = false;
+
+        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory)
         {
             _passwordHashingService = passwordHashingService;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWorkFactory = unitOfWorkFactory;
+
+            //open the unit of work
+            _unitOfWorkFactory.Open();
+
         }
 
         public async ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password)
@@ -128,13 +152,72 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected abstract TIdentifier? GetClaimIdentifier(string? claimValue);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername>?> GetUserByUsernameAsync(TUsername username);
+        protected abstract ValueTask<TUser?> GetUserByUsernameAsync(TUsername username);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername>?> GetUserByIdAsync(TIdentifier identifier);
+        protected abstract ValueTask<TUser?> GetUserByIdAsync(TIdentifier identifier);
 
-        protected abstract IAsyncEnumerable<Claim> GetClaimsAsync(IUser<TIdentifier, TPrimitive, TUsername> user);
+        protected virtual async IAsyncEnumerable<Claim> GetClaimsAsync(TUser user)
+        {
+            await ValueTask.CompletedTask;
 
-        protected abstract ValueTask SaveUserAsync();
+            yield break;
+        }
+
+        internal static ValueTask<IList<Claim>> GetStandardClaimsAsync(TUser user)
+        {
+            var claims = new List<Claim>();
+
+            claims
+                .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
+                .AddClaim(ClaimTypes.Username, user.Username.Value)
+                .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
+                .AddClaim(JwtRegisteredClaimNames.Sub, user.Username.Value) // subject (required)
+                .AddClaim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()!) // token id is scoped to the user id
+                .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second
+
+            return ValueTask.FromResult((IList<Claim>)claims);
+        }
+
+        private async ValueTask SaveUserAsync()
+        {
+            //let the subclass do it's thing
+            await OnSaveUserAsync();
+
+            //commit the current transaction
+            await _unitOfWorkFactory.Current.CommitAsync();
+
+            //open a new unit of work in case there are more db calls
+            _unitOfWorkFactory.Open();
+        }
+
+        protected virtual ValueTask OnSaveUserAsync() => ValueTask.CompletedTask;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+
+            return ValueTask.CompletedTask;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _unitOfWorkFactory?.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
 
     }
 }
