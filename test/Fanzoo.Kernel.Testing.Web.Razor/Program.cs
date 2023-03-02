@@ -16,15 +16,17 @@ if (isStandAlone)
 
 }
 
-var application = WebApplication.CreateBuilder(args)
+
+var builder = WebApplication.CreateBuilder(args)
     .AddRazorPagesCore<RazorPagesUserAuthenticationService>()
     .AddNHibernateCoreFromAssembly(Assembly.GetExecutingAssembly())
     .AddFrameworkCoreFromAssemblies(addTypes =>
         addTypes
             .FromAssembly(Assembly.GetExecutingAssembly()))
     .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly())
-    .AddLogging()
-        .Build();
+    .AddLogging();
+
+var application = builder.Build();
 
 if (isStandAlone)
 {

@@ -1,4 +1,4 @@
-namespace Fanzoo.Kernel.Web.Razor.Data.Migrations
+namespace Fanzoo.Kernel.Testing.Web.Razor.Migrations
 {
     [Migration(202303011432)]
     public class InitialMigration : Migration
