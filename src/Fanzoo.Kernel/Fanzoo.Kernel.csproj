@@ -29,31 +29,31 @@
 		<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="3.3.2" />
 		<PackageReference Include="FluentNHibernate" Version="3.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.1" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0-preview2.22314.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27">
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.5.22">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00293" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.5.0-dev-00367" />
-		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.1.0-dev-00035" />
+		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.2.0" />
 		<PackageReference Include="Slapper.AutoMapper" Version="2.0.5" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.50.0.58025">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.53.0.62665">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
 	</ItemGroup>
 
 	<ItemGroup>
