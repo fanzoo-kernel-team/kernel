@@ -1,28 +1,52 @@
-﻿using Fanzoo.Kernel.Domain.Entities.Users;
+﻿using Fanzoo.Kernel.Data;
+using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fanzoo.Kernel.Web.Services
 {
-    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword> : IRazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
-        where TUser : IUser<TIdentifier, TPrimitive, TUsername>
+    public interface IRazorPagesUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>
         where TIdentifier : IdentifierValue<TPrimitive>
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
         where TPassword : IPasswordValue
     {
+        ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password);
+
+        ValueTask SignOutAsync(TIdentifier identifier);
+
+        public Task ValidateLastAuthenticationChangeAsync(CookieValidatePrincipalContext context);
+
+    }
+
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword> : IDisposable, IAsyncDisposable,
+        IRazorPagesUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
+            where TUser : IUser<TIdentifier, TPrimitive, TUsername>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TPassword : IPasswordValue
+    {
         private readonly IPasswordHashingService _passwordHashingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService)
+        private bool _disposed = false;
+
+        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory)
         {
             _passwordHashingService = passwordHashingService;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWorkFactory = unitOfWorkFactory;
+
+            //open the unit of work
+            _unitOfWorkFactory.Open();
+
         }
 
         public async ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password)
         {
-            var user = await GetUserByUsernameAsync(username);
+            var user = await FindUserByUsernameAsync(username);
 
             if (user is null)
             {
@@ -50,13 +74,13 @@ namespace Fanzoo.Kernel.Web.Services
 
             user.RecordValidLogin();
 
-            var claims = new List<Claim>();
+            var claims = await GetStandardClaimsAsync(user);
 
-            claims
-                .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
-                .AddClaim(ClaimTypes.Username, user.Username.Value)
-                .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
-                .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second
+            //add internal claims
+            await foreach (var claim in GetClaimsInternalAsync(user))
+            {
+                claims.Add(claim);
+            }
 
             //add application claims
             await foreach (var claim in GetClaimsAsync(user))
@@ -78,7 +102,7 @@ namespace Fanzoo.Kernel.Web.Services
 
         public async ValueTask SignOutAsync(TIdentifier identifier)
         {
-            var user = await GetUserByIdAsync(identifier);
+            var user = await FindUserByIdAsync(identifier);
 
             if (user is null)
             {
@@ -104,11 +128,11 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected async ValueTask<bool> GetRequiresAuthenticationAsync(ClaimsPrincipal principal)
         {
-            var identifier = GetClaimIdentifier(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
+            var identifier = FindClaimIdentifier(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
 
             if (identifier is not null)
             {
-                var user = await GetUserByIdAsync(identifier);
+                var user = await FindUserByIdAsync(identifier);
 
                 if (user is not null)
                 {
@@ -126,15 +150,103 @@ namespace Fanzoo.Kernel.Web.Services
             return true;
         }
 
-        protected abstract TIdentifier? GetClaimIdentifier(string? claimValue);
+        protected abstract TIdentifier? FindClaimIdentifier(string? claimValue);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername>?> GetUserByUsernameAsync(TUsername username);
+        protected abstract ValueTask<TUser?> FindUserByUsernameAsync(TUsername username);
 
-        protected abstract ValueTask<IUser<TIdentifier, TPrimitive, TUsername>?> GetUserByIdAsync(TIdentifier identifier);
+        protected abstract ValueTask<TUser?> FindUserByIdAsync(TIdentifier identifier);
 
-        protected abstract IAsyncEnumerable<Claim> GetClaimsAsync(IUser<TIdentifier, TPrimitive, TUsername> user);
+        protected virtual async IAsyncEnumerable<Claim> GetClaimsAsync(TUser user)
+        {
+            await ValueTask.CompletedTask;
 
-        protected abstract ValueTask SaveUserAsync();
+            yield break;
+        }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4144:Methods should not have identical implementations", Justification = "Different scope")]
+        protected internal virtual async IAsyncEnumerable<Claim> GetClaimsInternalAsync(TUser user)
+        {
+            await ValueTask.CompletedTask;
+
+            yield break;
+        }
+
+        internal static ValueTask<IList<Claim>> GetStandardClaimsAsync(TUser user)
+        {
+            var claims = new List<Claim>();
+
+            claims
+                .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
+                .AddClaim(ClaimTypes.Username, user.Username.Value)
+                .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
+                .AddClaim(JwtRegisteredClaimNames.Sub, user.Username.Value) // subject (required)
+                .AddClaim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()!) // token id is scoped to the user id
+                .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second
+
+            return ValueTask.FromResult((IList<Claim>)claims);
+        }
+
+        private async ValueTask SaveUserAsync()
+        {
+            //let the subclass do it's thing
+            await OnSaveUserAsync();
+
+            //commit the current transaction
+            await _unitOfWorkFactory.Current.CommitAsync();
+
+            //open a new unit of work in case there are more db calls
+            _unitOfWorkFactory.Open();
+        }
+
+        protected virtual ValueTask OnSaveUserAsync() => ValueTask.CompletedTask;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+
+            return ValueTask.CompletedTask;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _unitOfWorkFactory?.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
+    }
+
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive> :
+        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>
+            where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TPassword : IPasswordValue
+            where TRoleValue : IRoleValue<TRolePrimitive>
+            where TRolePrimitive : notnull
+    {
+        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
+
+        protected internal override async IAsyncEnumerable<Claim> GetClaimsInternalAsync(TUser user)
+        {
+            //add roles
+            foreach (var role in user.Roles)
+            {
+                yield return await Task.Run(() => new Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
+            }
+        }
     }
 }

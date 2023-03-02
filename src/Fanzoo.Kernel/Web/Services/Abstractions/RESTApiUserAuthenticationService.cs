@@ -171,7 +171,7 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected async ValueTask<bool> GetRequiresAuthenticationAsync(ClaimsPrincipal principal)
         {
-            var identifier = GetClaimIdentifierOrDefault(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
+            var identifier = FindClaimIdentifier(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
 
             if (identifier is not null)
             {
@@ -193,7 +193,7 @@ namespace Fanzoo.Kernel.Web.Services
             return true;
         }
 
-        protected abstract TIdentifier? GetClaimIdentifierOrDefault(string? claimValue);
+        protected abstract TIdentifier? FindClaimIdentifier(string? claimValue);
 
         protected abstract ValueTask<TUser?> FindUserByUsernameAsync(TUsername username);
 
