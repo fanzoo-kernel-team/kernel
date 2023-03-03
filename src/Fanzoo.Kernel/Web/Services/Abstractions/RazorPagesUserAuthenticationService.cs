@@ -39,9 +39,11 @@ namespace Fanzoo.Kernel.Web.Services
             _httpContextAccessor = httpContextAccessor;
             _unitOfWorkFactory = unitOfWorkFactory;
 
-            //open the unit of work
-            _unitOfWorkFactory.Open();
-
+            //open the unit of work if it's not already open by the middle-ware
+            if (_unitOfWorkFactory.CanOpen)
+            {
+                _unitOfWorkFactory.Open();
+            }
         }
 
         public async ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password)
@@ -248,5 +250,21 @@ namespace Fanzoo.Kernel.Web.Services
                 yield return await Task.Run(() => new Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
             }
         }
+    }
+
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
+        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive>
+            where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+            where TIdentifier : IdentifierValue<TPrimitive>
+            where TPrimitive : notnull, new()
+            where TUsername : IUsernameValue
+            where TPassword : IPasswordValue
+            where TRefreshToken : IRefreshToken<TTokenIdentifier, TTokenPrimitive>
+            where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
+            where TTokenPrimitive : notnull, new()
+            where TRoleValue : IRoleValue<TRolePrimitive>
+            where TRolePrimitive : notnull
+    {
+        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
     }
 }

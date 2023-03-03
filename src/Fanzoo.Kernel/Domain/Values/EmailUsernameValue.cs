@@ -17,7 +17,7 @@
 
         public static ValueResult<EmailUsernameValue, Error> Create(string username)
         {
-            username = username.ToLower().Trim();
+            username = (username ?? string.Empty).ToLower().Trim();
 
             var isValid = Check.For
                 .NotNullOrWhiteSpace(username)

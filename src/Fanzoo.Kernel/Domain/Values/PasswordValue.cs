@@ -18,7 +18,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public static ValueResult<PasswordValue, Error> Create(string password)
         {
-            password = password.Trim();
+            password = (password ?? string.Empty).Trim();
 
             var isValid = Check.For
                 .LengthIsGreaterThanOrEqual(password, MinimumPasswordLength)
