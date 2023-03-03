@@ -3,20 +3,35 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fanzoo.Kernel.DependencyInjection
 {
+    public class AddRazorPagesCoreOptions
+    {
+        public bool DisableBuiltInValidation { get; set; } = false;
+    }
+
     public static partial class ServiceProviderExtensions
     {
-        public static IServiceCollection AddRazorPagesCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services)
+        public static IServiceCollection AddRazorPagesCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, Action<AddRazorPagesCoreOptions>? options = null)
             where TUserAuthenticationService : class, IRazorPagesUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
             where TUserIdentifier : IdentifierValue<TUserIdentifierPrimitive>
             where TUserIdentifierPrimitive : notnull, new()
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
         {
+            var razorPagesOptions = new AddRazorPagesCoreOptions();
+
+            options?.Invoke(razorPagesOptions);
+
+            services.AddMvc(o =>
+            {
+                if (razorPagesOptions.DisableBuiltInValidation)
+                {
+                    o.ModelValidatorProviders.Clear();
+                }
+            });
+
             services
                 .AddRazorPages()
                 .AddRazorRuntimeCompilation();
-
-            services.AddControllersWithViews();
 
             services
                 .AddTransient<IPasswordHashingService, IdentityPasswordHashingService>()

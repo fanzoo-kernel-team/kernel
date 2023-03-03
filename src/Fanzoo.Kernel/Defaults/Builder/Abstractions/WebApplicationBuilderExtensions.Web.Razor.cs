@@ -2,12 +2,12 @@
 {
     public static partial class WebApplicationBuilderExtensions
     {
-        public static WebApplicationBuilder AddRazorPagesCore<TUserAuthenticationService>(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddRazorPagesCore<TUserAuthenticationService>(this WebApplicationBuilder builder, Action<AddRazorPagesCoreOptions>? options = null)
             where TUserAuthenticationService : class, IRazorPagesUserAuthenticationService<UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>, ICookieUserAuthenticationService
         {
             builder.Services
                 .AddWebCore()
-                .AddRazorPagesCore<TUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>();
+                .AddRazorPagesCore<TUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>(options);
 
             return builder;
         }
