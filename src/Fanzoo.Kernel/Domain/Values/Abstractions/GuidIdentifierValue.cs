@@ -7,6 +7,6 @@
 
         protected GuidIdentifierValue() : this(Guid.NewGuid()) { }
 
-        private GuidIdentifierValue(Guid id) : base(id) { }
+        protected GuidIdentifierValue(Guid id) : base(id) { }
     }
 }
