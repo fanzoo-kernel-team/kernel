@@ -496,6 +496,8 @@ namespace Fanzoo.Kernel.Tests
         {
             var valid = "https://www.microsoft.com";
 
+            Assert.True(UrlValue.CanCreate(valid));
+
             Assert.True(UrlValue.Create(valid).IsSuccessful);
 
             Assert.True(UrlValue.Create(valid).Value == valid);
