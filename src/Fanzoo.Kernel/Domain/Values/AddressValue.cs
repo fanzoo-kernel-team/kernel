@@ -18,17 +18,10 @@ namespace Fanzoo.Kernel.Domain.Values
             PostalCode = postalCode;
         }
 
-        public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode)
-        {
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(primaryAddress)
-                .And
-                .NotNullOrWhiteSpace(city);
-
-            return isValid
+        public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode) => CanCreate(primaryAddress, city, postalCode)        
                 ? new AddressValue(primaryAddress, secondaryAddress, city, region, postalCode)
                 : Errors.ValueObjects.AddressValue.InvalidFormat;
-        }
+        
 
         public string PrimaryAddress { get; private set; } = default!;
 
@@ -69,5 +62,7 @@ namespace Fanzoo.Kernel.Domain.Values
             yield return Region;
             yield return PostalCode;
         }
+
+        public static bool CanCreate(string primaryAddress, string? city, PostalCodeValue postalCode) => Check.For.IsValidAddress(primaryAddress, city, postalCode);
     }
 }

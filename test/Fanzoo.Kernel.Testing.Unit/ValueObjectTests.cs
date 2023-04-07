@@ -10,6 +10,8 @@ namespace Fanzoo.Kernel.Tests
         [Fact]
         public void Test_EmailValue()
         {
+            var blankEmail = " ";
+
             var validEmail = "test@test.com";
 
             var inValidEmail = "test@@test.com";
@@ -24,6 +26,14 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.True(EmailValue.Create(tooLongEmail).IsFailure);
 
+            Assert.True(EmailValue.CanCreate(email));
+
+            Assert.False(EmailValue.CanCreate(blankEmail));
+
+            Assert.False(EmailValue.CanCreate(tooLongEmail));
+
+            Assert.False(EmailValue.CanCreate(inValidEmail));
+
             Assert.Throws<ArgumentException>(() => new EmailValue(inValidEmail));
 
             Assert.Throws<ArgumentException>(() => new EmailValue(tooLongEmail));
@@ -34,6 +44,8 @@ namespace Fanzoo.Kernel.Tests
         [Fact]
         public void Test_EmailUsernameValue()
         {
+            var blankEmail = " ";
+
             var validEmail = "test@test.com";
 
             var inValidEmail = "test@@test.com";
@@ -47,6 +59,14 @@ namespace Fanzoo.Kernel.Tests
             Assert.True(EmailUsernameValue.Create(inValidEmail).IsFailure);
 
             Assert.True(EmailUsernameValue.Create(tooLongEmail).IsFailure);
+
+            Assert.True(EmailUsernameValue.CanCreate(email));
+
+            Assert.False(EmailUsernameValue.CanCreate(blankEmail));
+
+            Assert.False(EmailUsernameValue.CanCreate(tooLongEmail));
+
+            Assert.False(EmailUsernameValue.CanCreate(inValidEmail));
 
             Assert.Throws<ArgumentException>(() => new EmailUsernameValue(inValidEmail));
 
@@ -92,6 +112,12 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.True(MoneyValue.Create(invalidMoneyValueDecimal, CurrencyValue.USDollar).IsFailure);
 
+            Assert.True(MoneyValue.CanCreate(validMoneyValueAmount, CurrencyValue.USDollar));
+
+            Assert.False(MoneyValue.CanCreate(invalidMoneyValueDecimal, CurrencyValue.USDollar));
+
+            Assert.False(MoneyValue.CanCreate(invalidMoneyValueAmount, CurrencyValue.USDollar));
+
             Assert.Throws<ArgumentOutOfRangeException>(() => new MoneyValue(invalidMoneyValueAmount, CurrencyValue.USDollar));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => new MoneyValue(invalidMoneyValueDecimal, CurrencyValue.USDollar));
@@ -130,6 +156,14 @@ namespace Fanzoo.Kernel.Tests
 
             Assert.True(NameValue.Create(validFirstName, invalidName).IsFailure);
 
+            Assert.True(NameValue.CanCreate(validFirstName, validLastName));
+
+            Assert.False(NameValue.CanCreate(invalidName, validLastName));
+
+            Assert.False(NameValue.CanCreate(validFirstName, invalidName));
+
+            Assert.False(NameValue.CanCreate(invalidName, invalidName));
+
             Assert.Throws<ArgumentNullException>(() => new NameValue(invalidName, validLastName));
 
             Assert.Throws<ArgumentNullException>(() => new NameValue(validFirstName, invalidName));
@@ -149,6 +183,8 @@ namespace Fanzoo.Kernel.Tests
 
             var validCity = "City";
 
+            var validPostalCode = "12345"
+;
             var testingRegion = RegionValue.Create("TN");
 
             var testingPostalCode = PostalCodeValue.Create("11111-1111");
@@ -164,6 +200,10 @@ namespace Fanzoo.Kernel.Tests
             Assert.True(AddressValue.Create(invalidPrimaryAddress, testingSecondaryAddressBlank, validCity, testingRegion.Value, testingPostalCode.Value).IsFailure);
 
             Assert.True(AddressValue.Create(validPrimaryAddress, testingSecondaryAddressBlank, invalidCity, testingRegion.Value, testingPostalCode.Value).IsFailure);
+
+            Assert.True(AddressValue.CanCreate(validPrimaryAddress, validCity, validPostalCode));
+
+            Assert.True(AddressValue.CanCreate(validPrimaryAddress, validCity, testingPostalCode.Value));
 
             Assert.Throws<ArgumentNullException>(() => new AddressValue(invalidPrimaryAddress, testingSecondaryAddressBlank, validCity, testingRegion.Value, testingPostalCode.Value));
 
@@ -237,6 +277,12 @@ namespace Fanzoo.Kernel.Tests
             Assert.True(IPAddressValue.Create(invalidIPAddress).IsFailure);
 
             Assert.True(IPAddressValue.Create(emptyIPAddress).IsFailure);
+
+            Assert.True(IPAddressValue.CanCreate(validIPAddress));
+
+            Assert.False(IPAddressValue.CanCreate(invalidIPAddress));
+
+            Assert.False(IPAddressValue.CanCreate(emptyIPAddress));
 
             Assert.Throws<ArgumentException>(() => new IPAddressValue(invalidIPAddress));
 

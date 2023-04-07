@@ -1,4 +1,8 @@
 ﻿using System.Globalization;
+using System.Net;
+using NHibernate.Mapping;
+using NHibernate.Stat;
+using static NHibernate.Engine.Query.CallableParser;
 
 namespace Fanzoo.Kernel
 {
@@ -7,6 +11,8 @@ namespace Fanzoo.Kernel
         private const string PhonePattern = @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
 
         private const string IPAddressPattern = @"^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
+
+        private const string PostalCodePattern = @"^\d{5}(?:[-\s]\d{4})?$";
 
         public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
@@ -84,6 +90,54 @@ namespace Fanzoo.Kernel
 
         public static Check DoesNotStartsWith(this Check check, string value, string search) => !check.Resolve(value.StartsWith(search));
 
+        public static Check IsValidNameFormat(this Check check, string firstName, string lastName)
+        {
+            return string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ? check.Resolve(false) : check.Resolve(true);
+        }
+        public static Check IsValidAddress(this Check check, string primaryAddress, string? city, PostalCodeValue postalCode)
+        {
+            if (string.IsNullOrWhiteSpace(primaryAddress))
+            {
+                return check.Resolve(false);
+            }
+
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                return check.Resolve(false);
+            }
+
+            try
+            {
+                return check.Resolve(Regex.IsMatch(postalCode, PostalCodePattern, RegexOptions.IgnoreCase));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return check.Resolve(false);
+            }
+        }
+
+        public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency)
+        {
+            if (decimal.Round(amount, currency.MinorUnits) != amount)
+            {
+
+                return check.Resolve(false);
+             
+            }
+
+            try
+            {
+                return check.GreaterThanOrEqual(amount, 0);
+            }
+            catch (KernelErrorException)
+            {
+                return check.Resolve(false);
+             
+            }
+        }
+
+
+
         private static Check IsValidEmailFormatInternal(Check check, string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -127,5 +181,7 @@ namespace Fanzoo.Kernel
                 return check.Resolve(false);
             }
         }
+
+    
     }
 }

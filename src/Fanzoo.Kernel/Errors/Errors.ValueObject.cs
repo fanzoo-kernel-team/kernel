@@ -71,6 +71,8 @@
                 public static Error InvalidNumberOfDecimalPlaces => new("invalid.number.of.decimal.places", "The minor units (decimal places) for this currency is invalid.");
 
                 public static Error CannotPerformArithmeticOperationOnDifferentCurrencies => new("cannot.perform.arithmetic.operation.on.different.currencies", "Cannot perform arithmetic operation on different currencies.");
+
+                public static Error InvalidFormat => new("invalid.name.format", "Invalid money format.");
             }
 
             public static class RefreshTokenValue

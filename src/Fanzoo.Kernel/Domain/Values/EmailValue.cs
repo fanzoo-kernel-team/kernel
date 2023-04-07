@@ -13,23 +13,17 @@
             Guard.Against.InvalidEmailFormat(email, nameof(email));
         }
 
-        public static ValueResult<EmailValue, Error> Create(string email)
-        {
-            email = email.ToLower().Trim();
+        public static ValueResult<EmailValue, Error> Create(string email) => CanCreate(GetEmail(email))
+           ? new EmailValue(GetEmail(email)) : Errors.ValueObjects.EmailValue.InvalidFormat;
 
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(email)
-                .And
-                .LessThanOrEqual(email.Length, MAX_SIZE)
-                .And
-                .IsValidEmailFormat(email);
-
-
-            return isValid ? new EmailValue(email) : Errors.ValueObjects.EmailValue.InvalidFormat;
-
-        }
 
         public static implicit operator EmailValue(string value) => new(value);
 
+        public static bool CanCreate(string email) => Check.For.IsValidEmailFormat(GetEmail(email));
+
+        private static string GetEmail(string email) => email
+                .ToLower()
+                    .Trim();
     }
 }
+

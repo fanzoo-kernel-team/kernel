@@ -22,20 +22,25 @@ namespace Fanzoo.Kernel.Domain.Values
 
         }
 
-        public static ValueResult<MoneyValue, Error> Create(decimal amount, CurrencyValue currency)
-        {
-            if (!Check.For.GreaterThanOrEqual(amount, 0))
-            {
-                return Errors.ValueObjects.MoneyValue.GreaterThanOrEqualToZero;
-            }
+        public static ValueResult<MoneyValue, Error> Create(decimal amount, CurrencyValue currency) => CanCreate(amount, currency)
+               ? new MoneyValue(amount, currency)
+               : Errors.ValueObjects.MoneyValue.InvalidFormat;
 
-            if (decimal.Round(amount, currency.MinorUnits) != amount)
-            {
-                return Errors.ValueObjects.MoneyValue.InvalidNumberOfDecimalPlaces;
-            }
+        //not sure if this should be revised this way, can't pull in correct errors
 
-            return new MoneyValue(amount, currency);
-        }
+        //if (!Check.For.GreaterThanOrEqual(amount, 0))
+        //{
+        //    return Errors.ValueObjects.MoneyValue.GreaterThanOrEqualToZero;
+        //}
+
+        //if (decimal.Round(amount, currency.MinorUnits) != amount)
+        //{
+        //    return Errors.ValueObjects.MoneyValue.InvalidNumberOfDecimalPlaces;
+        //}
+
+        //    return new MoneyValue(amount, currency);
+
+
 
         public decimal Amount { get; init; }
 
@@ -70,5 +75,8 @@ namespace Fanzoo.Kernel.Domain.Values
         public static bool operator ==(MoneyValue a, decimal amount) => a.Amount == amount;
 
         public static bool operator !=(MoneyValue a, decimal amount) => a.Amount != amount;
+
+        public static bool CanCreate(decimal amount, CurrencyValue currency) => Check.For.IsValidMoneyFormat(amount, currency);
+
     }
 }
