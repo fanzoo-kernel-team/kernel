@@ -113,34 +113,6 @@ namespace Fanzoo.Kernel.Builder
             return builder;
         }
 
-        public static WebApplicationBuilder AddAutoMapperFromAssemblies(this WebApplicationBuilder builder, Assembly[] assemblies)
-        {
-            builder.Services.AddAutoMapperCore(assemblies);
-
-            return builder;
-        }
-
-        public static WebApplicationBuilder AddAutoMapperFromAssemblies(this WebApplicationBuilder builder, Action<IServiceTypeAssemblyBuilder> addTypes)
-        {
-            builder.Services.AddAutoMapperCore(addTypes);
-
-            return builder;
-        }
-
-        public static WebApplicationBuilder AddAutoMapperFromAssembly(this WebApplicationBuilder builder, Assembly assembly)
-        {
-            builder.Services.AddAutoMapperCore(assembly);
-
-            return builder;
-        }
-
-        public static WebApplicationBuilder AddAutoMapperFromAssembly(this WebApplicationBuilder builder, string assemblyName)
-        {
-            builder.Services.AddAutoMapperCore(assemblyName);
-
-            return builder;
-        }
-
         public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, Assembly assembly) => builder.AddApplicationModulesFromAssemblies(new[] { assembly });
 
         public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, string assemblyName) => builder.AddApplicationModulesFromAssemblies(new[] { Assembly.Load(assemblyName) });
