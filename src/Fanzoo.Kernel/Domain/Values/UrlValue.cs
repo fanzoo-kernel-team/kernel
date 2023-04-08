@@ -6,30 +6,27 @@
 
         private UrlValue() { }
 
-        public UrlValue(string Url) : base(Url)
+        public UrlValue(string url) : base(url)
         {
-            Guard.Against.NullOrWhiteSpace(Url, nameof(Url));
-            Guard.Against.ExceedsMaxValue(Url.Length, MAX_SIZE, nameof(Url));
-            Guard.Against.InvalidUrlFormat(Url, nameof(Url));
+            Guard.Against.NullOrWhiteSpace(url, nameof(url));
+            Guard.Against.ExceedsMaxValue(url.Length, MAX_SIZE, nameof(url));
+            Guard.Against.InvalidUrlFormat(url, nameof(url));
         }
 
-        public static ValueResult<UrlValue, Error> Create(string Url)
-        {
-            Url = Url.ToLower().Trim();
-
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(Url)
-                .And
-                .LessThanOrEqual(Url.Length, MAX_SIZE)
-                .And
-                .IsValidUrlFormat(Url);
-
-
-            return isValid ? new UrlValue(Url) : Errors.ValueObjects.UrlValue.InvalidFormat;
-
-        }
+        public static ValueResult<UrlValue, Error> Create(string url) => CanCreate(url) ? new UrlValue(url) : Errors.ValueObjects.UrlValue.InvalidFormat;
 
         public static implicit operator UrlValue(string value) => new(value);
 
+        public static bool CanCreate(string url)
+        {
+            url = url.ToLower().Trim();
+
+            return Check.For
+                .NotNullOrWhiteSpace(url)
+                .And
+                .LessThanOrEqual(url.Length, MAX_SIZE)
+                .And
+                .IsValidUrlFormat(url);
+        }
     }
 }

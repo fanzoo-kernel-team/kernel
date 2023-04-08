@@ -4,6 +4,7 @@ namespace Fanzoo.Kernel
 {
     public static class GuardExtensions
     {
+
         public static void Null<T>(this Guard guard, T value, string argument) => _ = value ?? throw new ArgumentNullException(argument);
 
         public static void NullOrWhiteSpace(this Guard guard, string value, string argument)
@@ -115,6 +116,14 @@ namespace Fanzoo.Kernel
             if (Check.For.IsNotValidUrlFormat(url))
             {
                 throw new UriFormatException();
+            }
+        }
+
+        public static void InvalidPhoneNumber(this Guard guard, string value, string argument)
+        {
+            if (Check.For.IsNotValidPhoneFormat(value))
+            {
+                throw new ArgumentException(argument);
             }
         }
     }

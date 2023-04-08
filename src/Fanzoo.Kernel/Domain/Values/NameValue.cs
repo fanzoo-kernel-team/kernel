@@ -12,16 +12,9 @@
             LastName = lastName;
         }
 
-        public static ValueResult<NameValue, Error> Create(string firstName, string lastName)
-        {
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(firstName)
-                .And
-                .NotNullOrWhiteSpace(lastName);
-
-            return isValid ? new NameValue(firstName, lastName) : Errors.ValueObjects.NameValue.InvalidFormat;
-        }
-
+        public static ValueResult<NameValue, Error> Create(string firstName, string lastName) => CanCreate(firstName, lastName)       
+          ? new NameValue(firstName, lastName) : Errors.ValueObjects.NameValue.InvalidFormat;
+        
         public string FirstName { get; } = default!;
 
         public string LastName { get; } = default!;
@@ -31,5 +24,7 @@
             yield return FirstName;
             yield return LastName;
         }
+
+        public static bool CanCreate(string firstName, string lastName) => Check.For.IsValidNameFormat(firstName, lastName);
     }
 }
