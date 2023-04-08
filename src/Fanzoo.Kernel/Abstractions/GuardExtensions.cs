@@ -1,5 +1,6 @@
 ﻿#pragma warning disable IDE0060 // Remove unused parameter
 
+
 namespace Fanzoo.Kernel
 {
     public static class GuardExtensions
@@ -122,6 +123,14 @@ namespace Fanzoo.Kernel
         public static void InvalidPhoneNumber(this Guard guard, string value, string argument)
         {
             if (Check.For.IsNotValidPhoneFormat(value))
+            {
+                throw new ArgumentException(argument);
+            }
+        }
+
+        public static void InvalidUSPostalCode(this Guard guard, string value, string argument)
+        {
+            if (Check.For.IsNotValidUSPostalCode(value))
             {
                 throw new ArgumentException(argument);
             }

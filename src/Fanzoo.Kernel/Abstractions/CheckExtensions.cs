@@ -8,12 +8,6 @@ namespace Fanzoo.Kernel
 {
     public static class CheckExtensions
     {
-        private const string PhonePattern = @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
-
-        private const string IPAddressPattern = @"^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$";
-
-        private const string PostalCodePattern = @"^\d{5}(?:[-\s]\d{4})?$";
-
         public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
         public static Check IsNull<T>(this Check check, T value) => check.Resolve(value is null);
@@ -74,27 +68,29 @@ namespace Fanzoo.Kernel
 
         public static Check IsNotValidUrlFormat(this Check check, string url) => !check.Resolve(Uri.IsWellFormedUriString(url, UriKind.Absolute));
 
-        public static Check IsValidPhoneFormat(this Check check, string phone) => Matches(check, phone, PhonePattern);
+        public static Check IsValidPhoneFormat(this Check check, string phone) => check.Resolve(RegexCatalog.Phone().IsMatch(phone));
 
-        public static Check IsNotValidPhoneFormat(this Check check, string phone) => !Matches(check, phone, PhonePattern);
+        public static Check IsNotValidPhoneFormat(this Check check, string phone) => !check.Resolve(RegexCatalog.Phone().IsMatch(phone));
 
         public static Check IsEmpty(this Check check, Guid guid) => check.Resolve(guid == Guid.Empty);
 
         public static Check IsNotEmpty(this Check check, Guid guid) => check.Resolve(guid != Guid.Empty);
 
-        public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(Regex.IsMatch(ipAddress, IPAddressPattern));
+        public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
 
-        public static Check IsNotValidIPAddress(this Check check, string ipAddress) => !check.Resolve(Regex.IsMatch(ipAddress, IPAddressPattern));
+        public static Check IsNotValidIPAddress(this Check check, string ipAddress) => !check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
 
         public static Check StartsWith(this Check check, string value, string search) => check.Resolve(value.StartsWith(search));
 
         public static Check DoesNotStartsWith(this Check check, string value, string search) => !check.Resolve(value.StartsWith(search));
 
-        public static Check IsValidNameFormat(this Check check, string firstName, string lastName)
-        {
-            return string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ? check.Resolve(false) : check.Resolve(true);
-        }
-        public static Check IsValidAddress(this Check check, string primaryAddress, string? city, PostalCodeValue postalCode)
+        public static Check IsValidNameFormat(this Check check, string firstName, string lastName) => string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ? check.Resolve(false) : check.Resolve(true);
+
+        public static Check IsValidUSPotalCode(this Check check, string postalCode) => check.Resolve(RegexCatalog.PostalCode().IsMatch(postalCode));
+
+        public static Check IsNotValidUSPostalCode(this Check check, string postalCode) => !check.Resolve(RegexCatalog.PostalCode().IsMatch(postalCode));
+
+        public static Check IsValidAddress(this Check check, string primaryAddress, string? city, USPostalCodeValue postalCode)
         {
             if (string.IsNullOrWhiteSpace(primaryAddress))
             {
@@ -108,7 +104,7 @@ namespace Fanzoo.Kernel
 
             try
             {
-                return check.Resolve(Regex.IsMatch(postalCode, PostalCodePattern, RegexOptions.IgnoreCase));
+                return Check.For.IsValidUSPotalCode(postalCode);
             }
             catch (RegexMatchTimeoutException)
             {
@@ -120,9 +116,7 @@ namespace Fanzoo.Kernel
         {
             if (decimal.Round(amount, currency.MinorUnits) != amount)
             {
-
                 return check.Resolve(false);
-             
             }
 
             try
@@ -132,11 +126,17 @@ namespace Fanzoo.Kernel
             catch (KernelErrorException)
             {
                 return check.Resolve(false);
-             
             }
         }
 
+        public static Check IsValidCssColor(this Check check, string cssColor)
+        {
+            var normalizedValue = cssColor.Trim().ToLower();
 
+            return check.Resolve(normalizedValue.StartsWith('#')
+                ? RegexCatalog.CssColor().IsMatch(normalizedValue)
+                : _validColorNames.Contains(normalizedValue));
+        }
 
         private static Check IsValidEmailFormatInternal(Check check, string email)
         {
@@ -182,6 +182,154 @@ namespace Fanzoo.Kernel
             }
         }
 
-    
+        private static readonly string[] _validColorNames = {
+            "aliceblue",
+            "antiquewhite",
+            "aqua",
+            "aquamarine",
+            "azure",
+            "beige",
+            "bisque",
+            "black",
+            "blanchedalmond",
+            "blue",
+            "blueviolet",
+            "brown",
+            "burlywood",
+            "cadetblue",
+            "chartreuse",
+            "chocolate",
+            "coral",
+            "cornflowerblue",
+            "cornsilk",
+            "crimson",
+            "cyan",
+            "darkblue",
+            "darkcyan",
+            "darkgoldenrod",
+            "darkgray",
+            "darkgrey",
+            "darkgreen",
+            "darkkhaki",
+            "darkmagenta",
+            "darkolivegreen",
+            "darkorange",
+            "darkorchid",
+            "darkred",
+            "darksalmon",
+            "darkseagreen",
+            "darkslateblue",
+            "darkslategray",
+            "darkslategrey",
+            "darkturquoise",
+            "darkviolet",
+            "deeppink",
+            "deepskyblue",
+            "dimgray",
+            "dimgrey",
+            "dodgerblue",
+            "firebrick",
+            "floralwhite",
+            "forestgreen",
+            "fuchsia",
+            "gainsboro",
+            "ghostwhite",
+            "gold",
+            "goldenrod",
+            "gray",
+            "grey",
+            "green",
+            "greenyellow",
+            "honeydew",
+            "hotpink",
+            "indianred",
+            "indigo",
+            "ivory",
+            "khaki",
+            "lavender",
+            "lavenderblush",
+            "lawngreen",
+            "lemonchiffon",
+            "lightblue",
+            "lightcoral",
+            "lightcyan",
+            "lightgoldenrodyellow",
+            "lightgray",
+            "lightgrey",
+            "lightgreen",
+            "lightpink",
+            "lightsalmon",
+            "lightseagreen",
+            "lightskyblue",
+            "lightslategray",
+            "lightslategrey",
+            "lightsteelblue",
+            "lightyellow",
+            "lime",
+            "limegreen",
+            "linen",
+            "magenta",
+            "maroon",
+            "mediumaquamarine",
+            "mediumblue",
+            "mediumorchid",
+            "mediumpurple",
+            "mediumseagreen",
+            "mediumslateblue",
+            "mediumspringgreen",
+            "mediumturquoise",
+            "mediumvioletred",
+            "midnightblue",
+            "mintcream",
+            "mistyrose",
+            "moccasin",
+            "navajowhite",
+            "navy",
+            "oldlace",
+            "olive",
+            "olivedrab",
+            "orange",
+            "orangered",
+            "orchid",
+            "palegoldenrod",
+            "palegreen",
+            "paleturquoise",
+            "palevioletred",
+            "papayawhip",
+            "peachpuff",
+            "peru",
+            "pink",
+            "plum",
+            "powderblue",
+            "purple",
+            "rebeccapurple",
+            "red",
+            "rosybrown",
+            "royalblue",
+            "saddlebrown",
+            "salmon",
+            "sandybrown",
+            "seagreen",
+            "seashell",
+            "sienna",
+            "silver",
+            "skyblue",
+            "slateblue",
+            "slategray",
+            "slategrey",
+            "snow",
+            "springgreen",
+            "steelblue",
+            "tan",
+            "teal",
+            "thistle",
+            "tomato",
+            "turquoise",
+            "violet",
+            "wheat",
+            "white",
+            "whitesmoke",
+            "yellow",
+            "yellowgreen"};
     }
 }

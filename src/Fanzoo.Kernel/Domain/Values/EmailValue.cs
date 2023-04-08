@@ -13,8 +13,10 @@
             Guard.Against.InvalidEmailFormat(email, nameof(email));
         }
 
-        public static ValueResult<EmailValue, Error> Create(string email) => CanCreate(GetEmail(email))
-           ? new EmailValue(GetEmail(email)) : Errors.ValueObjects.EmailValue.InvalidFormat;
+        public static ValueResult<EmailValue, Error> Create(string email) =>
+            CanCreate(GetEmail(email))
+                ? new EmailValue(GetEmail(email))
+                : Errors.ValueObjects.EmailValue.InvalidFormat;
 
 
         public static implicit operator EmailValue(string value) => new(value);

@@ -12,17 +12,9 @@ namespace Fanzoo.Kernel.Domain.Values
             Guard.Against.InvalidBase64String(refreshToken, nameof(refreshToken));
         }
 
-        public static ValueResult<RefreshTokenValue, Error> Create(string refreshToken)
-        {
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(refreshToken)
-                .And
-                .IsBase64String(refreshToken);
-
-            return isValid
+        public static ValueResult<RefreshTokenValue, Error> Create(string refreshToken) => CanCreate(refreshToken)
                 ? new RefreshTokenValue(refreshToken)
                 : Errors.ValueObjects.RefreshTokenValue.InvalidFormat;
-        }
 
         public static RefreshTokenValue Generate()
         {
@@ -32,6 +24,12 @@ namespace Fanzoo.Kernel.Domain.Values
         }
 
         public static implicit operator RefreshTokenValue(string value) => new(value);
+
+        public static bool CanCreate(string refreshToken) =>
+            Check.For
+                .NotNullOrWhiteSpace(refreshToken)
+                .And
+                .IsBase64String(refreshToken);
 
     }
 }

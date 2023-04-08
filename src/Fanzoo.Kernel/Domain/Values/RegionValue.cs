@@ -4,96 +4,70 @@
     {
         private RegionValue() { } //ORM
 
-        private RegionValue(string regionAbbreviation) : base(regionAbbreviation) { }
-
-        public static ValueResult<RegionValue, Error> Create(string regionAbbreviation)
+        public RegionValue(string region) : base(region.ToUpper())
         {
-            regionAbbreviation = regionAbbreviation.ToUpper();
-
-            var isValid = Check.For
-                .NotNullOrWhiteSpace(regionAbbreviation)
-                .And
-                .IsInList(GetRegions(), regionAbbreviation);
-
-            return isValid ? new RegionValue(regionAbbreviation) : Errors.ValueObjects.RegionValue.InvalidRegionCode;
+            Guard.Against.NullOrWhiteSpace(region.ToUpper(), nameof(region));
+            Guard.Against.NotInList(Regions.Keys, region.ToUpper(), nameof(region));
         }
 
-        public static IEnumerable<string> GetRegions() => new string[]
-            {
-                //"AB",
-                //"BC",
-                //"MB",
-                //"NB",
-                //"NL",
-                //"NT",
-                //"NS",
-                //"NU",
-                //"ON",
-                //"PE",
-                //"QC",
-                //"SK",
-                //"YT",
-                //<- end canada
+        public static ValueResult<RegionValue, Error> Create(string region) => CanCreate(region.ToUpper()) ? new RegionValue(region) : Errors.ValueObjects.RegionValue.InvalidRegionCode;
 
-                "AL",
-                "AK",
-                "AS",
-                "AZ",
-                "AR",
-                "CA",
-                "CO",
-                "CT",
-                "DE",
-                "DC",
-                "FM",
-                "FL",
-                "GA",
-                "GU",
-                "HI",
-                "ID",
-                "IL",
-                "IN",
-                "IA",
-                "KS",
-                "KY",
-                "LA",
-                "ME",
-                "MH",
-                "MD",
-                "MA",
-                "MI",
-                "MN",
-                "MS",
-                "MO",
-                "MT",
-                "NE",
-                "NV",
-                "NH",
-                "NJ",
-                "NM",
-                "NY",
-                "NC",
-                "ND",
-                "MP",
-                "OH",
-                "OK",
-                "OR",
-                "PW",
-                "PA",
-                "PR",
-                "RI",
-                "SC",
-                "SD",
-                "TN",
-                "TX",
-                "UT",
-                "VT",
-                "VI",
-                "VA",
-                "WA",
-                "WV",
-                "WI",
-                "WY"
-            };
+        public static bool CanCreate(string region) => Check.For.IsInList(Regions.Keys, region.ToUpper());
+
+        public static readonly IReadOnlyDictionary<string, string> Regions = new Dictionary<string, string>()
+        {
+            { "AL", "Alabama" },
+            { "AK", "Alaska" },
+            { "AZ", "Arizona" },
+            { "AR", "Arkansas" },
+            { "CA", "California" },
+            { "CO", "Colorado" },
+            { "CT", "Connecticut" },
+            { "DE", "Delaware" },
+            { "DC", "District of Columbia" },
+            { "FL", "Florida" },
+            { "GA", "Georgia" },
+            { "HI", "Hawaii" },
+            { "ID", "Idaho" },
+            { "IL", "Illinois" },
+            { "IN", "Indiana" },
+            { "IA", "Iowa" },
+            { "KS", "Kansas" },
+            { "KY", "Kentucky" },
+            { "LA", "Louisiana" },
+            { "ME", "Maine" },
+            { "MD", "Maryland" },
+            { "MA", "Massachusetts" },
+            { "MI", "Michigan" },
+            { "MN", "Minnesota" },
+            { "MS", "Mississippi" },
+            { "MO", "Missouri" },
+            { "MT", "Montana" },
+            { "NE", "Nebraska" },
+            { "NV", "Nevada" },
+            { "NH", "New Hampshire" },
+            { "NJ", "New Jersey" },
+            { "NM", "New Mexico" },
+            { "NY", "New York" },
+            { "NC", "North Carolina" },
+            { "ND", "North Dakota" },
+            { "OH", "Ohio" },
+            { "OK", "Oklahoma" },
+            { "OR", "Oregon" },
+            { "PA", "Pennsylvania" },
+            { "RI", "Rhode Island" },
+            { "SC", "South Carolina" },
+            { "SD", "South Dakota" },
+            { "TN", "Tennessee" },
+            { "TX", "Texas" },
+            { "UT", "Utah" },
+            { "VT", "Vermont" },
+            { "VA", "Virginia" },
+            { "WA", "Washington" },
+            { "WV", "West Virginia" },
+            { "WI", "Wisconsin" },
+            { "WY", "Wyoming" }
+        };
+
     }
 }

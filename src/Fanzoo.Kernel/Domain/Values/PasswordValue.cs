@@ -2,6 +2,7 @@
 
 namespace Fanzoo.Kernel.Domain.Values
 {
+    //TODO: refactor this to be configurable somehow
     public sealed class PasswordValue : RequiredStringValue, IPasswordValue
     {
         private const int MinimumPasswordLength = 6;

@@ -6,7 +6,7 @@ namespace Fanzoo.Kernel.Domain.Values
     {
         private AddressValue() { } //ORM
 
-        public AddressValue(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode)
+        public AddressValue(string primaryAddress, string? secondaryAddress, string city, RegionValue region, USPostalCodeValue postalCode)
         {
             Guard.Against.NullOrWhiteSpace(primaryAddress, nameof(primaryAddress));
             Guard.Against.NullOrWhiteSpace(city, nameof(city));
@@ -18,10 +18,10 @@ namespace Fanzoo.Kernel.Domain.Values
             PostalCode = postalCode;
         }
 
-        public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, PostalCodeValue postalCode) => CanCreate(primaryAddress, city, postalCode)        
+        public static ValueResult<AddressValue, Error> Create(string primaryAddress, string? secondaryAddress, string city, RegionValue region, USPostalCodeValue postalCode) => CanCreate(primaryAddress, city, postalCode)
                 ? new AddressValue(primaryAddress, secondaryAddress, city, region, postalCode)
                 : Errors.ValueObjects.AddressValue.InvalidFormat;
-        
+
 
         public string PrimaryAddress { get; private set; } = default!;
 
@@ -31,7 +31,7 @@ namespace Fanzoo.Kernel.Domain.Values
 
         public RegionValue Region { get; private set; } = default!;
 
-        public PostalCodeValue PostalCode { get; private set; } = default!;
+        public USPostalCodeValue PostalCode { get; private set; } = default!;
 
         public override string ToString()
         {
@@ -63,6 +63,6 @@ namespace Fanzoo.Kernel.Domain.Values
             yield return PostalCode;
         }
 
-        public static bool CanCreate(string primaryAddress, string? city, PostalCodeValue postalCode) => Check.For.IsValidAddress(primaryAddress, city, postalCode);
+        public static bool CanCreate(string primaryAddress, string? city, USPostalCodeValue postalCode) => Check.For.IsValidAddress(primaryAddress, city, postalCode);
     }
 }

@@ -26,22 +26,6 @@ namespace Fanzoo.Kernel.Domain.Values
                ? new MoneyValue(amount, currency)
                : Errors.ValueObjects.MoneyValue.InvalidFormat;
 
-        //not sure if this should be revised this way, can't pull in correct errors
-
-        //if (!Check.For.GreaterThanOrEqual(amount, 0))
-        //{
-        //    return Errors.ValueObjects.MoneyValue.GreaterThanOrEqualToZero;
-        //}
-
-        //if (decimal.Round(amount, currency.MinorUnits) != amount)
-        //{
-        //    return Errors.ValueObjects.MoneyValue.InvalidNumberOfDecimalPlaces;
-        //}
-
-        //    return new MoneyValue(amount, currency);
-
-
-
         public decimal Amount { get; init; }
 
         public CurrencyValue Currency { get; init; } = default!;
