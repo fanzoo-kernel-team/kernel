@@ -187,7 +187,7 @@ namespace Fanzoo.Kernel.Tests
 ;
             var testingRegion = RegionValue.Create("TN");
 
-            var testingPostalCode = PostalCodeValue.Create("11111-1111");
+            var testingPostalCode = USPostalCodeValue.Create("11111-1111");
 
             var testingSecondaryAddressBlank = "";
 
@@ -300,19 +300,43 @@ namespace Fanzoo.Kernel.Tests
 
             var emptyPostalCode = "";
 
-            var postalCode = PostalCodeValue.Create(validPostalCode);
+            var postalCode = USPostalCodeValue.Create(validPostalCode);
 
             Assert.True(postalCode.Value == validPostalCode);
 
-            Assert.True(PostalCodeValue.Create(invalidPostalCode).IsFailure);
+            Assert.True(USPostalCodeValue.Create(invalidPostalCode).IsFailure);
 
-            Assert.True(PostalCodeValue.Create(emptyPostalCode).IsFailure);
+            Assert.True(USPostalCodeValue.Create(emptyPostalCode).IsFailure);
 
-            Assert.Throws<ArgumentException>(() => new PostalCodeValue(invalidPostalCode));
+            Assert.Throws<ArgumentException>(() => new USPostalCodeValue(invalidPostalCode));
 
-            Assert.Throws<ArgumentNullException>(() => new PostalCodeValue(emptyPostalCode));
+            Assert.Throws<ArgumentNullException>(() => new USPostalCodeValue(emptyPostalCode));
 
-            Assert.NotNull(new PostalCodeValue(validPostalCode));
+            Assert.NotNull(new USPostalCodeValue(validPostalCode));
+        }
+
+        [Fact]
+        public void Test_RegionValue()
+        {
+            var validRegion = "MI";
+            var invalidRegion = "BB";
+            var emptyRegion = "";
+
+            Assert.True(RegionValue.CanCreate(validRegion));
+
+            var region = RegionValue.Create(validRegion);
+
+            Assert.True(region.Value == validRegion);
+
+            Assert.True(RegionValue.Create(invalidRegion).IsFailure);
+
+            Assert.True(RegionValue.Create(emptyRegion).IsFailure);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => new RegionValue(invalidRegion));
+
+            Assert.Throws<ArgumentNullException>(() => new RegionValue(emptyRegion));
+
+            Assert.NotNull(new RegionValue(validRegion));
         }
 
         [Fact]
@@ -325,6 +349,8 @@ namespace Fanzoo.Kernel.Tests
             var emptyBase64String = "";
 
             var base64String = RefreshTokenValue.Create(validBase64string).Value;
+
+            Assert.True(RefreshTokenValue.CanCreate(validBase64string));
 
             Assert.True(base64String.Value == validBase64string);
 

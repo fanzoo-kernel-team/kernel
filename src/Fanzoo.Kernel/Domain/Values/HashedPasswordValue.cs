@@ -10,11 +10,13 @@
         }
 
         public static ValueResult<HashedPasswordValue, Error> Create(string hashedPassword) =>
-            Check.For.IsBase64String(hashedPassword)
+            CanCreate(hashedPassword)
                 ? new HashedPasswordValue(hashedPassword)
                 : Errors.ValueObjects.HashedPasswordValue.InvalidFormat;
 
         public static implicit operator HashedPasswordValue(string value) => new(value);
+
+        public static bool CanCreate(string hashedPassword) => Check.For.IsBase64String(hashedPassword);
 
     }
 }
