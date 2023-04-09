@@ -1,5 +1,6 @@
 ﻿using Fanzoo.Kernel.Builder;
 using Fanzoo.Kernel.Defaults.Web.Endpoints.Session;
+using Fanzoo.Kernel.Web.Services;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Session
 {
@@ -19,6 +20,11 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Session
             group.MapPost("/tokens/refresh", PostRefreshToken.HandleAsync);
 
             group.MapPost("/tokens/revoke", PostRevokeToken.HandleAsync);
+
+            group.MapGet("email", (ICurrentUserService currentUserService) =>
+            {
+                return currentUserService.GetEmailOrDefault();
+            });
 
             return endpoints;
         }
