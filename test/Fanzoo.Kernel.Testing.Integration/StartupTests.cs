@@ -25,6 +25,19 @@ namespace Fanzoo.Kernel.Testing.Integration
                     .GetAsync("/heartbeat"))
                         .EnsureSuccessStatusCode();
 
+
+        [Fact]
+        public async Task Test_CurrentUserService()
+        {
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+
+            var email = await (await client
+                .GetAsync("/session/email"))
+                    .Content.ReadAsStringAsync();
+
+            Assert.Equal("billw@fanzootechnology.com", email);
+        }
+
         [Fact]
         public async Task Test_Can_Create_Game()
         {
