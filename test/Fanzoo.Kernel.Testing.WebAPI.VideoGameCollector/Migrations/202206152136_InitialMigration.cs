@@ -1,5 +1,3 @@
-using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Core.Values;
-
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Migrations
 {
     [Migration(202206152136)]
@@ -12,6 +10,12 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Migrations
                     .WithEmailColumn()
                     .WithColumn("Username")
                         .AsString(DatabaseCatalog.FieldLength.Email)
+                        .NotNullable()
+                    .WithColumn("FirstName")
+                        .AsString(DatabaseCatalog.FieldLength.Short)
+                        .NotNullable()
+                    .WithColumn("LastName")
+                        .AsString(DatabaseCatalog.FieldLength.Short)
                         .NotNullable()
                     .WithColumn("Password")
                         .AsString(DatabaseCatalog.FieldLength.Short)
@@ -89,8 +93,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Migrations
             var billw = Guid.NewGuid();
             var bob = Guid.NewGuid();
 
-            Insert.IntoTable("User").Row(new { Id = billw, Username = "billw@fanzootechnology.com", Email = "billw@fanzootechnology.com", Password = "ACCY+b4bvLeFcGENH/SFOrpZCi45WE5bhJDcho+8kT8UX+lzS0kOk46x6DUkvQH5Jw==", LastAuthenticationChange = DateTime.Now, IsActive = true, CreatedDate = DateTime.Now, CreatedBy = "system" });
-            Insert.IntoTable("User").Row(new { Id = bob, Username = "bob@fanzootechnology.com", Email = "bob@fanzootechnology.com", Password = "ACCY+b4bvLeFcGENH/SFOrpZCi45WE5bhJDcho+8kT8UX+lzS0kOk46x6DUkvQH5Jw==", LastAuthenticationChange = DateTime.Now, IsActive = true, CreatedDate = DateTime.Now, CreatedBy = "system" });
+            Insert.IntoTable("User").Row(new { Id = billw, Username = "billw@fanzootechnology.com", Email = "billw@fanzootechnology.com", Password = "ACCY+b4bvLeFcGENH/SFOrpZCi45WE5bhJDcho+8kT8UX+lzS0kOk46x6DUkvQH5Jw==", FirstName = "Bill", LastName = "Wheelock", LastAuthenticationChange = DateTime.Now, IsActive = true, CreatedDate = DateTime.Now, CreatedBy = "system" });
+            Insert.IntoTable("User").Row(new { Id = bob, Username = "bob@fanzootechnology.com", Email = "bob@fanzootechnology.com", Password = "ACCY+b4bvLeFcGENH/SFOrpZCi45WE5bhJDcho+8kT8UX+lzS0kOk46x6DUkvQH5Jw==", FirstName = "Bob", LastName = "Builder", LastAuthenticationChange = DateTime.Now, IsActive = true, CreatedDate = DateTime.Now, CreatedBy = "system" });
 
             Insert.IntoTable("Role").Row(new { ApplicationRoleValue.Administrator.Id, ApplicationRoleValue.Administrator.Name, CreatedDate = DateTime.Now, CreatedBy = "system" });
             Insert.IntoTable("Role").Row(new { ApplicationRoleValue.User.Id, ApplicationRoleValue.User.Name, CreatedDate = DateTime.Now, CreatedBy = "system" });

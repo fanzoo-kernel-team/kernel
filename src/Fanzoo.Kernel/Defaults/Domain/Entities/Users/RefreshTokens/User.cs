@@ -1,5 +1,4 @@
-﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
-using Fanzoo.Kernel.Domain.Entities.Users;
+﻿using Fanzoo.Kernel.Domain.Entities.Users;
 
 namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens
 {
@@ -7,13 +6,14 @@ namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens
     {
         protected User() : base(10, 5) { }
 
-        public static ValueResult<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password)
+        public static ValueResult<User, Error> Create(EmailUsernameValue username, EmailValue email, HashedPasswordValue password, NameValue name)
         {
             var user = new User()
             {
                 Username = username,
                 Email = email,
                 Password = password,
+                Name = name,
                 ForcePasswordChange = true,
                 IsActive = true
             };

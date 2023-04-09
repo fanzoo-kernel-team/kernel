@@ -13,6 +13,8 @@
 
         HashedPasswordValue Password { get; }
 
+        NameValue Name { get; }
+
         bool IsLockedOut { get; }
 
         bool IsActive { get; }
@@ -99,6 +101,8 @@
         public virtual EmailValue Email { get; protected set; } = default!;
 
         public virtual HashedPasswordValue Password { get; protected set; } = default!;
+
+        public NameValue Name { get; protected set; } = default!;
 
         public virtual DateTime? LastLogin { get; protected set; }
 

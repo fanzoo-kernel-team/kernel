@@ -51,6 +51,19 @@ namespace FluentNHibernate.Mapping
             return mapping;
         }
 
+        public static ComponentPart<NameValue?> MapNameValue<TEntity>(this ClasslikeMapBase<TEntity> map, Expression<Func<TEntity, NameValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false)
+        {
+            var mapping = map.Component(entityFieldExpression, x =>
+            {
+                x.Map(n => n!.FirstName, "FirstName").Nullable(nullable);
+                x.Map(n => n!.LastName, "LastName").Nullable(nullable);
+            });
+
+            mapping.ColumnPrefix(columnPrefix);
+
+            return mapping;
+        }
+
         public static OneToManyPart<TChild> HasMany<TEntity, TChild>(this ClasslikeMapBase<TEntity> map, Expression<Func<TEntity, IEnumerable<TChild>>> memberExpression, string keyColumn) =>
             map.HasMany(memberExpression)
                 .KeyColumn(keyColumn)

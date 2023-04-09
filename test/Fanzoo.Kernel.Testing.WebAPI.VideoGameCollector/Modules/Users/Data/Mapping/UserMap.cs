@@ -12,6 +12,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users.Data.Map
 
             MapValueObject(e => e.Password);
 
+            MapNameValue(e => e.Name);
+
             HasMany(e => e.RefreshTokens, "UserId");
 
             HasMany(e => e.Roles)

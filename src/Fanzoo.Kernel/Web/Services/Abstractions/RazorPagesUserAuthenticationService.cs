@@ -181,6 +181,7 @@ namespace Fanzoo.Kernel.Web.Services
                 .AddClaim(System.Security.Claims.ClaimTypes.PrimarySid, user.Id.Value)
                 .AddClaim(ClaimTypes.Username, user.Username.Value)
                 .AddClaim(System.Security.Claims.ClaimTypes.Email, user.Email)
+                .AddClaim(System.Security.Claims.ClaimTypes.Name, user.Name)
                 .AddClaim(JwtRegisteredClaimNames.Sub, user.Username.Value) // subject (required)
                 .AddClaim(JwtRegisteredClaimNames.Jti, user.Id.Value.ToString()!) // token id is scoped to the user id
                 .AddClaim(ClaimTypes.LastAuthenticationChange, user.LastAuthenticationChange.AddSeconds(1)); // there is some slight precision loss in the string round-trip, so we give it an extra second

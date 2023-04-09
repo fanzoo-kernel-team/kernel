@@ -26,6 +26,11 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Session
                 return currentUserService.GetEmailOrDefault();
             });
 
+            group.MapGet("name", (ICurrentUserService currentUserService) =>
+            {
+                return currentUserService.GetNameOrDefault();
+            });
+
             return endpoints;
         }
 

@@ -51,5 +51,7 @@
         public static string? GetUsernameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(ClaimTypes.Username);
 
         public static string? GetEmailOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.Email);
+
+        public static string? GetNameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.Name);
     }
 }

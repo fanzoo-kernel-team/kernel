@@ -12,6 +12,8 @@ namespace Fanzoo.Kernel.Testing.Web.Razor.Modules.Users.Data.Mapping
 
             MapValueObject(e => e.Password);
 
+            MapNameValue(e => e.Name);
+
             HasMany(e => e.Roles)
                 .Table("UserRole")
                 .KeyColumn("UserId")

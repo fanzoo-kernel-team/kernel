@@ -35,7 +35,12 @@ namespace Fanzoo.Kernel.Testing.Integration
                 .GetAsync("/session/email"))
                     .Content.ReadAsStringAsync();
 
+            var name = await (await client
+                .GetAsync("/session/name"))
+                    .Content.ReadAsStringAsync();
+
             Assert.Equal("billw@fanzootechnology.com", email);
+            Assert.Equal("Bill Wheelock", name);
         }
 
         [Fact]

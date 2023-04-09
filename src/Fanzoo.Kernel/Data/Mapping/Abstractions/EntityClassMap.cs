@@ -31,6 +31,9 @@ namespace Fanzoo.Kernel.Data.Mapping
         protected ComponentPart<MoneyValue?> MapMoneyValue(Expression<Func<TEntity, MoneyValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false) =>
             ClassMapExtensions.MapMoneyValue(this, entityFieldExpression, columnPrefix, nullable);
 
+        protected ComponentPart<NameValue?> MapNameValue(Expression<Func<TEntity, NameValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false) =>
+            ClassMapExtensions.MapNameValue(this, entityFieldExpression, columnPrefix, nullable);
+
         protected OneToManyPart<TChild> HasMany<TChild>(Expression<Func<TEntity, IEnumerable<TChild>>> memberExpression, string keyColumn) =>
             ClassMapExtensions.HasMany(this, memberExpression, keyColumn);
     }
