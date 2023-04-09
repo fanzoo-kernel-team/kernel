@@ -2,6 +2,8 @@
 {
     public interface ICurrentUserService
     {
+        bool IsAuthenticated { get; }
+
         string GetClaim(string claim);
 
         string? GetClaimOrDefault(string claim);
@@ -17,6 +19,8 @@
         {
             _contextAccessor = contextAccessor;
         }
+
+        public bool IsAuthenticated => _contextAccessor.User?.Identity?.IsAuthenticated ?? false;
 
         public string? GetClaimOrDefault(string claim) => _contextAccessor.User?.GetClaimOrDefault(claim)?.Value;
 
