@@ -213,30 +213,6 @@ namespace Fanzoo.Kernel.Tests
         }
 
         [Fact]
-        public void Test_PasswordValue()
-        {
-            var validPassword = "PasswordPassword";
-
-            var invalidPasswordShort = "meh";
-
-            var invalidPasswordLong = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-
-            var password = PasswordValue.Create(validPassword);
-
-            Assert.True(password.Value == validPassword);
-
-            Assert.True(PasswordValue.Create(invalidPasswordShort).IsFailure);
-
-            Assert.True(PasswordValue.Create(invalidPasswordLong).IsFailure);
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => new PasswordValue(invalidPasswordLong));
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => new PasswordValue(invalidPasswordShort));
-
-            Assert.NotNull(new PasswordValue(validPassword));
-        }
-
-        [Fact]
         public void Test_PhoneValue()
         {
             var validPhoneInput = "1(615) 555-5555";
@@ -607,6 +583,37 @@ namespace Fanzoo.Kernel.Tests
             Assert.True(CssColorValue.Create(invalidHex1).IsFailure);
             Assert.True(CssColorValue.Create(invalidHex2).IsFailure);
             Assert.True(CssColorValue.Create(invalidHex3).IsFailure);
+        }
+
+        [Fact]
+        public void Test_PasswordValue()
+        {
+            var validPasswords = new[]
+            {
+                "aaF!1rfhti",
+                "AABBCCd%22",
+                "djelkjasdlkd!1"
+            };
+
+            var invalidPasswords = new[]
+            {
+                "aaaF1!uewbncjd",
+                "ABCDEFGHIJKLMNOP",
+                "Fg!1a",
+                "aaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtiaaF!1rfhtit"
+            };
+
+            foreach (var validPassword in validPasswords)
+            {
+                Assert.True(PasswordValue.Create(validPassword).IsSuccessful);
+                Assert.True(PasswordValue.CanCreate(validPassword));
+            }
+
+            foreach (var invalidPassword in invalidPasswords)
+            {
+                Assert.True(PasswordValue.Create(invalidPassword).IsFailure);
+                Assert.False(PasswordValue.CanCreate(invalidPassword));
+            }
         }
 
         //[Fact]
