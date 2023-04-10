@@ -1,13 +1,12 @@
 ﻿using System.Globalization;
-using System.Net;
-using NHibernate.Mapping;
-using NHibernate.Stat;
-using static NHibernate.Engine.Query.CallableParser;
 
 namespace Fanzoo.Kernel
 {
     public static class CheckExtensions
     {
+        private const int MinimumPasswordLength = 10;
+        private const int MaximumPasswordLength = 100;
+
         public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
         public static Check IsNull<T>(this Check check, T value) => check.Resolve(value is null);
@@ -136,6 +135,44 @@ namespace Fanzoo.Kernel
             return check.Resolve(normalizedValue.StartsWith('#')
                 ? RegexCatalog.CssColor().IsMatch(normalizedValue)
                 : _validColorNames.Contains(normalizedValue));
+        }
+
+        //BHW 04/10/2023 -- this is ugly
+        public static Check IsValidPassword(this Check check, string password)
+        {
+            var isValid = Check.For
+                .LengthIsGreaterThanOrEqual(password, MinimumPasswordLength)
+                .And
+                .LengthIsLessThanOrEqual(password, MaximumPasswordLength)
+                    .Result;
+
+            var validCharacterCount = 0;
+
+            if (RegexCatalog.Uppercase().IsMatch(password))
+            {
+                validCharacterCount++;
+            }
+
+            if (RegexCatalog.Lowercase().IsMatch(password))
+            {
+                validCharacterCount++;
+            }
+
+            if (RegexCatalog.Digit().IsMatch(password))
+            {
+                validCharacterCount++;
+            }
+
+            if (RegexCatalog.SpecialCharacter().IsMatch(password))
+            {
+                validCharacterCount++;
+            }
+
+            isValid &= validCharacterCount >= 3;
+
+            isValid &= RegexCatalog.MoreThanTwoMatchingCharactersInARow().IsMatch(password) is not true;
+
+            return check.Resolve(isValid);
         }
 
         private static Check IsValidEmailFormatInternal(Check check, string email)

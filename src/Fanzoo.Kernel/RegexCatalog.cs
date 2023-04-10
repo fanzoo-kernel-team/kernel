@@ -13,5 +13,20 @@
 
         [GeneratedRegex(@"^\d{5}(?:[-\s]\d{4})?$")]
         public static partial Regex PostalCode();
+
+        [GeneratedRegex(@"[a-z]")]
+        public static partial Regex Lowercase();
+
+        [GeneratedRegex(@"[A-Z]")]
+        public static partial Regex Uppercase();
+
+        [GeneratedRegex(@"[0-9]")]
+        public static partial Regex Digit();
+
+        [GeneratedRegex(@"[!@#$%^&*()]")]
+        public static partial Regex SpecialCharacter();
+
+        [GeneratedRegex(@"(.)\1{2,}")]
+        public static partial Regex MoreThanTwoMatchingCharactersInARow();
     }
 }

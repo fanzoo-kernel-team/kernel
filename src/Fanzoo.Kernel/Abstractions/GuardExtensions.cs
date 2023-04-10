@@ -135,5 +135,13 @@ namespace Fanzoo.Kernel
                 throw new ArgumentException(argument);
             }
         }
+
+        public static void InvalidPassword(this Guard guard, string value, string argument)
+        {
+            if (Check.For.IsValidPassword(value).Result is not true)
+            {
+                throw new ArgumentException(argument);
+            }
+        }
     }
 }
