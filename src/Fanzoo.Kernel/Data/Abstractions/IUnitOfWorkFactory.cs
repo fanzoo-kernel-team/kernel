@@ -6,6 +6,8 @@
 
         IUnitOfWork Current { get; }
 
+        bool HasUnitOfWork { get; }
+
         bool CanOpen { get; }
     }
 }
