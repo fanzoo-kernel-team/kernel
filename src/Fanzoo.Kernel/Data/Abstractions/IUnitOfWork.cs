@@ -15,5 +15,7 @@
         ValueTask CommitAsync();
 
         ValueTask RollbackAsync();
+
+        void Rollback();
     }
 }

@@ -19,6 +19,11 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
             throw new ArgumentNullException(nameof(unitOfWorkFactory));
         }
 
+        if (unitOfWorkFactory.HasUnitOfWork)
+        {
+            unitOfWorkFactory.Current.Rollback();
+        }
+
         _unitOfWork = unitOfWorkFactory.Open();
     }
 
@@ -93,6 +98,11 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
         if (unitOfWorkFactory is null)
         {
             throw new ArgumentNullException(nameof(unitOfWorkFactory));
+        }
+
+        if (unitOfWorkFactory.HasUnitOfWork)
+        {
+            unitOfWorkFactory.Current.Rollback();
         }
 
         _unitOfWork = unitOfWorkFactory.Open();

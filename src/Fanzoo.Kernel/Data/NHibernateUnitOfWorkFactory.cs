@@ -35,6 +35,8 @@
 
         public bool CanOpen => _current is null || _current.IsClosed;
 
+        public bool HasUnitOfWork => _current is not null;
+
         public void Dispose() => _current?.Dispose();
 
         public ValueTask DisposeAsync()
