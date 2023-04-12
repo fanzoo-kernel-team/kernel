@@ -25,8 +25,8 @@ namespace Fanzoo.Kernel.Data.Mapping
             where TComponent : ValueObject =>
                 ClassMapExtensions.MapValueObject(this, entityFieldExpression, nullable);
 
-        protected ComponentPart<AddressValue?> MapAddressValue(Expression<Func<TEntity, AddressValue?>> entityFieldExpression, string columnPrefix = "") =>
-            ClassMapExtensions.MapAddressValue(this, entityFieldExpression, columnPrefix);
+        protected ComponentPart<AddressValue?> MapAddressValue(Expression<Func<TEntity, AddressValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false) =>
+            ClassMapExtensions.MapAddressValue(this, entityFieldExpression, columnPrefix, nullable);
 
         protected ComponentPart<MoneyValue?> MapMoneyValue(Expression<Func<TEntity, MoneyValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false) =>
             ClassMapExtensions.MapMoneyValue(this, entityFieldExpression, columnPrefix, nullable);

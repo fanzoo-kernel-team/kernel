@@ -20,15 +20,15 @@ namespace FluentNHibernate.Mapping
             where TComponent : ValueObject =>
                 map.MapValueObject(entityFieldExpression, entityFieldExpression.ToMember().Name, nullable);
 
-        public static ComponentPart<AddressValue?> MapAddressValue<TEntity>(this ClasslikeMapBase<TEntity> map, Expression<Func<TEntity, AddressValue?>> entityFieldExpression, string columnPrefix = "")
+        public static ComponentPart<AddressValue?> MapAddressValue<TEntity>(this ClasslikeMapBase<TEntity> map, Expression<Func<TEntity, AddressValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false)
         {
             var mapping = map.Component(entityFieldExpression, x =>
             {
-                x.Map(a => a!.PrimaryAddress);
-                x.Map(a => a!.SecondaryAddress);
-                x.Map(a => a!.City);
-                x.MapValueObject(a => a!.Region);
-                x.MapValueObject(a => a!.PostalCode);
+                x.Map(a => a!.PrimaryAddress).Nullable(nullable);
+                x.Map(a => a!.SecondaryAddress).Nullable(nullable);
+                x.Map(a => a!.City).Nullable(nullable);
+                x.MapValueObject(a => a!.Region, nullable);
+                x.MapValueObject(a => a!.PostalCode, nullable);
             });
 
             mapping.ColumnPrefix(columnPrefix);

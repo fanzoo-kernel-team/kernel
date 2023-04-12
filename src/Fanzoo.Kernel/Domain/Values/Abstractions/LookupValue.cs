@@ -23,6 +23,14 @@ namespace Fanzoo.Kernel.Domain.Values
                                     .Cast<TInheritor>()
                                         .Single(f => f.Id.Equals(id));
 
+        public static IEnumerable<TInheritor> All() => typeof(TInheritor)
+            .GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.FieldType == typeof(TInheritor))
+                    .Select(f => f.GetValue(null))
+                        .Cast<LookupValue<TInheritor, TPrimitive>>()
+                                .Cast<TInheritor>()
+                                    .ToArray();
+
         protected override IEnumerable<object> GetEqualityValues()
         {
             yield return Id;

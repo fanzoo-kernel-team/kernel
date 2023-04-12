@@ -34,6 +34,14 @@ namespace Fanzoo.Kernel.Data
             }
         }
 
+        public void Rollback()
+        {
+            if (_transaction.IsActive)
+            {
+                _transaction.Rollback();
+            }
+        }
+
         public async ValueTask RollbackAsync()
         {
             if (_transaction.IsActive)

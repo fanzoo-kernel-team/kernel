@@ -11,6 +11,8 @@ namespace Fanzoo.Kernel.Testing.Integration
     [Collection("LocalDb")]
     public class StartupTests
     {
+        private const string Password = "TestPassword123!";
+
         private readonly IntegrationSqlLocalDbWebApplicationFactory _factory;
 
         public StartupTests(IntegrationSqlLocalDbWebApplicationFactory factory)
@@ -29,7 +31,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_CurrentUserService()
         {
-            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             var email = await (await client
                 .GetAsync("/session/email"))
@@ -46,7 +48,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Create_Game()
         {
-            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             (await client
                     .PostAsync("/games?name=Pitfall", null))
@@ -56,7 +58,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Update_Many()
         {
-            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             (await client
                     .PostAsync("/games?name=Pitfall", null))
@@ -82,7 +84,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Must_Be_In_Administrator_Role()
         {
-            var (client, _) = await LoginAsync("bob@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("bob@fanzootechnology.com", Password);
 
             var result = await client.GetAsync("/requires-administrator-role");
 
@@ -92,7 +94,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Refresh_Token()
         {
-            var (client, _) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, _) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             //wait a few seconds for the token to expire
             Thread.Sleep(2000);
@@ -105,7 +107,7 @@ namespace Fanzoo.Kernel.Testing.Integration
             AuthenticationResponse response;
 
             //re-authenticate
-            (client, response) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            (client, response) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             //refresh the token
             result = await client.PostAsJsonAsync("/session/tokens/refresh", new RefreshTokenRequest(response.RefreshToken));
@@ -131,7 +133,7 @@ namespace Fanzoo.Kernel.Testing.Integration
         [Fact]
         public async Task Test_Can_Revoke_Token()
         {
-            var (client, response) = await LoginAsync("billw@fanzootechnology.com", "Test123!");
+            var (client, response) = await LoginAsync("billw@fanzootechnology.com", Password);
 
             var result = await client.PostAsJsonAsync("/session/tokens/revoke", new RevokeTokenRequest(response.RefreshToken));
 
