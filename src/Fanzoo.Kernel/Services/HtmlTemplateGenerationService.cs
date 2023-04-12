@@ -21,10 +21,7 @@
             {
                 var layout = await _embeddedResourceReader.ReadEmbeddedResourceFileAsync(layoutPathName, _templateEmbeddedResourceLocator.Assembly);
 
-                if (values.ContainsKey("Content"))
-                {
-                    values.Remove("Content");
-                }
+                values.Remove("Content");
 
                 values.Add("Content", sb.ToString());
 

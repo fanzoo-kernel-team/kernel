@@ -22,6 +22,13 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Users
 
             group.MapPost("/post-test", PostCreate.HandleAsync);
 
+            group.MapGet("/test-email", (IEmailServiceFactory emailFactory) =>
+            {
+                var emailService = emailFactory.GetService();
+
+                return Results.Ok();
+            });
+
             return endpoints;
         }
 
