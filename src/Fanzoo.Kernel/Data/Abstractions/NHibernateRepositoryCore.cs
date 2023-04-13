@@ -11,6 +11,8 @@
         protected NHibernateRepositoryCore(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
+
+            _unitOfWorkFactory.Open();
         }
 
         public async ValueTask<TAggregateRoot> LoadAsync(TIdentifier id) => await _unitOfWorkFactory.Current.GetContext().LoadAsync<TAggregateRoot, TIdentifier>(id);

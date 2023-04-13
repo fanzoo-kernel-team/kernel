@@ -47,14 +47,12 @@ namespace Fanzoo.Kernel.Web.Services
             _httpContextAccessor = httpContextAccessor;
             _passwordHashingService = passwordHashingService;
             _unitOfWorkFactory = unitOfWorkFactory;
-
-            //open the unit of work
-            _unitOfWorkFactory.Open();
-
         }
 
         public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password)
         {
+            _unitOfWorkFactory.Open();
+
             var user = await FindUserByUsernameAsync(username);
 
             if (user is null)
@@ -78,6 +76,8 @@ namespace Fanzoo.Kernel.Web.Services
 
                 await SaveUserAsync();
 
+                _unitOfWorkFactory.Close();
+
                 return Errors.UserAuthentication.PasswordVerificationFailed;
             }
 
@@ -87,11 +87,15 @@ namespace Fanzoo.Kernel.Web.Services
 
             await SaveUserAsync();
 
+            _unitOfWorkFactory.Close();
+
             return (new JwtSecurityTokenHandler().WriteToken(accessToken).ToString(), refreshToken.Token);
         }
 
         public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> RefreshTokenAsync(string refreshToken)
         {
+            _unitOfWorkFactory.Open();
+
             var user = await FindUserByTokenAsync(RefreshTokenValue.Create(refreshToken).Value);
 
             if (user is null)
@@ -132,11 +136,15 @@ namespace Fanzoo.Kernel.Web.Services
 
             await SaveUserAsync();
 
+            _unitOfWorkFactory.Close();
+
             return (new JwtSecurityTokenHandler().WriteToken(accessToken).ToString(), newRefreshToken.Token);
         }
 
         public async ValueTask<UnitResult<Error>> RevokeAsync(string refreshToken)
         {
+            _unitOfWorkFactory.Open();
+
             var token = RefreshTokenValue.Create(refreshToken).Value;
 
             var user = await FindUserByTokenAsync(token);
@@ -150,11 +158,15 @@ namespace Fanzoo.Kernel.Web.Services
 
             await SaveUserAsync();
 
+            _unitOfWorkFactory.Close();
+
             return UnitResult.Success<Error>();
         }
 
         public async ValueTask<UnitResult<Error>> RevokeAllAsync(TIdentifier identifier)
         {
+            _unitOfWorkFactory.Open();
+
             var user = await FindUserByIdAsync(identifier);
 
             if (user is null)
@@ -166,11 +178,15 @@ namespace Fanzoo.Kernel.Web.Services
 
             await SaveUserAsync();
 
+            _unitOfWorkFactory.Close();
+
             return UnitResult.Success<Error>();
         }
 
         protected async ValueTask<bool> GetRequiresAuthenticationAsync(ClaimsPrincipal principal)
         {
+            _unitOfWorkFactory.Open();
+
             var identifier = FindClaimIdentifier(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
 
             if (identifier is not null)
@@ -185,10 +201,14 @@ namespace Fanzoo.Kernel.Web.Services
                         && DateTime.TryParse(lastAuthenticationChange, out var lastAuthenticationChangeDate)
                         && !user.RequiresAuthentication(lastAuthenticationChangeDate))
                     {
+                        _unitOfWorkFactory.Close();
+
                         return false;
                     }
                 }
             }
+
+            _unitOfWorkFactory.Close();
 
             return true;
         }
