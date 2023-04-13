@@ -9,6 +9,11 @@ namespace Fanzoo.Kernel.Services
         public string Service { get; set; } = default!;
     }
 
+    public interface IEmailServiceFactory
+    {
+        IEmailService GetService();
+    }
+
     public sealed class EmailServiceFactory : IEmailServiceFactory
     {
         private readonly string _serviceName;

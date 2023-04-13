@@ -2,27 +2,11 @@
 {
     public record struct EmailAttachment(byte[] Data, string MIMEType, string Filename);
 
-    public interface IEmailService : IService
+    public interface IEmailService
     {
         string Name => GetType().Name;
 
-        ValueTask SendEmailAsync(string[] to, string[] cc, string[] bcc, string from, string subject, string? htmlContent = null, string? plainTextContent = null, EmailAttachment[]? attachments = null);
-
-        ValueTask SendEmailAsync(string to, string subject, string content, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string to, string subject, string content, EmailAttachment[] attachments, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string to, string from, string subject, string content, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string to, string from, string subject, string content, EmailAttachment[] attachments, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string[] recipients, string subject, string content, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string[] recipients, string subject, string content, EmailAttachment[] attachments, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string[] recipients, string from, string subject, string content, bool isHtml = true);
-
-        ValueTask SendEmailAsync(string[] recipients, string from, string subject, string content, EmailAttachment[] attachments, bool isHtml = true);
+        ValueTask SendEmailAsync(string[] to, string subject, string? from = null, string[]? cc = null, string[]? bcc = null, string? htmlContent = null, string? plainTextContent = null, EmailAttachment[]? attachments = null);
     }
 }
 

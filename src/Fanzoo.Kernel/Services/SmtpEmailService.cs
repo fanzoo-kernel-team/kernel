@@ -43,18 +43,34 @@ namespace Fanzoo.Kernel.Services
 
         public string Name => "Smtp";
 
-        public async ValueTask SendEmailAsync(string[] to, string[] cc, string[] bcc, string from, string subject, string? htmlContent = null, string? plainTextContent = null, EmailAttachment[]? attachments = null)
+        public async ValueTask SendEmailAsync(string[] to, string subject, string? from = null, string[]? cc = null, string[]? bcc = null, string? htmlContent = null, string? plainTextContent = null, EmailAttachment[]? attachments = null)
         {
             //create the message
-            var message = new MimeMessage();
+            var message = new MimeMessage
+            {
+                Subject = subject
+            };
+
+            from ??= _settings.From;
+
+            if (from is null)
+            {
+                throw new ArgumentNullException(nameof(from));
+            }
 
             message.From.Add(MailboxAddress.Parse(from));
 
             message.To.AddRange(to.Select(t => MailboxAddress.Parse(t)));
 
-            message.Cc.AddRange(cc.Select(c => MailboxAddress.Parse(c)));
+            if (cc is not null)
+            {
+                message.Cc.AddRange(cc.Select(c => MailboxAddress.Parse(c)));
+            }
 
-            message.Bcc.AddRange(bcc.Select(b => MailboxAddress.Parse(b)));
+            if (bcc is not null)
+            {
+                message.Bcc.AddRange(bcc.Select(b => MailboxAddress.Parse(b)));
+            }
 
             var multipart = new Multipart("mixed");
 
@@ -106,29 +122,20 @@ namespace Fanzoo.Kernel.Services
                     break;
 
                 case SmtpDeliveryMethod.SpecifiedPickupDirectory:
-                    var filename = Path.Combine(_settings.OutputDirectory ?? string.Empty, $"{Guid.NewGuid()}.eml");
+                    var path = _settings.PickupDirectoryLocation ?? string.Empty;
+
+                    var filename = Path.Combine(_settings.PickupDirectoryLocation ?? string.Empty, $"{Guid.NewGuid()}.eml");
+
+                    if (path.IsNotNullOrWhitespace() && Directory.Exists(filename) is not true)
+                    {
+                        Directory.CreateDirectory(path);
+                    }
 
                     await message.WriteToAsync(filename);
 
                     break;
             }
         }
-
-        public ValueTask SendEmailAsync(string to, string subject, string content, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string to, string subject, string content, EmailAttachment[] attachments, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string to, string from, string subject, string content, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string to, string from, string subject, string content, EmailAttachment[] attachments, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string[] recipients, string subject, string content, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string[] recipients, string subject, string content, EmailAttachment[] attachments, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string[] recipients, string from, string subject, string content, bool isHtml = true) => throw new NotImplementedException();
-
-        public ValueTask SendEmailAsync(string[] recipients, string from, string subject, string content, EmailAttachment[] attachments, bool isHtml = true) => throw new NotImplementedException();
     }
 
     static file class Extensions
