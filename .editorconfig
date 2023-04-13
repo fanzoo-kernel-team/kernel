@@ -223,6 +223,7 @@ dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_field
 dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
 
 dotnet_naming_symbols.instance_fields.applicable_kinds = field
+dotnet_naming_symbols.instance_fields.applicable_accessibilities = private, protected, protected_internal, private_protected
 
 dotnet_naming_style.instance_field_style.capitalization = camel_case
 dotnet_naming_style.instance_field_style.required_prefix = _
@@ -285,3 +286,9 @@ dotnet_diagnostic.S1066.severity = none
 
 # S3267: Loops should be simplified with "LINQ" expressions
 dotnet_diagnostic.S3267.severity = none
+
+# CS8795: Compliler issue with Mapperly
+dotnet_diagnostic.CS8795.severity = none
+
+# RMG020: Source property is not mapped to any target property
+dotnet_diagnostic.RMG020.severity = none
