@@ -53,11 +53,110 @@ namespace System
             return new string(dst, 0, (int)end);
         }
 
+        public static string? ValueFromStart(this string value, string endString) => ValueBetween(value, "", endString);
+
+        public static string? ValueBetween(this string value, string startString, string endString)
+        {
+            var start = value.IndexOf(startString) + startString.Length;
+            var end = value.IndexOf(endString, start);
+
+            return start < 0 || end < 0 ? null : value[start..end];
+        }
+
+        public static string? ValueBetween(this string value, string startString, string endString, int startIndex)
+        {
+            if (startIndex < 0)
+            {
+                return null;
+            }
+
+            var start = value.IndexOf(startString, startIndex) + startString.Length;
+            var end = value.IndexOf(endString, start);
+
+            return value[start..end];
+        }
+
+        public static string RemoveWords(this string value, bool ignoreCase, params string[] words)
+        {
+            var testPhrase = value;
+            var testWords = words;
+
+            var sb = new StringBuilder();
+
+            if (ignoreCase)
+            {
+                testPhrase = testPhrase.ToLower();
+
+                for (var i = 0; i < testWords.Length; i++)
+                {
+                    testWords[i] = testWords[i].ToLower();
+                }
+            }
+
+            var splitText = testPhrase.Trim().Split(' ');
+
+            for (var i = 0; i < splitText.Length; i++)
+            {
+                var t = splitText[i];
+
+                if (!string.IsNullOrWhiteSpace(t) && !testWords.Contains(t.ToAlphaNumeric()))
+                {
+                    sb.Append(value.Split(' ')[i] + " ");
+                }
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string ToAlphaNumeric(this string value)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var c in value)
+            {
+                if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Replace("  ", " ");
+        }
+
+        public static string RemovePunctuation(this string value)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var c in value)
+            {
+                if (!char.IsPunctuation(c))
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Replace("  ", " ");
+        }
+
+        public static bool StartsWithAny(this string value, params string[] args)
+        {
+
+            foreach (var s in args)
+            {
+                if (value.StartsWith(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string ToDigits(this string value)
         {
             var sb = new StringBuilder();
 
-            foreach (var c in value.Where(c => char.IsDigit(c)))
+            foreach (var c in value.Where(char.IsDigit))
             {
                 sb.Append(c);
             }

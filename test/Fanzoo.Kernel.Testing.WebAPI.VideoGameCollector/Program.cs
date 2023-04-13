@@ -5,6 +5,7 @@ using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector;
 using Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services;
 using Fanzoo.Kernel.Web.Services.Configuration;
 
+
 var isStandAlone = Environment.GetEnvironmentVariable("RUN_MODE") == "Stand-alone";
 
 if (isStandAlone)
@@ -31,6 +32,12 @@ var builder =
         .AddSetting<JwtSecurityTokenSettings>("Jwt")
         .AddFluentMigratorCoreFromAssembly(Assembly.GetExecutingAssembly())
         .AddLogging();
+
+builder.Services.AddTransient<IEmailServiceFactory, EmailServiceFactory>();
+builder.AddSetting<EmailServiceFactorySettings>(EmailServiceFactorySettings.SectionName);
+
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
+builder.AddSetting<SmtpSettings>(SmtpSettings.SectionName);
 
 var application = builder.Build();
 
