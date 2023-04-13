@@ -4,6 +4,8 @@
     {
         IUnitOfWork Open();
 
+        void Close();
+
         IUnitOfWork Current { get; }
 
         bool HasUnitOfWork { get; }

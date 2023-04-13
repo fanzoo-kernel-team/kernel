@@ -15,6 +15,12 @@
 
         public IUnitOfWork Open()
         {
+            //I may regret this
+            if (_current is not null && _current.IsClosed is not true)
+            {
+                return _current;
+            }
+
             if (!CanOpen)
             {
                 throw new InvalidOperationException("Cannot open a new UnitOfWork until the current one is closed.");
@@ -30,6 +36,8 @@
 
             return _current;
         }
+
+        public void Close() => _current?.Dispose();
 
         public IUnitOfWork Current => _current ?? throw new InvalidOperationException("No UnitOfWork exists.");
 

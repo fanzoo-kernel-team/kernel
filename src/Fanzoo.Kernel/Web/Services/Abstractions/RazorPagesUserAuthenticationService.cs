@@ -38,16 +38,12 @@ namespace Fanzoo.Kernel.Web.Services
             _passwordHashingService = passwordHashingService;
             _httpContextAccessor = httpContextAccessor;
             _unitOfWorkFactory = unitOfWorkFactory;
-
-            //open the unit of work if it's not already open by the middle-ware
-            if (_unitOfWorkFactory.CanOpen)
-            {
-                _unitOfWorkFactory.Open();
-            }
         }
 
         public async ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password)
         {
+            _unitOfWorkFactory.Open();
+
             var user = await FindUserByUsernameAsync(username);
 
             if (user is null)
@@ -70,6 +66,8 @@ namespace Fanzoo.Kernel.Web.Services
                 user.RecordInvalidLogin();
 
                 await SaveUserAsync();
+
+                _unitOfWorkFactory.Close();
 
                 return Errors.UserAuthentication.PasswordVerificationFailed;
             }
@@ -99,11 +97,15 @@ namespace Fanzoo.Kernel.Web.Services
 
             await SaveUserAsync();
 
+            _unitOfWorkFactory.Close();
+
             return UnitResult.Success<Error>();
         }
 
         public async ValueTask SignOutAsync(TIdentifier identifier)
         {
+            _unitOfWorkFactory.Open();
+
             var user = await FindUserByIdAsync(identifier);
 
             if (user is null)
@@ -118,6 +120,8 @@ namespace Fanzoo.Kernel.Web.Services
                     .SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             await SaveUserAsync();
+
+            _unitOfWorkFactory.Close();
         }
 
         public async Task ValidateLastAuthenticationChangeAsync(CookieValidatePrincipalContext context)
@@ -130,6 +134,8 @@ namespace Fanzoo.Kernel.Web.Services
 
         protected async ValueTask<bool> GetRequiresAuthenticationAsync(ClaimsPrincipal principal)
         {
+            _unitOfWorkFactory.Open();
+
             var identifier = FindClaimIdentifier(principal.Claims.GetClaimValueOrDefault(System.Security.Claims.ClaimTypes.PrimarySid));
 
             if (identifier is not null)
@@ -144,10 +150,14 @@ namespace Fanzoo.Kernel.Web.Services
                         && DateTime.TryParse(lastAuthenticationChange, out var lastAuthenticationChangeDate)
                         && !user.RequiresAuthentication(lastAuthenticationChangeDate))
                     {
+                        _unitOfWorkFactory.Close();
+
                         return false;
                     }
                 }
             }
+
+            _unitOfWorkFactory.Close();
 
             return true;
         }
@@ -196,9 +206,6 @@ namespace Fanzoo.Kernel.Web.Services
 
             //commit the current transaction
             await _unitOfWorkFactory.Current.CommitAsync();
-
-            //open a new unit of work in case there are more db calls
-            _unitOfWorkFactory.Open();
         }
 
         protected virtual ValueTask OnSaveUserAsync() => ValueTask.CompletedTask;
