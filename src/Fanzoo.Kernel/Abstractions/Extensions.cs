@@ -191,5 +191,21 @@ namespace System
                 }
             }
         }
+
+        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> destination, IDictionary<TKey, TValue> source)
+        {
+            foreach (var item in source)
+            {
+                destination.Add(item);
+            }
+        }
+
+        public static void AddRange<T>(this IList<T> destination, IList<T> source)
+        {
+            foreach (var item in source)
+            {
+                destination.Add(item);
+            }
+        }
     }
 }
