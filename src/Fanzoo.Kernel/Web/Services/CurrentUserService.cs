@@ -48,10 +48,19 @@
     {
         public static string? GetUserIdOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.PrimarySid);
 
+        public static string GetUserId(this ICurrentUserService service) => service.GetClaim(System.Security.Claims.ClaimTypes.PrimarySid);
+
         public static string? GetUsernameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(ClaimTypes.Username);
+
+        public static string GetUsername(this ICurrentUserService service) => service.GetClaim(ClaimTypes.Username);
 
         public static string? GetEmailOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.Email);
 
+        public static string GetEmail(this ICurrentUserService service) => service.GetClaim(System.Security.Claims.ClaimTypes.Email);
+
         public static string? GetNameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.Name);
+
+        public static string GetName(this ICurrentUserService service) => service.GetClaim(System.Security.Claims.ClaimTypes.Name);
+
     }
 }
