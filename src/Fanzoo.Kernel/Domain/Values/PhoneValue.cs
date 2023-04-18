@@ -4,7 +4,7 @@
     {
         private PhoneValue() { } //ORM
 
-        public PhoneValue(string value) : base(value)
+        public PhoneValue(string value) : base()
         {
             //sanitize
             var digits = value
@@ -13,11 +13,10 @@
 
             Guard.Against.InvalidPhoneNumber(digits, nameof(value));
 
+            Value = digits;
         }
 
-        public static ValueResult<PhoneValue, Error> Create(string phone) => CanCreate(phone)
-                ? new PhoneValue(GetDigits(phone))
-                : Errors.ValueObjects.PhoneValue.InvalidFormat;
+        public static ValueResult<PhoneValue, Error> Create(string phone) => CanCreate(phone) ? (ValueResult<PhoneValue, Error>)new PhoneValue(phone) : (ValueResult<PhoneValue, Error>)Errors.ValueObjects.PhoneValue.InvalidFormat;
 
         public override string ToString() => Value.Format("{0:(###) ###-####}");
 

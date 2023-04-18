@@ -226,6 +226,8 @@ namespace Fanzoo.Kernel.Tests
 
             var phone = PhoneValue.Create(validPhoneInput);
 
+            Assert.False(PhoneValue.CanCreate("333.333.33"));
+
             Assert.True(PhoneValue.CanCreate(validPhoneInput));
 
             Assert.True(phone.Value == sanitizedValidPhone);
