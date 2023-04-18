@@ -25,7 +25,7 @@ namespace FluentNHibernate.Mapping
             var mapping = map.Component(entityFieldExpression, x =>
             {
                 x.Map(a => a!.PrimaryAddress).Nullable(nullable);
-                x.Map(a => a!.SecondaryAddress).Nullable(false);
+                x.Map(a => a!.SecondaryAddress).Nullable(true);
                 x.Map(a => a!.City).Nullable(nullable);
                 x.MapValueObject(a => a!.Region, nullable);
                 x.MapValueObject(a => a!.PostalCode, nullable);
