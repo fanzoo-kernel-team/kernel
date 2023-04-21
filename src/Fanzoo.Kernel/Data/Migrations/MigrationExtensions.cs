@@ -1,5 +1,4 @@
-﻿using Fanzoo.Kernel;
-using FluentMigrator.Builders.Create;
+﻿using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Index;
 using FluentMigrator.Builders.Create.Table;
 
@@ -88,11 +87,16 @@ namespace FluentMigrator
                     .AsGuid()
                     .Required(required);
 
-        public static void ForeignKey(this ICreateExpressionRoot create, string fromTable, string toTable /*Rule onDelete = Rule.SetDefault, Rule onUpdate = Rule.SetDefault*/) => create.ForeignKey($"FK_{fromTable}_{toTable}_{toTable}Id")
+        public static void ForeignKey(this ICreateExpressionRoot create, string fromTable, string toTable, string? foreignColumn = null /*Rule onDelete = Rule.SetDefault, Rule onUpdate = Rule.SetDefault*/)
+        {
+            foreignColumn ??= $"{toTable}Id";
+
+            create.ForeignKey($"FK_{fromTable}_{toTable}_{foreignColumn}")
                 .FromTable(fromTable)
-                    .ForeignColumn($"{toTable}Id")
+                    .ForeignColumn(foreignColumn)
                         .ToTable(toTable)
                             .PrimaryColumn("Id");
+        }
 
         public static ICreateTableColumnOptionOrWithColumnSyntax Required(this ICreateTableColumnOptionOrWithColumnSyntax table, bool required) => required ? table.NotNullable() : table.Nullable();
 
