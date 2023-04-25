@@ -41,23 +41,23 @@ namespace Fanzoo.Kernel.Builder
             return builder;
         }
 
-        public static WebApplicationBuilder AddNHibernateCoreFromAssemblyOf<TMappingClass>(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddNHibernateCoreFromAssemblyOf<TMappingClass>(this WebApplicationBuilder builder, Action<NHibernate.Cfg.Configuration>? cfg = null)
         {
-            builder.Services.AddNHibernateCoreFromAssemblyOf<TMappingClass>(builder.Configuration);
+            builder.Services.AddNHibernateCoreFromAssemblyOf<TMappingClass>(builder.Configuration, cfg);
 
             return builder;
         }
 
-        public static WebApplicationBuilder AddNHibernateCoreFromAssembly(this WebApplicationBuilder builder, Assembly assembly)
+        public static WebApplicationBuilder AddNHibernateCoreFromAssembly(this WebApplicationBuilder builder, Assembly assembly, Action<NHibernate.Cfg.Configuration>? cfg = null)
         {
-            builder.Services.AddNHibernateCoreFromAssembly(assembly, builder.Configuration);
+            builder.Services.AddNHibernateCoreFromAssembly(assembly, builder.Configuration, cfg);
 
             return builder;
         }
 
-        public static WebApplicationBuilder AddNHibernateCoreFromAssembly(this WebApplicationBuilder builder, string assemblyName)
+        public static WebApplicationBuilder AddNHibernateCoreFromAssembly(this WebApplicationBuilder builder, string assemblyName, Action<NHibernate.Cfg.Configuration>? cfg = null)
         {
-            builder.Services.AddNHibernateCoreFromAssembly(assemblyName, builder.Configuration);
+            builder.Services.AddNHibernateCoreFromAssembly(assemblyName, builder.Configuration, cfg);
 
             return builder;
         }
