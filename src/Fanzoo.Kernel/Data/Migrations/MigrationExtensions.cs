@@ -1,6 +1,7 @@
 ﻿using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Index;
 using FluentMigrator.Builders.Create.Table;
+using FluentMigrator.Builders.Insert;
 
 namespace FluentMigrator
 {
@@ -111,5 +112,15 @@ namespace FluentMigrator
                     .AsDateTime2()
                         .Required(required);
 
+        public static IInsertDataSyntax IntoTable<TLookup>(this IInsertExpressionRoot insert, string tableName, TLookup value)
+            where TLookup : NamedLookupValue<TLookup, Guid> =>
+                insert.IntoTable(tableName).Row(new { value.Id, value.Name, CreatedDate = DateTime.Now.ToUniversalTime(), CreatedBy = "system" });
+
+        public static void LookupTable(this ICreateExpressionRoot create, string tableName) =>
+            create.Table(tableName)
+                .AsImmutable()
+                .WithColumn("Name")
+                    .AsString(DatabaseCatalog.FieldLength.Default)
+                    .NotNullable();
     }
 }
