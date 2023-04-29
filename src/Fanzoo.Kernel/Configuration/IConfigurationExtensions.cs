@@ -1,4 +1,6 @@
-﻿namespace Fanzoo.Kernel.Configuration
+﻿using Microsoft.Extensions.Configuration.Json;
+
+namespace Fanzoo.Kernel.Configuration
 {
     public static class ConfigurationExtensions
     {
@@ -33,5 +35,33 @@
 
             return configurationManager.GetConnectionString(configurationManager[ConfigurationKeys.ConnectionStringName.ToString()] ?? string.Empty);
         }
+
+#pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+        public static void RemoveAppSettingSection(this IConfiguration configuration, string sectionName)
+        {
+            if (configuration is not IConfigurationRoot configurationRoot)
+            {
+                throw new ArgumentException("Configuration is not IConfigurationRoot", nameof(configuration));
+            }
+
+            var configurationProvider = configurationRoot.Providers.SingleOrDefault(p => p is JsonConfigurationProvider) ?? throw new InvalidOperationException("No appsettings.json configuration provider found.");
+
+            var propertyInfo = configurationProvider
+                .GetType()
+                    .GetProperty("Data", BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?? throw new InvalidOperationException("Cannot load Data field from JsonConfigurationProvider.");
+
+
+            if (propertyInfo.GetValue(configurationProvider) is not IDictionary<string, string> data)
+            {
+                throw new InvalidOperationException("Cannot load Data from JsonConfigurationProvider.");
+            }
+
+            if (data.ContainsKey(sectionName))
+            {
+                data.Remove(sectionName);
+            }
+        }
+#pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
     }
 }
