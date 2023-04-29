@@ -75,6 +75,27 @@ namespace Fanzoo.Kernel
 
         public static Check IsNotEmpty(this Check check, Guid guid) => check.Resolve(guid != Guid.Empty);
 
+        public static Check HasSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value));
+
+        public static Check DoesNotHaveSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value) is false);
+
+        public static Check IsAlphaNumeric(this Check check, string value, char[] exceptions)
+        {
+            foreach (var character in value)
+            {
+                if (char.IsLetterOrDigit(character) is false && exceptions.Contains(character) is false)
+                {
+                    return false;
+                }
+            }
+
+            return check.Resolve(true);
+        }
+
+        public static Check IsBetween(this Check check, int value, int min, int max) => check.Resolve(value >= min && value <= max);
+
+        public static Check IsValidDate(this Check check, int month, int day, int year) => check.Resolve(DateTime.TryParse($"{month}/{day}/{year}", out _));
+
         public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
 
         public static Check IsNotValidIPAddress(this Check check, string ipAddress) => !check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
