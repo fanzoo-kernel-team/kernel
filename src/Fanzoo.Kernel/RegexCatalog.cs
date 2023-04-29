@@ -28,5 +28,9 @@
 
         [GeneratedRegex(@"(.)\1{2,}")]
         public static partial Regex MoreThanTwoMatchingCharactersInARow();
+
+        [GeneratedRegex(@"\s")]
+        public static partial Regex HasSpaces();
+
     }
 }
