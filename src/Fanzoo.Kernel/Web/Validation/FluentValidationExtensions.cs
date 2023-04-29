@@ -1,4 +1,6 @@
-﻿namespace FluentValidation
+﻿using System.Linq.Expressions;
+
+namespace FluentValidation
 {
     public static class FluentValidationExtensions
     {
@@ -47,6 +49,27 @@
                 default:
                     rule.When(p => p != null);
                     break;
+            }
+
+            return rule;
+        }
+
+        public static IRuleBuilderOptions<T, bool> MustBeTrue<T>(this IRuleBuilder<T, bool> ruleBuilder) => ruleBuilder.Must(p => p is true);
+
+        public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this AbstractValidator<T> validator, Expression<Func<T, TProperty>> ruleFor, Func<TProperty, bool>? must = null, string? errorMessage = null)
+        {
+            var rule = validator
+                .RuleFor(ruleFor)
+                    .StopOnEmpty();
+
+            if (must is not null)
+            {
+                rule = rule.Must(must);
+            }
+
+            if (errorMessage is not null)
+            {
+                rule = rule.WithMessage(errorMessage);
             }
 
             return rule;
