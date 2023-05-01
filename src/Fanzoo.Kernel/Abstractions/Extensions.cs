@@ -207,5 +207,21 @@ namespace System
                 destination.Add(item);
             }
         }
+
+        public static string? TrimEnd(this string? input, string? trimString, bool ignoreCase = false)
+        {
+            if (input == null || trimString == null)
+            {
+                return input;
+            }
+
+            var comparisonType = ignoreCase
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
+
+            return input.EndsWith(trimString, comparisonType) is false
+                ? input
+                : input[..^trimString.Length];
+        }
     }
 }
