@@ -12,44 +12,23 @@ namespace FluentValidation
         {
             var rule = ruleBuilder.Must(predicate);
 
-            switch (typeof(TProperty))
+            rule = rule.When((p, c) =>
             {
-                case Type type when type == typeof(string):
-                    rule.When(p => (p as string).IsNotNullOrWhitespace());
-                    break;
+                var v = p?.GetPropertyValue(c.PropertyName);
 
-                case Type type when type == typeof(Guid):
-                    rule.When(p => p != null && !p.Equals(Guid.Empty));
-                    break;
-
-                case Type type when type == typeof(int):
-                    rule.When(p => p != null && !p.Equals(0));
-                    break;
-
-                case Type type when type == typeof(long):
-                    rule.When(p => p != null && !p.Equals(0));
-                    break;
-
-                case Type type when type == typeof(decimal):
-                    rule.When(p => p != null && !p.Equals(0));
-                    break;
-
-                case Type type when type == typeof(DateTime):
-                    rule.When(p => p != null && !p.Equals(DateTime.MinValue));
-                    break;
-
-                case Type type when type == typeof(DateTimeOffset):
-                    rule.When(p => p != null && !p.Equals(DateTimeOffset.MinValue));
-                    break;
-
-                case Type type when type == typeof(TimeSpan):
-                    rule.When(p => p != null && !p.Equals(TimeSpan.Zero));
-                    break;
-
-                default:
-                    rule.When(p => p != null);
-                    break;
-            }
+                return typeof(TProperty) switch
+                {
+                    Type type when type == typeof(string) => (v as string).IsNotNullOrWhitespace(),
+                    Type type when type == typeof(Guid) => v != null && !v.Equals(Guid.Empty),
+                    Type type when type == typeof(int) => v != null && !v.Equals(0),
+                    Type type when type == typeof(long) => v != null && !v.Equals(0),
+                    Type type when type == typeof(decimal) => v != null && !v.Equals(0),
+                    Type type when type == typeof(DateTime) => v != null && !v.Equals(DateTime.MinValue),
+                    Type type when type == typeof(DateTimeOffset) => v != null && !v.Equals(DateTimeOffset.MinValue),
+                    Type type when type == typeof(TimeSpan) => v != null && !v.Equals(TimeSpan.Zero),
+                    _ => v != null,
+                };
+            });
 
             return rule;
         }
