@@ -19,6 +19,16 @@
                 public static Error InvalidFormat => new("invalid.url.format", "Invalid url format.");
             }
 
+            public static class FilenameValue
+            {
+                public static Error InvalidFormat => new("invalid.filename.format", "Invalid filename format.");
+            }
+
+            public static class MediaTypeValue
+            {
+                public static Error Invalid => new("invalid.mediatype", "Invalid media type.");
+            }
+
             public static class PhoneValue
             {
                 public static Error InvalidFormat => new("invalid.phone.format", "Invalid phone format.");

@@ -14,7 +14,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
     public sealed class AzureBlob : IBlob
     {
-        public const string FileNameMetadataKey = "filename";
+        public const string FileNameMetadataKey = "original_filename";
 
         //public AzureStorageBlob(BlobItem blob)
         //{

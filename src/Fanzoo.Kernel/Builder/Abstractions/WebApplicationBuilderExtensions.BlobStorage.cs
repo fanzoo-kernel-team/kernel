@@ -22,6 +22,15 @@ namespace Fanzoo.Kernel.Builder
 
             return builder;
         }
+
+        public static BlobStorageFactoryBuilder AddFileBlobStorage(this BlobStorageFactoryBuilder builder)
+        {
+            builder.WebApplicationBuilder.AddTransient<IBlobStorageService, FileBlobStorageService>();
+
+            builder.WebApplicationBuilder.AddSetting<FileBlobStorageSettings>(FileBlobStorageSettings.SectionName);
+
+            return builder;
+        }
     }
 
     public static partial class WebApplicationBuilderExtensions

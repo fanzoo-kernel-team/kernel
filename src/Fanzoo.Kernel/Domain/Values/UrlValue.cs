@@ -4,7 +4,7 @@
     {
         public const int MAX_SIZE = 2048;
 
-        private UrlValue() { }
+        private UrlValue() { } //ORM
 
         public UrlValue(string url) : base(url)
         {
