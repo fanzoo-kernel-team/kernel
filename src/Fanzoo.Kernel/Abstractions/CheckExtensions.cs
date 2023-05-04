@@ -158,6 +158,8 @@ namespace Fanzoo.Kernel
                 : _validColorNames.Contains(normalizedValue));
         }
 
+        public static Check IsValidFilename(this Check check, string filename) => check.Resolve(RegexCatalog.Filename().IsMatch(filename));
+
         //BHW 04/10/2023 -- this is ugly
         public static Check IsValidPassword(this Check check, string password)
         {

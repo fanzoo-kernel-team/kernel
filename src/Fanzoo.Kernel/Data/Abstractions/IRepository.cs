@@ -10,5 +10,7 @@
         ValueTask AddAsync(TAggregateRoot entity);
 
         ValueTask DeleteAsync(TAggregateRoot entity);
+
+        ValueTask DeleteAsync(TIdentifier id);
     }
 }

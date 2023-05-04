@@ -32,5 +32,7 @@
         [GeneratedRegex(@"\s")]
         public static partial Regex HasSpaces();
 
+        [GeneratedRegex(@"^[^<>:""/\\|?*\x00-\x1f]+$")]
+        public static partial Regex Filename();
     }
 }
