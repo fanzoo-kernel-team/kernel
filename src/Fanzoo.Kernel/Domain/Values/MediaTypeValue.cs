@@ -1791,6 +1791,7 @@
             "image/example",
             "image/fits",
             "image/g3fax",
+            "image/gif",
             "image/heic",
             "image/heic-sequence",
             "image/heif",
@@ -1799,6 +1800,7 @@
             "image/hsj2",
             "image/jls",
             "image/jp2",
+            "image/jpeg",
             "image/jph",
             "image/jphc",
             "image/jpm",
@@ -1953,6 +1955,7 @@
             "text/n3",
             "text/parameters",
             "text/parityfec",
+            "text/plain",
             "text/provenance-notation",
             "text/prs.fallenstein.rst",
             "text/prs.lines.tag",
@@ -1960,6 +1963,7 @@
             "text/raptorfec",
             "text/RED",
             "text/rfc822-headers",
+            "text/richtext",
             "text/rtf",
             "text/rtp-enc-aescm128",
             "text/rtploopback",
@@ -2048,6 +2052,7 @@
             "video/mp4",
             "video/MP4V-ES",
             "video/MPV",
+            "video/mpeg",
             "video/mpeg4-generic",
             "video/nv",
             "video/ogg",
@@ -2102,7 +2107,7 @@
             "video/vnd.youtube.yt",
             "video/vnd.vivo",
             "video/VP8",
-            "video/VP9",
+            "video/VP9"
         };
     }
 }

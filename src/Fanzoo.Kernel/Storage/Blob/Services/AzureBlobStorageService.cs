@@ -21,10 +21,9 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         //    //TODO: this
         //}
 
-        public AzureBlob(Guid id, string path, BlobProperties properties)
+        public AzureBlob(string filename, string path, BlobProperties properties)
         {
-            Id = id;
-            Filename = properties.Metadata[FileNameMetadataKey];
+            Filename = filename;
             Path = path;
             Size = properties.ContentLength;
             MediaType = properties.ContentType;
@@ -66,11 +65,11 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         public string Name => "Azure";
 
-        public async ValueTask<IBlob> CreateAsync(Guid id, string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false)
+        public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
             var (container, folder) = GetContainerAndFolderPath(path);
 
-            var blobName = string.Join('\\', folder, id).Trim('\\');
+            var blobName = string.Join('\\', folder, filename).Trim('\\');
 
             var containerClient = new BlobContainerClient(_connectionString, container);
 
@@ -102,31 +101,33 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             }
 
             //add metadata
-            var metadata = new Dictionary<string, string>
+            if (originalFilename is not null)
             {
-                { AzureBlob.FileNameMetadataKey, filename }
-            };
-
-            _ = await blobClient.SetMetadataAsync(metadata);
+                var metadata = new Dictionary<string, string>
+                {
+                    { AzureBlob.FileNameMetadataKey, originalFilename }
+                };
+                _ = await blobClient.SetMetadataAsync(metadata);
+            }
 
             var getPropertiesResponse = await blobClient.GetPropertiesAsync();
 
             //we're going to be optimistic here and assume this succeeds... for now
             var properties = getPropertiesResponse.Value;
 
-            return new AzureBlob(id, path, properties);
+            return new AzureBlob(filename, path, properties);
         }
 
-        public async ValueTask<IBlob> CreateAsync(Guid id, string filename, string path, byte[] data, string mediaType, bool isReadOnly = false, bool overwrite = false)
+        public async ValueTask<IBlob> CreateAsync(string filename, string path, byte[] data, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
             using var stream = new MemoryStream(data);
 
-            return await CreateAsync(id, filename, path, stream, mediaType, isReadOnly, overwrite);
+            return await CreateAsync(filename, path, stream, mediaType, isReadOnly, overwrite, originalFilename);
         }
 
         public async ValueTask<IBlob> GetBlobAsync(string blobPathName)
         {
-            var (container, path, id) = GetContainerAndBlobFolderPath(blobPathName);
+            var (container, path, filename) = GetContainerAndBlobFolderPath(blobPathName);
 
             var blobClient = GetBlobClient(blobPathName);
 
@@ -135,7 +136,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             //we're going to be optimistic here and assume this succeeds... for now
             var properties = getPropertiesResponse.Value;
 
-            return new AzureBlob(id, string.Join('\\', container, path), properties);
+            return new AzureBlob(filename, string.Join('\\', container, path), properties);
         }
 
         public async ValueTask<Stream> OpenReadAsync(string blobPathName) => await GetBlobClient(blobPathName).OpenReadAsync();
@@ -214,24 +215,24 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         }
 
-        private static (string Container, string Path, Guid Id) GetContainerAndBlobFolderPath(string blobPathName)
+        private static (string Container, string Path, string Filename) GetContainerAndBlobFolderPath(string blobPathName)
         {
             var (container, path) = GetContainerAndFolderPath(blobPathName);
 
             var pathSegments = path.Split('\\');
 
-            var id = pathSegments.Last();
+            var filename = pathSegments.Last();
 
             path = string.Join('\\', pathSegments[..^1]).TrimEnd('\\');
 
-            return (container, path, new Guid(id));
+            return (container, path, filename);
         }
 
         private BlobClient GetBlobClient(string blobPathName)
         {
-            var (container, path, id) = GetContainerAndBlobFolderPath(blobPathName);
+            var (container, path, filename) = GetContainerAndBlobFolderPath(blobPathName);
 
-            var blobName = string.Join('\\', path, id).TrimStart('\\').TrimEnd('\\');
+            var blobName = string.Join('\\', path, filename).TrimStart('\\').TrimEnd('\\');
 
             var containerClient = new BlobContainerClient(_connectionString, container);
 

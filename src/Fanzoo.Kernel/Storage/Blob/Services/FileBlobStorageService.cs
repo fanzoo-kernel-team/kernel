@@ -14,15 +14,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
     {
         public FileBlob(FileInfo fileInfo)
         {
-            var fileName = GetFileNameWithoutExtension(fileInfo.FullName);
-
-            if (Guid.TryParse(fileName, out var id) is false)
-            {
-                throw new ArgumentException($"File name {fileName} is not a valid Guid", nameof(fileInfo));
-            }
-
-            Id = id;
-            Filename = id.ToString();
+            Filename = GetFileName(fileInfo.FullName);
             Path = GetDirectoryName(fileInfo.FullName)!; //why would this be null?
             Size = fileInfo.Length;
             MediaType = "application/octet-stream";
@@ -65,15 +57,13 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         public string Name => "File";
 
-        public async ValueTask<IBlob> CreateAsync(Guid id, string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false)
+        public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
-            filename = id.ToString();
-
             var filePathname = Combine(_settings.RootPath, path, filename);
 
             if (overwrite is false && File.Exists(filePathname))
             {
-                throw new ArgumentException($"File {filePathname} already exists", nameof(id));
+                throw new ArgumentException($"File {filePathname} already exists", nameof(filename));
             }
 
             stream.Position = 0;
@@ -95,7 +85,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             return new FileBlob(new FileInfo(filePathname));
         }
 
-        public ValueTask<IBlob> CreateAsync(Guid id, string filename, string path, byte[] data, string mediaType, bool isReadOnly = false, bool overwrite = false) => CreateAsync(id, filename, path, new MemoryStream(data), mediaType, isReadOnly, overwrite);
+        public ValueTask<IBlob> CreateAsync(string filename, string path, byte[] data, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null) => CreateAsync(filename, path, new MemoryStream(data), mediaType, isReadOnly, overwrite, originalFilename);
 
         public ValueTask<IBlob> GetBlobAsync(string blobPathName)
         {

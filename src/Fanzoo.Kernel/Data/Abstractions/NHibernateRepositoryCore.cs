@@ -1,4 +1,6 @@
-﻿namespace Fanzoo.Kernel.Data
+﻿using NHibernate.Linq;
+
+namespace Fanzoo.Kernel.Data
 {
     public abstract class NHibernateRepositoryCore<TAggregateRoot, TIdentifier, TPrimitive> : IRepository<TAggregateRoot, TIdentifier, TPrimitive>
         where TAggregateRoot : class, IAggregateRoot, IEntity<TIdentifier, TPrimitive>, ITrackableEntity
@@ -36,6 +38,8 @@
 
             await _unitOfWorkFactory.Current.GetContext().DeleteAsync(entity);
         }
+
+        public async ValueTask DeleteAsync(TIdentifier id) => await Query.Where(e => e.Id == id).DeleteAsync();
 
         protected IQueryable<TAggregateRoot> Query => _unitOfWorkFactory.Current.GetContext().Query<TAggregateRoot>();
     }

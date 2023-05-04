@@ -162,5 +162,12 @@ namespace Fanzoo.Kernel.Builder
 
             return builder;
         }
+
+        public static WebApplicationBuilder AddSkiaImageService(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddTransient<IImageService, SkiaImageService>();
+
+            return builder;
+        }
     }
 }

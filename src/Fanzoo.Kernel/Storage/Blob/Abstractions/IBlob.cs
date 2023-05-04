@@ -2,8 +2,6 @@
 {
     public interface IBlob
     {
-        Guid Id { get; }
-
         string Filename { get; }
 
         string Path { get; }

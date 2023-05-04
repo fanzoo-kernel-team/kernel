@@ -166,7 +166,7 @@ namespace System
 
         public static byte[] ReadAllBytes(this Stream stream)
         {
-            using var memory = new MemoryStream();
+            using var memory = new MemoryStream(stream.CanSeek && stream.Length <= int.MaxValue ? (int)stream.Length : 4096);
 
             stream.CopyTo(memory);
 

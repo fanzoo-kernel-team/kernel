@@ -146,7 +146,7 @@ namespace Fanzoo.Kernel
 
         public static void InvalidFilename(this Guard guard, string value, string argument)
         {
-            if (Check.For.IsValidFilename(value) is false)
+            if (Check.For.IsValidFilename(value).Result is false)
             {
                 throw new ArgumentException(argument);
             }
