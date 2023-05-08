@@ -38,12 +38,10 @@ namespace FluentNHibernate.Mapping
 
         public static ComponentPart<MoneyValue?> MapMoneyValue<TEntity>(this ClasslikeMapBase<TEntity> map, Expression<Func<TEntity, MoneyValue?>> entityFieldExpression, string columnPrefix = "", bool nullable = false)
         {
-            var baseName = entityFieldExpression.ToMember().Name;
-
             var mapping = map.Component(entityFieldExpression, x =>
             {
-                x.Map(m => m!.Amount, baseName + "Amount").Nullable(nullable);
-                x.Component(m => m!.Currency, x => x.Map(Reveal.Member<CurrencyValue>("Code"), baseName + "Currency").Nullable(nullable));
+                x.Map(m => m!.Amount, "Amount").Nullable(nullable);
+                x.Component(m => m!.Currency, x => x.Map(Reveal.Member<CurrencyValue>("Code"), "Currency").Nullable(nullable));
             });
 
             mapping.ColumnPrefix(columnPrefix);
