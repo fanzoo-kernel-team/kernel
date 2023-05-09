@@ -1,4 +1,5 @@
-﻿using Fanzoo.Kernel.Web.Validation.Cookies;
+﻿using Fanzoo.Kernel.Web.Mvc.Filters;
+using Fanzoo.Kernel.Web.Validation.Cookies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -79,15 +80,17 @@ namespace Fanzoo.Kernel.DependencyInjection
 
                 o.ModelMetadataDetailsProviders.AddRange(configurationOptions.ModelMetadataDetailsProviders);
 
-                o.ModelValidatorProviders.AddRange(configurationOptions.ModelValidatorProviders);
-
-                o.ValueProviderFactories.AddRange(configurationOptions.ValueProviderFactories);
-
-                // clear the built-in providers
+                // clear the built-in providers & add a filter to clear model state after the built-in model binding validation
                 if (configurationOptions.DisableBuiltInValidation)
                 {
                     o.ModelValidatorProviders.Clear();
+
+                    o.Filters.Add(new DisableBuiltInModelValidationFilter());
                 }
+
+                o.ModelValidatorProviders.AddRange(configurationOptions.ModelValidatorProviders);
+
+                o.ValueProviderFactories.AddRange(configurationOptions.ValueProviderFactories);
             });
 
             services
