@@ -42,7 +42,7 @@ namespace Fanzoo.Kernel.Data.Listeners
 
                 if (@event.Persister.PropertyNames.Contains("CreatedDate"))
                 {
-                    @event.State[Array.IndexOf<string>(@event.Persister.PropertyNames, "CreatedDate")] = SystemDateTime.Now;
+                    @event.State[Array.IndexOf<string>(@event.Persister.PropertyNames, "CreatedDate")] = SystemDateTime.UtcNow;
                 }
 
                 if (@event.Persister.PropertyNames.Contains("CreatedBy"))
@@ -70,7 +70,7 @@ namespace Fanzoo.Kernel.Data.Listeners
 
                 if (@event.Persister.PropertyNames.Contains("UpdatedDate"))
                 {
-                    @event.State[Array.IndexOf<string>(@event.Persister.PropertyNames, "UpdatedDate")] = SystemDateTime.Now;
+                    @event.State[Array.IndexOf<string>(@event.Persister.PropertyNames, "UpdatedDate")] = SystemDateTime.UtcNow;
                 }
 
                 if (@event.Persister.PropertyNames.Contains("UpdatedBy"))

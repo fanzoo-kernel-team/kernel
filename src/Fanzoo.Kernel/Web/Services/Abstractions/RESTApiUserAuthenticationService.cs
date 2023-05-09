@@ -275,7 +275,7 @@ namespace Fanzoo.Kernel.Web.Services
                 _settings.Issuer,
                 _settings.Audience,
                 claims,
-                expires: SystemDateTime.Now.AddMinutes(_settings.AccessTokenTTLMinutes),
+                expires: SystemDateTime.UtcNow.AddMinutes(_settings.AccessTokenTTLMinutes),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Convert.FromBase64String(_settings.Secret)), SecurityAlgorithms.HmacSha256)));
 
         private async ValueTask<(JwtSecurityToken AccessToken, TRefreshToken RefreshToken)> GetTokensAsync(TUser user)
@@ -284,7 +284,7 @@ namespace Fanzoo.Kernel.Web.Services
 
             var refreshToken = user
                 .AddRefreshToken(
-                    SystemDateTime.Now.AddMinutes(_settings.RefreshTokenTTLMinutes),
+                    SystemDateTime.UtcNow.AddMinutes(_settings.RefreshTokenTTLMinutes),
                     IPAddressValue.Create(_httpContextAccessor.GetIPv4Address()).Value);
 
             return (accessToken, refreshToken);

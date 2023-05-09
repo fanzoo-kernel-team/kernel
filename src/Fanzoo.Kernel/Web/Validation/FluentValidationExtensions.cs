@@ -33,6 +33,13 @@ namespace FluentValidation
             return rule;
         }
 
+        public static IRuleBuilderOptions<T, DateTime> CurrentOrFutureDate<T>(this IRuleBuilder<T, DateTime> ruleBuilder) => ruleBuilder.Must(p =>
+        {
+            var date = new DateTime(p.Year, p.Month, p.Day, 0, 0, 0, DateTimeKind.Utc);
+
+            return date >= SystemDateTime.UtcNow.Date;
+        });
+
         public static IRuleBuilderOptions<T, bool> MustBeTrue<T>(this IRuleBuilder<T, bool> ruleBuilder) => ruleBuilder.Must(p => p is true);
 
         public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this AbstractValidator<T> validator, Expression<Func<T, TProperty>> ruleFor, Func<TProperty, bool>? must = null, string? errorMessage = null)
