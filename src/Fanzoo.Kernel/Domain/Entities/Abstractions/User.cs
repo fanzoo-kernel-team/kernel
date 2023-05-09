@@ -122,7 +122,7 @@
 
         public virtual void RecordValidLogin()
         {
-            LastLogin = SystemDateTime.Now;
+            LastLogin = SystemDateTime.UtcNow;
             FailedLoginAttempts = 0;
 
             OnRecordValidLogin();
@@ -145,7 +145,7 @@
         public virtual void Lock()
         {
             IsLockedOut = true;
-            LastAuthenticationChange = SystemDateTime.Now;
+            LastAuthenticationChange = SystemDateTime.UtcNow;
 
             OnLock();
 
@@ -162,8 +162,8 @@
         public virtual void UpdatePassword(HashedPasswordValue password)
         {
             Password = password;
-            LastPasswordChange = SystemDateTime.Now;
-            LastAuthenticationChange = SystemDateTime.Now;
+            LastPasswordChange = SystemDateTime.UtcNow;
+            LastAuthenticationChange = SystemDateTime.UtcNow;
             ForcePasswordChange = false;
 
             OnUpdatePassword();
@@ -172,8 +172,8 @@
         public virtual void ResetPassword(HashedPasswordValue password)
         {
             Password = password;
-            LastPasswordChange = SystemDateTime.Now;
-            LastAuthenticationChange = SystemDateTime.Now;
+            LastPasswordChange = SystemDateTime.UtcNow;
+            LastAuthenticationChange = SystemDateTime.UtcNow;
             ForcePasswordChange = true;
 
             OnResetPassword();
@@ -183,7 +183,7 @@
         public virtual void Deactivate()
         {
             IsActive = false;
-            LastAuthenticationChange = SystemDateTime.Now;
+            LastAuthenticationChange = SystemDateTime.UtcNow;
 
             OnDeactivate();
         }

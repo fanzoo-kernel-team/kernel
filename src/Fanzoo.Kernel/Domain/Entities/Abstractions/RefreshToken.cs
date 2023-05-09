@@ -44,8 +44,8 @@
 
         public bool IsActive => !IsRevoked && !IsExpired;
 
-        public bool IsExpired => ExpirationDate <= SystemDateTime.Now;
+        public bool IsExpired => ExpirationDate <= SystemDateTime.UtcNow;
 
-        public virtual void Revoke() => Revoked = SystemDateTime.Now;
+        public virtual void Revoke() => Revoked = SystemDateTime.UtcNow;
     }
 }

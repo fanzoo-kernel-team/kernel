@@ -41,7 +41,7 @@ namespace Fanzoo.Kernel.DependencyInjection
 
                             expires = expires.Value.Add(validationParameters.ClockSkew.Negate());
 
-                            return expires > SystemDateTime.Now;
+                            return expires > SystemDateTime.UtcNow;
                         },
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(jwtPrivateKey))
