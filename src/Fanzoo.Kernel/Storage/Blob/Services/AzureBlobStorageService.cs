@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
+using Azure.Storage.Sas;
 using Microsoft.Extensions.Options;
 
 namespace Fanzoo.Kernel.Storage.Blob.Services
@@ -16,21 +17,16 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
     {
         public const string FileNameMetadataKey = "original_filename";
 
-        //public AzureStorageBlob(BlobItem blob)
-        //{
-        //    //TODO: this
-        //}
-
-        public AzureBlob(string filename, string path, BlobProperties properties)
+        public AzureBlob(string filename, string path, BlobProperties? properties = null)
         {
             Filename = filename;
             Path = path;
-            Size = properties.ContentLength;
-            MediaType = properties.ContentType;
-            Metadata = (IReadOnlyDictionary<string, string>)properties.Metadata;
-            Created = properties.CreatedOn;
-            LastModified = properties.LastModified;
-            LastAccessed = properties.LastAccessed;
+            Size = properties?.ContentLength ?? 0;
+            MediaType = properties?.ContentType ?? string.Empty;
+            Metadata = (IReadOnlyDictionary<string, string>)(properties?.Metadata ?? new Dictionary<string, string>());
+            Created = properties?.CreatedOn;
+            LastModified = properties?.LastModified;
+            LastAccessed = properties?.LastAccessed;
         }
 
         public Guid Id { get; }
@@ -58,12 +54,18 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
     {
         private readonly string _connectionString;
 
+        private Uri? _rootUri;
+
         public AzureBlobStorageService(IOptions<AzureBlobStorageSettings> options)
         {
             _connectionString = options.Value.ConnectionString;
         }
 
         public string Name => "Azure";
+
+        public bool SupportsSecurityTokens => true;
+
+        public Uri RootUri => _rootUri ??= new BlobServiceClient(_connectionString).Uri;
 
         public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
@@ -190,6 +192,54 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             return blob;
         }
 
+        public async ValueTask<IBlob> RenameAsync(string sourceBlobPathName, string newBlobName)
+        {
+            var (container, path, _) = GetContainerAndBlobFolderPath(sourceBlobPathName);
+
+            var destinationBlobPathName = string.Join('\\', container, path, newBlobName).Trim('\\');
+
+            return await MoveAsync(sourceBlobPathName, destinationBlobPathName, false);
+        }
+
+        public ValueTask<string> GenerateSecurityTokenAsync(string container, string? blobPathName = null, int durationMinutes = 60, BlobStorageSecurityTarget target = BlobStorageSecurityTarget.Container, BlobStorageSecurityPermissions permissions = BlobStorageSecurityPermissions.Read, int cacheMinutes = 60)
+        {
+            //clean up the container name (this is critical, because it will not work if the container name starts with a slash)
+            container = container.TrimStart('/').TrimStart('\\');
+
+            var sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = container,
+                BlobName = blobPathName ?? string.Empty,
+                Resource = target.ToAzureSasResource(),
+                ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(durationMinutes)
+            };
+
+            if (target == BlobStorageSecurityTarget.Blob && cacheMinutes > 0)
+            {
+                sasBuilder.CacheControl = $"public, max-age={cacheMinutes * 60}";
+            }
+
+            sasBuilder.SetPermissions(permissions.ToAzureSasPermissions());
+
+            var containerClient = new BlobContainerClient(_connectionString, container);
+
+            return containerClient.CanGenerateSasUri is false
+                ? throw new InvalidOperationException($"Container {container} does not support generating SAS tokens.")
+                : new(containerClient.GenerateSasUri(sasBuilder).Query.TrimStart('?'));
+        }
+
+        public async IAsyncEnumerable<IBlob> GetBlobsAsync(string pathName)
+        {
+            var (container, path) = GetContainerAndFolderPath(pathName);
+
+            var containerClient = new BlobContainerClient(_connectionString, container);
+
+            await foreach (var blob in containerClient.GetBlobsAsync(prefix: path))
+            {
+                yield return new AzureBlob(blob.Name, path, null);
+            }
+        }
+
         private static (string Container, string Path) GetContainerAndFolderPath(string path)
         {
             if (path is null)
@@ -238,5 +288,33 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
             return containerClient.GetBlobClient(blobName);
         }
+    }
+
+    static file class Extensions
+    {
+        public static string ToAzureSasResource(this BlobStorageSecurityTarget target) => target switch
+        {
+            BlobStorageSecurityTarget.Blob => "b",
+            BlobStorageSecurityTarget.Container => "c",
+            _ => throw new NotSupportedException($"Security target {target} is not supported."),
+        };
+
+        public static BlobSasPermissions ToAzureSasPermissions(this BlobStorageSecurityPermissions permission) => permission switch
+        {
+            BlobStorageSecurityPermissions.Read => BlobSasPermissions.Read,
+            BlobStorageSecurityPermissions.Add => BlobSasPermissions.Add,
+            BlobStorageSecurityPermissions.Create => BlobSasPermissions.Create,
+            BlobStorageSecurityPermissions.Write => BlobSasPermissions.Write,
+            BlobStorageSecurityPermissions.Delete => BlobSasPermissions.Delete,
+            BlobStorageSecurityPermissions.Tag => BlobSasPermissions.Tag,
+            BlobStorageSecurityPermissions.DeleteBlobVersion => BlobSasPermissions.DeleteBlobVersion,
+            BlobStorageSecurityPermissions.List => BlobSasPermissions.List,
+            BlobStorageSecurityPermissions.Move => BlobSasPermissions.Move,
+            BlobStorageSecurityPermissions.Execute => BlobSasPermissions.Execute,
+            BlobStorageSecurityPermissions.SetImmutabilityPolicy => BlobSasPermissions.SetImmutabilityPolicy,
+            BlobStorageSecurityPermissions.PermanentDelete => BlobSasPermissions.PermanentDelete,
+            BlobStorageSecurityPermissions.All => BlobSasPermissions.All,
+            _ => throw new NotSupportedException($"Security permission {permission} is not supported."),
+        };
     }
 }

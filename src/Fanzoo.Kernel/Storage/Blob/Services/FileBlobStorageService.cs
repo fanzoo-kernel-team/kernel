@@ -57,6 +57,10 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         public string Name => "File";
 
+        public bool SupportsSecurityTokens => false;
+
+        public Uri RootUri => new($"{_settings.RootPath}\\");
+
         public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
             var filePathname = Combine(_settings.RootPath, path, filename);
@@ -119,6 +123,16 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             return default;
         }
 
+        public async IAsyncEnumerable<IBlob> GetBlobsAsync(string pathName)
+        {
+            pathName = Combine(_settings.RootPath, pathName);
+
+            foreach (var file in await Task.Run(() => Directory.EnumerateFiles(pathName)))
+            {
+                yield return new FileBlob(new FileInfo(file));
+            }
+        }
+
         public ValueTask<IBlob> CopyAsync(string sourceBlobPathName, string destinationBlobPathName, bool overwrite = false)
         {
             var sourceFilePathname = Combine(_settings.RootPath, sourceBlobPathName);
@@ -160,5 +174,18 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
             return new ValueTask<IBlob>(new FileBlob(new FileInfo(destinationFilePathname)));
         }
+
+        public ValueTask<IBlob> RenameAsync(string sourceBlobPathName, string newBlobName)
+        {
+            var sourceFilePathName = Combine(_settings.RootPath, sourceBlobPathName);
+
+            var destinationFilePathName = Combine(_settings.RootPath, GetDirectoryName(sourceBlobPathName)!, newBlobName);
+
+            File.Move(sourceFilePathName, destinationFilePathName);
+
+            return new ValueTask<IBlob>(new FileBlob(new FileInfo(destinationFilePathName)));
+        }
+
+        public ValueTask<string> GenerateSecurityTokenAsync(string container, string? blobPathName = null, int durationMinutes = 60, BlobStorageSecurityTarget target = BlobStorageSecurityTarget.Container, BlobStorageSecurityPermissions permissions = BlobStorageSecurityPermissions.Read, int cacheMinutes = 60) => throw new NotImplementedException();
     }
 }

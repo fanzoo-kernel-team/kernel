@@ -9,16 +9,52 @@ namespace Fanzoo.Kernel.Builder
             WebApplicationBuilder = builder;
         }
 
-        public WebApplicationBuilder WebApplicationBuilder { get; private set; }
+        internal WebApplicationBuilder WebApplicationBuilder { get; private set; }
+    }
+
+    public sealed class AzureBlobStorageBuilder
+    {
+        public AzureBlobStorageBuilder(WebApplicationBuilder builder)
+        {
+            WebApplicationBuilder = builder;
+        }
+
+        internal WebApplicationBuilder WebApplicationBuilder { get; private set; }
+    }
+
+    public static class AzureBlobStorageConfigurationExtensions
+    {
+        public static AzureBlobStorageBuilder AddCurrentUserTokenSecurity(this AzureBlobStorageBuilder builder)
+        {
+            builder.WebApplicationBuilder.AddTransient<IBlobStorageSecurityTokenGenerationService, CurrentUserBlobStorageSecurityTokenGenerationService>();
+
+            builder.WebApplicationBuilder.AddSetting<CurrentUserBlobStorageSecurityTokenGenerationServiceSettings>(CurrentUserBlobStorageSecurityTokenGenerationServiceSettings.SectionName);
+
+            return builder;
+        }
+
+        public static AzureBlobStorageBuilder AddCookieTokenPersistence(this AzureBlobStorageBuilder builder)
+        {
+            builder.WebApplicationBuilder.AddTransient<IBlobStorageSecurityTokenPersistenceService, CookieBlobStorageSecurityTokenPersistenceService>();
+
+            return builder;
+        }
     }
 
     public static class BlobStorageFactoryBuilderExtensions
     {
-        public static BlobStorageFactoryBuilder AddAzureBlobStorage(this BlobStorageFactoryBuilder builder)
+        public static BlobStorageFactoryBuilder AddAzureBlobStorage(this BlobStorageFactoryBuilder builder, Action<AzureBlobStorageBuilder>? configuration = null)
         {
             builder.WebApplicationBuilder.AddTransient<IBlobStorageService, AzureBlobStorageService>();
 
             builder.WebApplicationBuilder.AddSetting<AzureBlobStorageSettings>(AzureBlobStorageSettings.SectionName);
+
+            if (configuration is not null)
+            {
+                var azureBuilder = new AzureBlobStorageBuilder(builder.WebApplicationBuilder);
+
+                configuration.Invoke(azureBuilder);
+            }
 
             return builder;
         }
