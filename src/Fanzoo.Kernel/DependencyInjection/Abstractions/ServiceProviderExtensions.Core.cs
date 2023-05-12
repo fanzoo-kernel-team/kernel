@@ -50,7 +50,7 @@ namespace Fanzoo.Kernel.DependencyInjection
 
         internal static IServiceCollection AddCore(this IServiceCollection services) =>
             services
-                .AddDateTimeService()
+                .AddDateTimeServices()
                 .AddTransient<CommandDispatcher>()
                 .AddTransient<QueryDispatcher>()
                 .AddScoped<EventDispatcher>();
@@ -163,13 +163,21 @@ namespace Fanzoo.Kernel.DependencyInjection
             return services;
         }
 
-        internal static IServiceCollection AddDateTimeService(this IServiceCollection services)
+        internal static IServiceCollection AddDateTimeServices(this IServiceCollection services)
         {
+            // DateTime support
             var dateTimeService = new DateTimeService();
 
             SystemDateTime.SetProvider(dateTimeService);
 
-            return services.AddSingleton(typeof(IDateTimeService), dateTimeService);
+            // DateTimeOffset support
+            var dateTimeOffsetService = new DateTimeOffsetService();
+
+            SystemDateTimeOffset.SetProvider(dateTimeOffsetService);
+
+            return services
+                .AddSingleton(typeof(IDateTimeService), dateTimeService)
+                .AddSingleton(typeof(IDateTimeOffsetService), dateTimeOffsetService);
         }
 
         internal static IServiceCollection AddSlapper(this IServiceCollection services) => services.AddTransient<IDynamicMappingService, SlapperDynamicMappingService>();
