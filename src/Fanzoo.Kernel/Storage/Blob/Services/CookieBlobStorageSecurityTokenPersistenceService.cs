@@ -28,10 +28,7 @@
             {
                 var expiration = DateTimeOffset.Parse(expirationString);
 
-                if (SystemDateTimeOffset.UtcNow >= expiration)
-                {
-                    generateToken = false;
-                }
+                generateToken = SystemDateTimeOffset.UtcNow >= expiration;
             }
 
             if (generateToken)
