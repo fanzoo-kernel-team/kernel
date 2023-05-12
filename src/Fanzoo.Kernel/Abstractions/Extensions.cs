@@ -223,5 +223,39 @@ namespace System
                 ? input
                 : input[..^trimString.Length];
         }
+
+        public static Uri Combine(this Uri uri, string relativeUri)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
+
+            if (relativeUri == null)
+            {
+                throw new ArgumentNullException(nameof(relativeUri));
+            }
+
+            if (relativeUri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Uri(relativeUri);
+            }
+
+            var uriBuilder = new UriBuilder(uri);
+
+            if (uriBuilder.Path.EndsWith("/"))
+            {
+                uriBuilder.Path = uriBuilder.Path.TrimEnd('/');
+            }
+
+            if (relativeUri.StartsWith("/"))
+            {
+                relativeUri = relativeUri[1..];
+            }
+
+            uriBuilder.Path = Path.Combine(uriBuilder.Path, relativeUri);
+
+            return uriBuilder.Uri;
+        }
     }
 }
