@@ -23,5 +23,9 @@
         ValueTask<Stream> ScaleAndCenterImageAsync(Stream image, int targetWidth, int targetHeight, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
 
         ValueTask<byte[]> ScaleAndCenterImageAsync(byte[] image, int targetWidth, int targetHeight, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        ValueTask<Stream> ShrinkToMaxAsync(Stream image, int maxSize, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        ValueTask<byte[]> ShrinkToMaxAsync(byte[] image, int maxSize, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
     }
 }
