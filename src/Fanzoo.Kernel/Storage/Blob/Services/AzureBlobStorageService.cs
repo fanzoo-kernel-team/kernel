@@ -67,6 +67,13 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         public Uri RootUri => _rootUri ??= new BlobServiceClient(_connectionString).Uri;
 
+        public async ValueTask<bool> ExistsAsync(string blobPathName)
+        {
+            var blobClient = GetBlobClient(blobPathName);
+
+            return await blobClient.ExistsAsync();
+        }
+
         public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
             var (container, folder) = GetContainerAndFolderPath(path);

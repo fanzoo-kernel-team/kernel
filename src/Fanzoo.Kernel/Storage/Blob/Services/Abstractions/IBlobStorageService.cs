@@ -33,6 +33,8 @@
 
         Uri RootUri { get; }
 
+        ValueTask<bool> ExistsAsync(string blobPathName);
+
         ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null);
 
         ValueTask<IBlob> CreateAsync(string filename, string path, byte[] data, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null);

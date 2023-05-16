@@ -61,6 +61,13 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         public Uri RootUri => new($"{_settings.RootPath}\\");
 
+        public ValueTask<bool> ExistsAsync(string blobPathName)
+        {
+            var filePathname = Combine(_settings.RootPath, blobPathName);
+
+            return new ValueTask<bool>(File.Exists(filePathname));
+        }
+
         public async ValueTask<IBlob> CreateAsync(string filename, string path, Stream stream, string mediaType, bool isReadOnly = false, bool overwrite = false, string? originalFilename = null)
         {
             var filePathname = Combine(_settings.RootPath, path, filename);

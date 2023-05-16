@@ -10,6 +10,8 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
     private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
 
+    private readonly IList<IEvent> _domainEvents = new List<IEvent>();
+
     protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {
         _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
@@ -34,6 +36,12 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
 
             if (result.IsSuccessful)
             {
+                //handle domain events from the command handler
+                foreach (var domainEvent in _domainEvents)
+                {
+                    await _eventDispatcher.DispatchDomainEventAsync(domainEvent);
+                }
+
                 //handle cascading domain events
                 var entities = _unitOfWork.GetEntitiesWithEvents().ToArray();
 
@@ -75,6 +83,8 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
         }
     }
 
+    protected void PublishDomainEvent(IEvent @event) => _domainEvents.Add(@event);
+
     protected void PublishIntegrationEvent(IEvent @event) => _eventDispatcher.QueueIntegrationEvent(@event);
 
     protected abstract Task<CommandResult<TResult>> OnHandleAsync(TCommand command);
@@ -85,6 +95,8 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
+
+    private readonly IList<IEvent> _domainEvents = new List<IEvent>();
 
     protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {
@@ -110,6 +122,12 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
 
             if (result.IsSuccessful)
             {
+                //handle domain events from the command handler
+                foreach (var domainEvent in _domainEvents)
+                {
+                    await _eventDispatcher.DispatchDomainEventAsync(domainEvent);
+                }
+
                 //handle cascading domain events
                 var entities = _unitOfWork.GetEntitiesWithEvents().ToArray();
 
@@ -150,6 +168,8 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
             Logger.CommandInformation<TCommand>("<---------- End");
         }
     }
+
+    protected void PublishDomainEvent(IEvent @event) => _domainEvents.Add(@event);
 
     protected void PublishIntegrationEvent(IEvent @event) => _eventDispatcher.QueueIntegrationEvent(@event);
 
