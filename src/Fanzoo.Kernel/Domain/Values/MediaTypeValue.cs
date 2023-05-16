@@ -17,6 +17,8 @@
             .And
             .IsInList(mediaTypes, mediaType);
 
+        public bool IsImage => Value.StartsWith("image/");
+
         public static MediaTypeValue PlainText => new("text/plain");
 
         public static MediaTypeValue Html => new("text/html");

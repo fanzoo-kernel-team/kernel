@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Builders.Create;
+﻿using System.Data;
+using FluentMigrator.Builders.Create;
 using FluentMigrator.Builders.Create.Index;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Builders.Insert;
@@ -82,13 +83,13 @@ namespace FluentMigrator
                     .NotNullable()
                     .WithDefaultValue(true);
 
-        public static ICreateTableColumnOptionOrWithColumnSyntax WithForeignKeyColumn(this ICreateTableColumnOptionOrWithColumnSyntax table, string toTable, bool required = true) =>
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithForeignKeyColumn(this ICreateTableColumnOptionOrWithColumnSyntax table, string? toTable = null, bool required = true, string? columnName = null) =>
             table
-                .WithColumn($"{toTable}Id")
+                .WithColumn(columnName ?? $"{toTable ?? throw new ArgumentException($"{nameof(toTable)} is required when {nameof(columnName)} is not specified.")}Id")
                     .AsGuid()
                     .Required(required);
 
-        public static void ForeignKey(this ICreateExpressionRoot create, string fromTable, string toTable, string? foreignColumn = null /*Rule onDelete = Rule.SetDefault, Rule onUpdate = Rule.SetDefault*/)
+        public static void ForeignKey(this ICreateExpressionRoot create, string fromTable, string toTable, string? foreignColumn = null, Rule onDelete = Rule.None, Rule onUpdate = Rule.None)
         {
             foreignColumn ??= $"{toTable}Id";
 
@@ -96,7 +97,9 @@ namespace FluentMigrator
                 .FromTable(fromTable)
                     .ForeignColumn(foreignColumn)
                         .ToTable(toTable)
-                            .PrimaryColumn("Id");
+                            .PrimaryColumn("Id")
+                                .OnDelete(onDelete)
+                                .OnUpdate(onUpdate);
         }
 
         public static ICreateTableColumnOptionOrWithColumnSyntax Required(this ICreateTableColumnOptionOrWithColumnSyntax table, bool required) => required ? table.NotNullable() : table.Nullable();
