@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Fanzoo.Kernel.Domain.Values
+﻿namespace Fanzoo.Kernel.Domain.Values
 {
     public abstract class NamedLookupValue<TInheritor, TPrimitive> : LookupValue<TInheritor, TPrimitive>
         where TInheritor : NamedLookupValue<TInheritor, TPrimitive>

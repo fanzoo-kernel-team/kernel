@@ -1,6 +1,5 @@
 ﻿#pragma warning disable IDE0046 // Convert to conditional expression
 
-using System.Reflection;
 
 namespace Fanzoo.Kernel
 {

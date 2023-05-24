@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-
-namespace Fanzoo.Kernel.Services
+﻿namespace Fanzoo.Kernel.Services
 {
     public class HttpContextAccessorService : IContextAccessorService
     {

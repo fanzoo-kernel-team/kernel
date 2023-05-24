@@ -1,5 +1,4 @@
-﻿using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
-using Fanzoo.Kernel.Domain.Entities.Users;
+﻿using Fanzoo.Kernel.Domain.Entities.Users;
 
 namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users
 {
