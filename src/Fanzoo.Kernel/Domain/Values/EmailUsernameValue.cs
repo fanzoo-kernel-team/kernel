@@ -23,7 +23,7 @@
         public static implicit operator EmailUsernameValue(string s) => new(s);
 
         public static bool CanCreate(string username) => Check.For.IsValidEmailFormat(GetUsername(username));
-        
+
         private static string GetUsername(string username) => username
                  .ToLower()
                      .Trim();

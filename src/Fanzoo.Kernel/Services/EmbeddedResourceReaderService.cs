@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Fanzoo.Kernel.Services
+﻿namespace Fanzoo.Kernel.Services
 {
     public class EmbeddedResourceReaderService : IEmbeddedResourceReaderService
     {

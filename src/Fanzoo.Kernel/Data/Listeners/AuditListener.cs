@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Fanzoo.Kernel.Services;
-
-namespace Fanzoo.Kernel.Data.Listeners
+﻿namespace Fanzoo.Kernel.Data.Listeners
 {
 
     public sealed class AuditListener : IPreInsertEventListener, IPreUpdateEventListener

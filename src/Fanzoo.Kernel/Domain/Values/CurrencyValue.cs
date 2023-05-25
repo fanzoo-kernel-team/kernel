@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Fanzoo.Kernel.Domain.Values
+﻿namespace Fanzoo.Kernel.Domain.Values
 {
     public sealed class CurrencyValue : ValueObject
     {

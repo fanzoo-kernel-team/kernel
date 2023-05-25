@@ -10,10 +10,10 @@
             Guard.Against.NonMatchingRegex(ipAddress, IPAddressPattern, nameof(ipAddress));
         }
 
-        public static ValueResult<IPAddressValue, Error> Create(string ipAddress)  => CanCreate(ipAddress)     
+        public static ValueResult<IPAddressValue, Error> Create(string ipAddress) => CanCreate(ipAddress)
                 ? new IPAddressValue(ipAddress)
                 : Errors.ValueObjects.IPAddressValue.InvalidFormat;
-        
+
 
         public static implicit operator IPAddressValue(string value) => new(value);
 
