@@ -9,6 +9,8 @@
         string? GetClaimOrDefault(string claim);
 
         bool TryGetClaim(string claim, out string value);
+
+        IEnumerable<Claim> GetClaims(string claim);
     }
 
     internal class CurrentUserService : ICurrentUserService
@@ -42,6 +44,8 @@
                 return false;
             }
         }
+
+        public IEnumerable<Claim> GetClaims(string claim) => _contextAccessor.User?.GetClaims(claim) ?? Enumerable.Empty<Claim>();
     }
 
     public static class CurrentUserServiceExtensions
@@ -49,6 +53,14 @@
         public static string? GetUserIdOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.PrimarySid);
 
         public static string GetUserId(this ICurrentUserService service) => service.GetClaim(System.Security.Claims.ClaimTypes.PrimarySid);
+
+        public static T GetUserId<T>(this ICurrentUserService service) => typeof(T) switch
+        {
+            var t when t == typeof(Guid) => (T)Convert.ChangeType(new Guid(service.GetUserId()), typeof(T)),
+            var t when t == typeof(int) => (T)Convert.ChangeType(int.Parse(service.GetUserId()), typeof(T)),
+            var t when t == typeof(string) => (T)Convert.ChangeType(service.GetUserId(), typeof(T)),
+            _ => throw new InvalidOperationException("Unsupported type.")
+        };
 
         public static string? GetUsernameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(ClaimTypes.Username);
 
@@ -61,6 +73,10 @@
         public static string? GetNameOrDefault(this ICurrentUserService service) => service.GetClaimOrDefault(System.Security.Claims.ClaimTypes.Name);
 
         public static string GetName(this ICurrentUserService service) => service.GetClaim(System.Security.Claims.ClaimTypes.Name);
+
+        public static IEnumerable<string> GetRoles(this ICurrentUserService service) => service.GetClaims(System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
+
+        public static bool IsInRole(this ICurrentUserService service, string role) => service.GetRoles().Contains(role);
 
     }
 }
