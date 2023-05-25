@@ -18,14 +18,14 @@ namespace FluentValidation
 
                 return typeof(TProperty) switch
                 {
-                    Type type when type == typeof(string) => (v as string).IsNotNullOrWhitespace(),
-                    Type type when type == typeof(Guid) => v != null && !v.Equals(Guid.Empty),
-                    Type type when type == typeof(int) => v != null && !v.Equals(0),
-                    Type type when type == typeof(long) => v != null && !v.Equals(0),
-                    Type type when type == typeof(decimal) => v != null && !v.Equals(0),
-                    Type type when type == typeof(DateTime) => v != null && !v.Equals(DateTime.MinValue),
-                    Type type when type == typeof(DateTimeOffset) => v != null && !v.Equals(DateTimeOffset.MinValue),
-                    Type type when type == typeof(TimeSpan) => v != null && !v.Equals(TimeSpan.Zero),
+                    var type when type == typeof(string) => (v as string).IsNotNullOrWhitespace(),
+                    var type when type == typeof(Guid) => v != null && !v.Equals(Guid.Empty),
+                    var type when type == typeof(int) => v != null && !v.Equals(0),
+                    var type when type == typeof(long) => v != null && !v.Equals(0),
+                    var type when type == typeof(decimal) => v != null && !v.Equals(0),
+                    var type when type == typeof(DateTime) => v != null && !v.Equals(DateTime.MinValue),
+                    var type when type == typeof(DateTimeOffset) => v != null && !v.Equals(DateTimeOffset.MinValue),
+                    var type when type == typeof(TimeSpan) => v != null && !v.Equals(TimeSpan.Zero),
                     _ => v != null,
                 };
             });
