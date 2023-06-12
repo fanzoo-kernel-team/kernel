@@ -45,5 +45,18 @@
 
             return token is not null ? token : throw new InvalidOperationException("Security token could not be generated.");
         }
+
+        public async ValueTask ClearCurrentContainerSecurityTokenAsync()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+
+            if (httpContext is not null)
+            {
+                httpContext.Response.Cookies.Delete(SecurityTokenCookieName);
+                httpContext.Response.Cookies.Delete(SecurityTokenExpirationCookieName);
+            }
+
+            await Task.CompletedTask;
+        }
     }
 }

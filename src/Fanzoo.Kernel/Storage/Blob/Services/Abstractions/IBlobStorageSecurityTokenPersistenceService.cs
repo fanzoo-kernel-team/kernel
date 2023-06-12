@@ -2,6 +2,8 @@
 {
     public interface IBlobStorageSecurityTokenPersistenceService
     {
+        ValueTask ClearCurrentContainerSecurityTokenAsync();
+
         ValueTask<string> GetCurrentContainerSecurityTokenAsync();
     }
 }
