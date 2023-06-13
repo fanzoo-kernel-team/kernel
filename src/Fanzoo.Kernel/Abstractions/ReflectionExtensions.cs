@@ -1,5 +1,4 @@
-﻿#pragma warning disable IDE0046 // Convert to conditional expression
-
+﻿
 
 namespace Fanzoo.Kernel
 {
@@ -12,12 +11,7 @@ namespace Fanzoo.Kernel
 
             var type = obj.GetType();
 
-            var fieldInfo = GetFieldInfo(type, name);
-
-            if (fieldInfo is null)
-            {
-                throw new InvalidOperationException($"{name} not found.");
-            }
+            var fieldInfo = GetFieldInfo(type, name) ?? throw new InvalidOperationException($"{name} not found.");
 
             return fieldInfo.GetValue(obj);
         }
@@ -28,12 +22,7 @@ namespace Fanzoo.Kernel
 
             var type = obj.GetType();
 
-            var fieldInfo = GetFieldInfo(type, name);
-
-            if (fieldInfo is null)
-            {
-                throw new InvalidOperationException($"{name} not found.");
-            }
+            var fieldInfo = GetFieldInfo(type, name) ?? throw new InvalidOperationException($"{name} not found.");
 
             fieldInfo.SetValue(obj, val);
         }
@@ -61,12 +50,7 @@ namespace Fanzoo.Kernel
 
             var type = obj.GetType();
 
-            var propertyInfo = GetPropertyInfo(type, name);
-
-            if (propertyInfo is null)
-            {
-                throw new InvalidOperationException($"{name} not found.");
-            }
+            var propertyInfo = GetPropertyInfo(type, name) ?? throw new InvalidOperationException($"{name} not found.");
 
             return propertyInfo.GetValue(obj, null);
         }
@@ -77,12 +61,7 @@ namespace Fanzoo.Kernel
 
             var type = obj.GetType();
 
-            var propertyInfo = GetPropertyInfo(type, name);
-
-            if (propertyInfo is null)
-            {
-                throw new InvalidOperationException($"{name} not found.");
-            }
+            var propertyInfo = GetPropertyInfo(type, name) ?? throw new InvalidOperationException($"{name} not found.");
 
             propertyInfo.SetValue(obj, val, null);
         }

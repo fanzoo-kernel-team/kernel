@@ -13,7 +13,7 @@
         {
             dynamic commandHandler = _serviceProvider
                 .GetService(typeof(ICommandHandler<>)
-                    .MakeGenericType(new Type[] { command.GetType() }))!;
+                    .MakeGenericType(command.GetType()))!;
 
             return await commandHandler.HandleAsync((dynamic)command);
         }
@@ -22,7 +22,7 @@
         {
             dynamic commandHandler = _serviceProvider
                 .GetService(typeof(ICommandHandler<,>)
-                    .MakeGenericType(new Type[] { command.GetType(), typeof(T) }))!;
+                    .MakeGenericType(command.GetType(), typeof(T)))!;
 
             return await commandHandler.HandleAsync((dynamic)command);
         }
