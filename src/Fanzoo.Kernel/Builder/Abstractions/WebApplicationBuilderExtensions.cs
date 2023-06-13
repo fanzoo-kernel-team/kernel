@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Settings.Configuration;
 
 namespace Fanzoo.Kernel.Builder
 {
@@ -157,7 +158,7 @@ namespace Fanzoo.Kernel.Builder
 
             builder.Host.UseSerilog((hostContext, services, configuration) =>
             {
-                configuration.ReadFrom.Configuration(hostContext.Configuration, configurationSectionName);
+                configuration.ReadFrom.Configuration(hostContext.Configuration, new ConfigurationReaderOptions() { SectionName = configurationSectionName });
             });
 
             return builder;

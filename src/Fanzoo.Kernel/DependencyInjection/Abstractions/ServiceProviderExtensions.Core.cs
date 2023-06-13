@@ -64,7 +64,7 @@ namespace Fanzoo.Kernel.DependencyInjection
             {
                 var commandHandlers = assembly.GetTypes()
                     .Where(t => !t.IsAbstract)
-                    .Where(t => t.GetInterfaces().Any(i => IsHandlerInterface(i)))
+                    .Where(t => t.GetInterfaces().Exists(i => IsHandlerInterface(i)))
                         .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => IsHandlerInterface(i))));
 
                 foreach (var commandHandler in commandHandlers)
@@ -85,7 +85,7 @@ namespace Fanzoo.Kernel.DependencyInjection
             {
                 var queryHandlers = assembly.GetTypes()
                     .Where(t => !t.IsAbstract)
-                    .Where(t => t.GetInterfaces().Any(i => IsHandlerInterface(i)))
+                    .Where(t => t.GetInterfaces().Exists(i => IsHandlerInterface(i)))
                         .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => IsHandlerInterface(i))));
 
                 foreach (var queryHandler in queryHandlers)
@@ -107,7 +107,7 @@ namespace Fanzoo.Kernel.DependencyInjection
             {
                 var eventHandlers = assembly.GetTypes()
                     .Where(t => !t.IsAbstract)
-                    .Where(t => t.GetInterfaces().Any(i => IsHandlerInterface(i)));
+                    .Where(t => t.GetInterfaces().Exists(i => IsHandlerInterface(i)));
 
                 foreach (var eventHandler in eventHandlers)
                 {
@@ -128,8 +128,8 @@ namespace Fanzoo.Kernel.DependencyInjection
             {
                 var repositories = assembly.GetTypes()
                     .Where(t => !t.IsAbstract)
-                    .Where(t => t.GetInterfaces().Any(i => IsRepositoryInterface(i)))
-                        .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => !IsRepositoryInterface(i)))); //TODO: this assumes there are only 2 interfaces - the framework and the explicit. Problem down the road?
+                    .Where(t => t.GetInterfaces().Exists(i => IsRepositoryInterface(i)))
+                        .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => !IsRepositoryInterface(i))));
 
                 foreach (var repository in repositories)
                 {
@@ -146,7 +146,7 @@ namespace Fanzoo.Kernel.DependencyInjection
             {
                 var applicationServices = assembly.GetTypes()
                     .Where(t => t.IsClass)
-                    .Where(t => t.GetInterfaces().Any(i => i == typeof(IService)))
+                    .Where(t => t.GetInterfaces().Exists(i => i == typeof(IService)))
                         .Select(t => (Type: t, Interface: t.GetInterfaces().Except(new[] { typeof(IService) }).First()));
 
                 foreach (var applicationService in applicationServices)
@@ -181,7 +181,5 @@ namespace Fanzoo.Kernel.DependencyInjection
         }
 
         internal static IServiceCollection AddSlapper(this IServiceCollection services) => services.AddTransient<IDynamicMappingService, SlapperDynamicMappingService>();
-
-        internal static IServiceCollection AddJobs(this IServiceCollection services) => services; //TODO: add job stuff when the time comes
     }
 }

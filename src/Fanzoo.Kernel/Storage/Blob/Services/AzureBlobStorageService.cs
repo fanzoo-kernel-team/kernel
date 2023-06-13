@@ -278,7 +278,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
             var pathSegments = path.Split('\\');
 
-            var filename = pathSegments.Last();
+            var filename = pathSegments[^1];
 
             path = string.Join('\\', pathSegments[..^1]).TrimEnd('\\');
 

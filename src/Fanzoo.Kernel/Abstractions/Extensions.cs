@@ -243,12 +243,12 @@ namespace System
 
             var uriBuilder = new UriBuilder(uri);
 
-            if (uriBuilder.Path.EndsWith("/"))
+            if (uriBuilder.Path.EndsWith('/'))
             {
                 uriBuilder.Path = uriBuilder.Path.TrimEnd('/');
             }
 
-            if (relativeUri.StartsWith("/"))
+            if (relativeUri.StartsWith('/'))
             {
                 relativeUri = relativeUri[1..];
             }
@@ -257,5 +257,7 @@ namespace System
 
             return uriBuilder.Uri;
         }
+
+        public static bool Exists<T>(this T[] array, Predicate<T> match) => Array.Exists(array, match);
     }
 }

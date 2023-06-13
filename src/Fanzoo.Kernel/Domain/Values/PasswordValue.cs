@@ -1,7 +1,5 @@
 ﻿namespace Fanzoo.Kernel.Domain.Values
 {
-    //TODO: refactor this to be configurable somehow
-    //service?
     public sealed class PasswordValue : RequiredStringValue, IPasswordValue
     {
         private PasswordValue() { } //ORM
