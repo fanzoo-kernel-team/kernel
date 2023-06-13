@@ -13,7 +13,7 @@
         {
             dynamic QueryHandler = _serviceProvider
                 .GetService(typeof(IQueryHandler<,>)
-                    .MakeGenericType(new Type[] { query.GetType(), typeof(T) }))!;
+                    .MakeGenericType(query.GetType(), typeof(T)))!;
 
             return await QueryHandler.HandleAsync((dynamic)query);
         }

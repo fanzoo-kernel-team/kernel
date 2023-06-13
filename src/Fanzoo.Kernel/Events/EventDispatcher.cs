@@ -46,9 +46,9 @@ namespace Fanzoo.Kernel.Events
 
             var handlerTypes = _serviceProvider.GetConfiguredServiceTypes()
                 .Where(t => !t.IsAbstract)
-                .Where(t => t.GetInterfaces().Any(i => IsHandlerInterface(i, eventHandlerType)))
+                .Where(t => t.GetInterfaces().Exists(i => IsHandlerInterface(i, eventHandlerType)))
                     .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => IsHandlerInterface(i, eventHandlerType))))
-                        .Where(i => i.Interface.GenericTypeArguments.Any(t => t == @event.GetType()));
+                        .Where(i => i.Interface.GenericTypeArguments.Exists(t => t == @event.GetType()));
 
             foreach (var handlerType in handlerTypes)
             {

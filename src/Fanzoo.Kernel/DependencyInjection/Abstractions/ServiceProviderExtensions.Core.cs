@@ -129,7 +129,7 @@ namespace Fanzoo.Kernel.DependencyInjection
                 var repositories = assembly.GetTypes()
                     .Where(t => !t.IsAbstract)
                     .Where(t => t.GetInterfaces().Exists(i => IsRepositoryInterface(i)))
-                        .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => !IsRepositoryInterface(i)))); //TODO: this assumes there are only 2 interfaces - the framework and the explicit. Problem down the road?
+                        .Select(t => (Type: t, Interface: t.GetInterfaces().Single(i => !IsRepositoryInterface(i))));
 
                 foreach (var repository in repositories)
                 {
