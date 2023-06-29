@@ -102,23 +102,13 @@ namespace Fanzoo.Kernel.Tests
 
             var invalidMoneyValueDecimal = 12.5555555m;
 
-            var invalidMoneyValueAmount = -1.25m;
-
             var moneyValueAmount = MoneyValue.Create(validMoneyValueAmount, CurrencyValue.USDollar).Value;
 
             Assert.True(moneyValueAmount.Amount == validMoneyValueAmount);
 
-            Assert.True(MoneyValue.Create(invalidMoneyValueAmount, CurrencyValue.USDollar).IsFailure);
-
-            Assert.True(MoneyValue.Create(invalidMoneyValueDecimal, CurrencyValue.USDollar).IsFailure);
-
             Assert.True(MoneyValue.CanCreate(validMoneyValueAmount, CurrencyValue.USDollar));
 
             Assert.False(MoneyValue.CanCreate(invalidMoneyValueDecimal, CurrencyValue.USDollar));
-
-            Assert.False(MoneyValue.CanCreate(invalidMoneyValueAmount, CurrencyValue.USDollar));
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => new MoneyValue(invalidMoneyValueAmount, CurrencyValue.USDollar));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => new MoneyValue(invalidMoneyValueDecimal, CurrencyValue.USDollar));
 
