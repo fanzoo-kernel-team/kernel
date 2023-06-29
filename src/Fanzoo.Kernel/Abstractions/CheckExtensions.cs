@@ -134,19 +134,7 @@ namespace Fanzoo.Kernel
 
         public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency)
         {
-            if (decimal.Round(amount, currency.MinorUnits) != amount)
-            {
-                return check.Resolve(false);
-            }
-
-            try
-            {
-                return check.GreaterThanOrEqual(amount, 0);
-            }
-            catch (KernelErrorException)
-            {
-                return check.Resolve(false);
-            }
+            return decimal.Round(amount, currency.MinorUnits) != amount ? check.Resolve(false) : check.Resolve(true);
         }
 
         public static Check IsValidCssColor(this Check check, string cssColor)

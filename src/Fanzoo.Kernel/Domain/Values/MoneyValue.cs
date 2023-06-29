@@ -14,7 +14,6 @@ namespace Fanzoo.Kernel.Domain.Values
         public MoneyValue(decimal amount, CurrencyValue currency)
         {
 
-            Guard.Against.LessThan(amount, 0m, nameof(amount));
             Guard.Against.InvalidMinorUnits(amount, currency.MinorUnits, nameof(amount));
 
             Amount = amount;
