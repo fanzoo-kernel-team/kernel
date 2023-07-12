@@ -102,7 +102,7 @@
 
         public virtual HashedPasswordValue Password { get; protected set; } = default!;
 
-        public virtual NameValue Name { get; protected set; } = default!;
+        public NameValue Name { get; protected set; } = default!;
 
         public virtual DateTime? LastLogin { get; protected set; }
 
