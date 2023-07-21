@@ -102,9 +102,49 @@ namespace Fanzoo.Kernel.DependencyInjection
                         }, new List<string>()
                     }
                 });
+
+                var schemaHelper = new SwashbuckleSchemaHelper();
+
+                c.CustomSchemaIds(type => schemaHelper.GetSchemaId(type));
             });
 
             return services;
+        }
+
+        internal class SwashbuckleSchemaHelper
+        {
+            private readonly Dictionary<string, int> _schemaNameRepetition = new();
+
+            // borrowed from https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/95cb4d370e08e54eb04cf14e7e6388ca974a686e/src/Swashbuckle.AspNetCore.SwaggerGen/SchemaGenerator/SchemaGeneratorOptions.cs#L44
+            private string DefaultSchemaIdSelector(Type modelType)
+            {
+                if (!modelType.IsConstructedGenericType)
+                {
+                    return modelType.Name.Replace("[]", "Array");
+                }
+
+                var prefix = modelType.GetGenericArguments()
+                    .Select(DefaultSchemaIdSelector)
+                        .Aggregate((previous, current) => previous + current);
+
+                return $"{prefix}{modelType.Name.Split('`')[0]}";
+            }
+
+            public string GetSchemaId(Type modelType)
+            {
+                var id = DefaultSchemaIdSelector(modelType);
+
+                if (!_schemaNameRepetition.ContainsKey(id))
+                {
+                    _schemaNameRepetition.Add(id, 0);
+                }
+
+                var count = _schemaNameRepetition[id] + 1;
+
+                _schemaNameRepetition[id] = count;
+
+                return $"{id}{(count > 1 ? count.ToString() : "")}";
+            }
         }
     }
 }
