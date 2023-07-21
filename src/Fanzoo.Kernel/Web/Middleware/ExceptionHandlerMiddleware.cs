@@ -20,6 +20,8 @@ namespace Fanzoo.Kernel.Web.Middleware
             }
             catch (KernelErrorException e)
             {
+                Log.Logger.Error(e, "An unhandled Kernel Error in a 500 Internal Server Error was thrown:");
+
                 await HandleResultExceptionAsync(context, e);
             }
             catch (Exception e)
@@ -34,7 +36,7 @@ namespace Fanzoo.Kernel.Web.Middleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsJsonAsync(e);
+            await context.Response.WriteAsync(e.Message);
         }
 
         private static async ValueTask HandleExceptionAsync(HttpContext context)
