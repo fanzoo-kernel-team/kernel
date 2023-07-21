@@ -151,5 +151,13 @@ namespace Fanzoo.Kernel
                 throw new ArgumentException(argument);
             }
         }
+
+        public static void InvalidIPAddress(this Guard guard, string value, string argument)
+        {
+            if (Check.For.IsValidIPAddress(value).Result is false)
+            {
+                throw new ArgumentException(argument);
+            }
+        }
     }
 }

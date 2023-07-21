@@ -232,7 +232,7 @@ namespace Fanzoo.Kernel.Tests
         [Fact]
         public void Test_IPAddressValue()
         {
-            var validIPAddress = "192.168.1.15";
+            var validIPAddress = "68.40.13.233:51177";
 
             var invalidIPAddress = "1925.168.1.15";
 
