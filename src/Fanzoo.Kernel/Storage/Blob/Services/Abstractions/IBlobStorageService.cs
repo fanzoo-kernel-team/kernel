@@ -54,5 +54,7 @@
         ValueTask<IBlob> RenameAsync(string sourceBlobPathName, string newBlobName);
 
         ValueTask<string> GenerateSecurityTokenAsync(string container, string? blobPathName = null, int durationMinutes = 60, BlobStorageSecurityTarget target = BlobStorageSecurityTarget.Container, BlobStorageSecurityPermissions permissions = BlobStorageSecurityPermissions.Read, int cacheMinutes = 60);
+
+        ValueTask DeleteContainerAsync(string container);
     }
 }
