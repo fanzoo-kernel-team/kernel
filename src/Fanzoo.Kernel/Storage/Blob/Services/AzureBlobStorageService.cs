@@ -1,11 +1,7 @@
-﻿using System.ComponentModel;
-using Azure;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
-using FluentNHibernate.Cfg;
-using FluentNHibernate.Infrastructure;
 using Microsoft.Extensions.Options;
 
 namespace Fanzoo.Kernel.Storage.Blob.Services
@@ -216,16 +212,16 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         public async ValueTask DeleteContainerAsync(string container)
         {
             var containerClient = GetContainerClient(container);
-            
+
             try
             {
                 // Delete the specified container and handle the exception.
                 await containerClient.DeleteIfExistsAsync();
             }
-            catch 
+            catch
             {
                 throw new InvalidOperationException($"Failed to delete container");
-            }      
+            }
         }
 
         public ValueTask<string> GenerateSecurityTokenAsync(string container, string? blobPathName = null, int durationMinutes = 60, BlobStorageSecurityTarget target = BlobStorageSecurityTarget.Container, BlobStorageSecurityPermissions permissions = BlobStorageSecurityPermissions.Read, int cacheMinutes = 60)
