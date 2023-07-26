@@ -130,6 +130,9 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             return default;
         }
 
+        public ValueTask DeleteContainerAsync(string container) => throw new NotImplementedException();
+
+
         public async IAsyncEnumerable<IBlob> GetBlobsAsync(string pathName)
         {
             pathName = Combine(_settings.RootPath, pathName);

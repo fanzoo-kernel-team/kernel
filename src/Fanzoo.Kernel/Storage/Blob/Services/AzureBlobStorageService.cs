@@ -208,6 +208,22 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             return await MoveAsync(sourceBlobPathName, destinationBlobPathName, false);
         }
 
+
+        public async ValueTask DeleteContainerAsync(string container)
+        {
+            var containerClient = GetContainerClient(container);
+
+            try
+            {
+                // Delete the specified container and handle the exception.
+                await containerClient.DeleteIfExistsAsync();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Failed to delete container");
+            }
+        }
+
         public ValueTask<string> GenerateSecurityTokenAsync(string container, string? blobPathName = null, int durationMinutes = 60, BlobStorageSecurityTarget target = BlobStorageSecurityTarget.Container, BlobStorageSecurityPermissions permissions = BlobStorageSecurityPermissions.Read, int cacheMinutes = 60)
         {
             //clean up the container name (this is critical, because it will not work if the container name starts with a slash)
@@ -294,6 +310,13 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             var containerClient = new BlobContainerClient(_connectionString, container);
 
             return containerClient.GetBlobClient(blobName);
+        }
+
+        private BlobContainerClient GetContainerClient(string container)
+        {
+            var containerClient = new BlobContainerClient(_connectionString, container);
+
+            return containerClient;
         }
     }
 
