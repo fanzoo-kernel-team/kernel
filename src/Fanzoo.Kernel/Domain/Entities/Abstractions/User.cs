@@ -241,6 +241,14 @@
             }
         }
 
+        public virtual void RemoveRole(TRoleValue role)
+        {
+            if (HasRole(role))
+            {
+                _roles.Remove(role);
+            }
+        }
+
         public abstract bool CanAddRole(TRoleValue role);
     }
 
