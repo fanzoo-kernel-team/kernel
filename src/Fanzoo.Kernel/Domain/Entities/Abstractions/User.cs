@@ -49,6 +49,8 @@
 
         void AddRole(TRoleValue role);
 
+        void RemoveRole(TRoleValue role);
+
         bool CanAddRole(TRoleValue role);
     }
 
@@ -358,6 +360,14 @@
             else
             {
                 throw new InvalidOperationException(Errors.Entities.User.RoleCannotBeAddedInTheCurrentState.Message);
+            }
+        }
+
+        public virtual void RemoveRole(TRoleValue role)
+        {
+            if (HasRole(role))
+            {
+                _roles.Remove(role);
             }
         }
 
