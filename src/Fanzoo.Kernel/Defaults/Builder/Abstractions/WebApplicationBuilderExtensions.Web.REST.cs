@@ -2,7 +2,7 @@
 {
     public static partial class WebApplicationBuilderExtensions
     {
-        public static WebApplicationBuilder AddRESTApiCore<TUserAuthenticationService>(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddRESTApiCore<TUserAuthenticationService>(this WebApplicationBuilder builder, Action<AddMvcCoreConfiguration>? options = null)
             where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>
         {
             var jwtSecret = builder.Configuration["Jwt:Secret"] ?? throw new ArgumentException("Configuration not found.");
@@ -10,7 +10,7 @@
 
             builder.Services
                 .AddWebCore()
-                .AddRESTApiCore<TUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>(jwtSecret, clockSkewMinutes);
+                .AddRESTApiCore<TUserAuthenticationService, UserIdentifierValue, Guid, EmailUsernameValue, PasswordValue>(jwtSecret, clockSkewMinutes, options);
 
             return builder;
         }

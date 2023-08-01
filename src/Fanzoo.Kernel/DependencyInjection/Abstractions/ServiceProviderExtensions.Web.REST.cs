@@ -8,14 +8,19 @@ namespace Fanzoo.Kernel.DependencyInjection
     {
         public static IServiceCollection AddRESTApiCore(this IServiceCollection services) => services.AddCors();
 
-        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, string jwtPrivateKey, double clockSkewMinutes)
+        public static IServiceCollection AddRESTApiCore<TUserAuthenticationService, TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>(this IServiceCollection services, string jwtPrivateKey, double clockSkewMinutes, Action<AddMvcCoreConfiguration>? options = null)
             where TUserAuthenticationService : class, IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>
             where TUserIdentifier : IdentifierValue<TUserIdentifierPrimitive>
             where TUserIdentifierPrimitive : notnull, new()
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
         {
+            var configuration = new AddMvcCoreConfiguration();
+
+            options?.Invoke(configuration);
+
             services
+                .AddMvcCore(configuration)
                 .AddTransient<IPasswordHashingService, IdentityPasswordHashingService>()
                 .AddTransient<IRESTApiUserAuthenticationService<TUserIdentifier, TUserIdentifierPrimitive, TUsername, TPassword>, TUserAuthenticationService>()
                 .AddCors()
