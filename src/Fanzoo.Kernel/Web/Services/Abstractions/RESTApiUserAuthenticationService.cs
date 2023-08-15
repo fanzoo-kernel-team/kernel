@@ -340,7 +340,7 @@ namespace Fanzoo.Kernel.Web.Services
             //add roles
             foreach (var role in user.Roles)
             {
-                claims.AddClaim(System.Security.Claims.ClaimTypes.Role, role.Name);
+                claims.AddClaim(System.Security.Claims.ClaimTypes.Role, role.Name, true);
             }
 
             //add application claims

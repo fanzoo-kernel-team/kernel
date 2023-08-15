@@ -6,9 +6,9 @@
 
         public static string? GetClaimValueOrDefault(this IEnumerable<Claim> claims, string claimType) => claims.FirstOrDefault(c => c.Type == claimType)?.Value;
 
-        public static IList<Claim> AddClaim(this IList<Claim> claims, string claimType, object value)
+        public static IList<Claim> AddClaim(this IList<Claim> claims, string claimType, object value, bool supportsMultiple = false)
         {
-            if (!claims.HasClaimType(claimType))
+            if (supportsMultiple || !claims.HasClaimType(claimType))
             {
                 claims.Add(new Claim(claimType, value.ToString()!));
             }
