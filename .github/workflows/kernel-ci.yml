@@ -25,10 +25,16 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Get Version
+      id: version
+      uses: battila7/get-version-action@v2
       
     - name: Build
-      run: dotnet build -c Release --no-restore
+      run: dotnet build -c Release --no-restore -p:Version=${{ steps.version.outputs.version-without-v }}
       
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration"
-            
+
+    - name: 'Pack project'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}            
