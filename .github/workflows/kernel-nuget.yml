@@ -26,16 +26,16 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
-      
-    - name: Build
-      run: dotnet build -c Release --no-restore
 
     - name: Get Version
       id: version
       uses: battila7/get-version-action@v2
+      
+    - name: Build
+      run: dotnet build -c Release --no-restore -p:Version=${{ steps.version.outputs.version-without-v }}
 
     - name: 'Pack project'
-      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}            
 
     - name: 'Push package'
       run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.KERNEL_NUGET_API }} -s ${{ env.NUGET_SOURCE_URL }} --skip-duplicate            
