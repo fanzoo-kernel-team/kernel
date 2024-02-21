@@ -2,14 +2,9 @@
 
 namespace Microsoft.AspNetCore.Mvc.RazorPages
 {
-    public class PageValidationResult
+    public class PageValidationResult(bool isValid)
     {
-        public PageValidationResult(bool isValid)
-        {
-            IsValid = isValid;
-        }
-
-        public bool IsValid { get; }
+        public bool IsValid { get; } = isValid;
 
         public bool IsNotValid => !IsValid;
     }

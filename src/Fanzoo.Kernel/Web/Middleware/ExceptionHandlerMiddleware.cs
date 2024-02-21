@@ -3,14 +3,9 @@ using Serilog;
 
 namespace Fanzoo.Kernel.Web.Middleware
 {
-    public class ExceptionHandlerMiddleware
+    public class ExceptionHandlerMiddleware(RequestDelegate nextDelegate)
     {
-        private readonly RequestDelegate _nextDelegate;
-
-        public ExceptionHandlerMiddleware(RequestDelegate nextDelegate)
-        {
-            _nextDelegate = nextDelegate;
-        }
+        private readonly RequestDelegate _nextDelegate = nextDelegate;
 
         public async Task InvokeAsync(HttpContext context)
         {

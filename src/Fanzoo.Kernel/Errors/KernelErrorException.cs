@@ -1,15 +1,9 @@
-﻿#pragma warning disable S3925 // "ISerializable" should be implemented correctly
-
+﻿
 namespace System
 {
-    public class KernelErrorException : Exception
+    public class KernelErrorException(Error error) : Exception(error.Message)
     {
-        private readonly Error _error;
-
-        public KernelErrorException(Error error) : base(error.Message)
-        {
-            _error = error;
-        }
+        private readonly Error _error = error;
 
         public string Code => _error.Code;
     }

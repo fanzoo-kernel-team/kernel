@@ -1,13 +1,8 @@
 ﻿namespace Fanzoo.Kernel.Commands
 {
-    public sealed class CommandDispatcher
+    public sealed class CommandDispatcher(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public CommandDispatcher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         public async Task<CommandResult> DispatchAsync(ICommand command)
         {

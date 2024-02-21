@@ -1,13 +1,8 @@
 ﻿namespace Fanzoo.Kernel.Builder
 {
-    public sealed class EmailFactoryBuilder
+    public sealed class EmailFactoryBuilder(WebApplicationBuilder builder)
     {
-        public EmailFactoryBuilder(WebApplicationBuilder builder)
-        {
-            WebApplicationBuilder = builder;
-        }
-
-        public WebApplicationBuilder WebApplicationBuilder { get; private set; }
+        public WebApplicationBuilder WebApplicationBuilder { get; private set; } = builder;
     }
 
     public static class EmailFactoryBuilderExtensions

@@ -4,7 +4,7 @@
     {
         private int? _hashCode;
 
-        private IEnumerable<object> _equalityValues = Array.Empty<object>();
+        private IEnumerable<object> _equalityValues = [];
 
         internal static Type GetUnproxiedType(object obj)
         {

@@ -44,10 +44,7 @@
             ErrorMessage = errorMessage;
         }
 
-        private CommandResult(T value) : this(true)
-        {
-            Value = value;
-        }
+        private CommandResult(T value) : this(true) => Value = value;
 
         public static CommandResult<T> Success(T value) => new(value);
 

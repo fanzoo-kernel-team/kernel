@@ -1,15 +1,9 @@
 ﻿namespace Fanzoo.Kernel.Services
 {
-    public sealed class HtmlTemplateGenerationService : IHtmlTemplateGenerationService
+    public sealed class HtmlTemplateGenerationService(ITemplateEmbeddedResourceLocator templateEmbeddedResourceLocator, IEmbeddedResourceReaderService embeddedResourceReader) : IHtmlTemplateGenerationService
     {
-        private readonly ITemplateEmbeddedResourceLocator _templateEmbeddedResourceLocator;
-        private readonly IEmbeddedResourceReaderService _embeddedResourceReader;
-
-        public HtmlTemplateGenerationService(ITemplateEmbeddedResourceLocator templateEmbeddedResourceLocator, IEmbeddedResourceReaderService embeddedResourceReader)
-        {
-            _templateEmbeddedResourceLocator = templateEmbeddedResourceLocator;
-            _embeddedResourceReader = embeddedResourceReader;
-        }
+        private readonly ITemplateEmbeddedResourceLocator _templateEmbeddedResourceLocator = templateEmbeddedResourceLocator;
+        private readonly IEmbeddedResourceReaderService _embeddedResourceReader = embeddedResourceReader;
 
         public async ValueTask<string> GenerateAsync(string templatePathname, Dictionary<string, object> values, string? layoutPathName = "_Layout.html")
         {

@@ -14,16 +14,10 @@ namespace Fanzoo.Kernel.Services
         IEmailService GetService();
     }
 
-    public sealed class EmailServiceFactory : IEmailServiceFactory
+    public sealed class EmailServiceFactory(IOptions<EmailServiceFactorySettings> settings, IEnumerable<IEmailService> services) : IEmailServiceFactory
     {
-        private readonly string _serviceName;
-        private readonly IEnumerable<IEmailService> _services;
-
-        public EmailServiceFactory(IOptions<EmailServiceFactorySettings> settings, IEnumerable<IEmailService> services)
-        {
-            _services = services;
-            _serviceName = settings.Value.Service;
-        }
+        private readonly string _serviceName = settings.Value.Service;
+        private readonly IEnumerable<IEmailService> _services = services;
 
         public IEmailService GetService()
         {

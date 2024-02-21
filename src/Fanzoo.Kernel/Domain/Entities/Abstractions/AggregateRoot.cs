@@ -11,7 +11,7 @@ namespace Fanzoo.Kernel.Domain.Entities
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
     {
-        public ICollection<IEvent> Events { get; init; } = new List<IEvent>();
+        public ICollection<IEvent> Events { get; init; } = [];
 
         protected void PublishEvent(IEvent @event) => Events.Add(@event); //can an aggregate raise the same event more than once???
     }

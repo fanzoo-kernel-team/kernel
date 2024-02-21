@@ -13,14 +13,9 @@
         IEnumerable<Claim> GetClaims(string claim);
     }
 
-    internal class CurrentUserService : ICurrentUserService
+    internal class CurrentUserService(IContextAccessorService contextAccessor) : ICurrentUserService
     {
-        private readonly IContextAccessorService _contextAccessor;
-
-        public CurrentUserService(IContextAccessorService contextAccessor)
-        {
-            _contextAccessor = contextAccessor;
-        }
+        private readonly IContextAccessorService _contextAccessor = contextAccessor;
 
         public bool IsAuthenticated => _contextAccessor.User?.Identity?.IsAuthenticated ?? false;
 
@@ -45,7 +40,7 @@
             }
         }
 
-        public IEnumerable<Claim> GetClaims(string claim) => _contextAccessor.User?.GetClaims(claim) ?? Enumerable.Empty<Claim>();
+        public IEnumerable<Claim> GetClaims(string claim) => _contextAccessor.User?.GetClaims(claim) ?? [];
     }
 
     public static class CurrentUserServiceExtensions

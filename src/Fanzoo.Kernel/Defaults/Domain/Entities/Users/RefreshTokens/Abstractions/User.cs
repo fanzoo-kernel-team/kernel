@@ -2,11 +2,9 @@
 
 namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users.RefreshTokens
 {
-    public abstract class User<TRoleValue> : User<UserIdentifierValue, Guid, EmailUsernameValue, TRoleValue, Guid, RefreshToken, RefreshTokenIdentifierValue, Guid>
+    public abstract class User<TRoleValue>(int maxFailedLogins, int numberOfInactiveTokensToStore) : User<UserIdentifierValue, Guid, EmailUsernameValue, TRoleValue, Guid, RefreshToken, RefreshTokenIdentifierValue, Guid>(maxFailedLogins, numberOfInactiveTokensToStore)
         where TRoleValue : IRoleValue<Guid>
     {
-        protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
-
         protected override RefreshToken CreateToken(DateTime expirationDate, IPAddressValue ipAddress) => RefreshToken.Create(expirationDate, ipAddress).Value;
 
     }

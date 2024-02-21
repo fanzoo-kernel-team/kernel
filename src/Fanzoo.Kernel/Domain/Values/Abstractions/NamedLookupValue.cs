@@ -10,10 +10,7 @@
 
         protected NamedLookupValue() { } //ORM
 
-        protected NamedLookupValue(TPrimitive id, string name) : base(id)
-        {
-            Name = name;
-        }
+        protected NamedLookupValue(TPrimitive id, string name) : base(id) => Name = name;
 
         public string Name
         {

@@ -75,7 +75,7 @@
             }
 
             public static class MoneyValue
-            {               
+            {
                 public static Error InvalidNumberOfDecimalPlaces => new("invalid.number.of.decimal.places", "The minor units (decimal places) for this currency is invalid.");
 
                 public static Error CannotPerformArithmeticOperationOnDifferentCurrencies => new("cannot.perform.arithmetic.operation.on.different.currencies", "Cannot perform arithmetic operation on different currencies.");

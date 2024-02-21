@@ -9,18 +9,11 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         public int SecurityTokenDurationMinutes { get; set; } = 60;
     }
 
-    public class CurrentUserBlobStorageSecurityTokenGenerationService : IBlobStorageSecurityTokenGenerationService
+    public class CurrentUserBlobStorageSecurityTokenGenerationService(IOptions<CurrentUserBlobStorageSecurityTokenGenerationServiceSettings> options, IBlobStorageServiceFactory blobStorageServiceFactory, ICurrentUserService currentUserService) : IBlobStorageSecurityTokenGenerationService
     {
-        private readonly IBlobStorageServiceFactory _blobStorageServiceFactory;
-        private readonly ICurrentUserService _currentUserService;
-        private readonly CurrentUserBlobStorageSecurityTokenGenerationServiceSettings _settings;
-
-        public CurrentUserBlobStorageSecurityTokenGenerationService(IOptions<CurrentUserBlobStorageSecurityTokenGenerationServiceSettings> options, IBlobStorageServiceFactory blobStorageServiceFactory, ICurrentUserService currentUserService)
-        {
-            _blobStorageServiceFactory = blobStorageServiceFactory;
-            _currentUserService = currentUserService;
-            _settings = options.Value;
-        }
+        private readonly IBlobStorageServiceFactory _blobStorageServiceFactory = blobStorageServiceFactory;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
+        private readonly CurrentUserBlobStorageSecurityTokenGenerationServiceSettings _settings = options.Value;
 
         public int SecurityTokenDurationMinutes => _settings.SecurityTokenDurationMinutes;
 

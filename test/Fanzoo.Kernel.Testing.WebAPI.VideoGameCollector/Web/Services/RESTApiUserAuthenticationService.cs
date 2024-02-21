@@ -5,14 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Web.Services
 {
-    public class RESTApiUserAuthenticationService : Defaults.Web.Services.RESTApiUserAuthenticationService<ApplicationRoleValue>
+    public class RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory, IUserRepository userRepository) : Defaults.Web.Services.RESTApiUserAuthenticationService<ApplicationRoleValue>(settings, httpContextAccessor, passwordHashingService, unitOfWorkFactory)
     {
-        private readonly IUserRepository _userRepository;
-
-        public RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory, IUserRepository userRepository) : base(settings, httpContextAccessor, passwordHashingService, unitOfWorkFactory)
-        {
-            _userRepository = userRepository;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
 
         protected override ValueTask<User<ApplicationRoleValue>?> FindUserByIdAsync(UserIdentifierValue identifier) => throw new NotImplementedException();
 

@@ -10,50 +10,32 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         public string RootPath { get; set; } = default!;
     }
 
-    public sealed class FileBlob : IBlob
+    public sealed class FileBlob(FileInfo fileInfo) : IBlob
     {
-        public FileBlob(FileInfo fileInfo)
-        {
-            Filename = GetFileName(fileInfo.FullName);
-            Path = GetDirectoryName(fileInfo.FullName)!; //why would this be null?
-            Size = fileInfo.Length;
-            MediaType = "application/octet-stream";
-            Metadata = new Dictionary<string, string>();
-            IsReadOnly = fileInfo.IsReadOnly;
-            Created = fileInfo.CreationTimeUtc;
-            LastModified = fileInfo.LastWriteTimeUtc;
-            LastAccessed = fileInfo.LastAccessTimeUtc;
-        }
-
         public Guid Id { get; }
 
-        public string Filename { get; }
+        public string Filename { get; } = GetFileName(fileInfo.FullName);
 
-        public string Path { get; }
+        public string Path { get; } = GetDirectoryName(fileInfo.FullName)!; //why would this be null?
 
-        public long Size { get; }
+        public long Size { get; } = fileInfo.Length;
 
-        public string MediaType { get; }
+        public string MediaType { get; } = "application/octet-stream";
 
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; } = new Dictionary<string, string>();
 
-        public bool IsReadOnly { get; }
+        public bool IsReadOnly { get; } = fileInfo.IsReadOnly;
 
-        public DateTimeOffset? Created { get; }
+        public DateTimeOffset? Created { get; } = fileInfo.CreationTimeUtc;
 
-        public DateTimeOffset? LastModified { get; }
+        public DateTimeOffset? LastModified { get; } = fileInfo.LastWriteTimeUtc;
 
-        public DateTimeOffset? LastAccessed { get; }
+        public DateTimeOffset? LastAccessed { get; } = fileInfo.LastAccessTimeUtc;
     }
 
-    public sealed class FileBlobStorageService : IBlobStorageService
+    public sealed class FileBlobStorageService(IOptions<FileBlobStorageSettings> options) : IBlobStorageService
     {
-        private readonly FileBlobStorageSettings _settings;
-
-        public FileBlobStorageService(IOptions<FileBlobStorageSettings> options)
-        {
-            _settings = options.Value;
-        }
+        private readonly FileBlobStorageSettings _settings = options.Value;
 
         public string Name => "File";
 
@@ -72,14 +54,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var filePathname = Combine(_settings.RootPath, path, filename);
 
-            if (overwrite is false && File.Exists(filePathname))
+            if (!overwrite && File.Exists(filePathname))
             {
                 throw new ArgumentException($"File {filePathname} already exists", nameof(filename));
             }
 
             stream.Position = 0;
 
-            if (Directory.Exists(GetDirectoryName(filePathname)) is false)
+            if (!Directory.Exists(GetDirectoryName(filePathname)))
             {
                 Directory.CreateDirectory(GetDirectoryName(filePathname)!);
             }
@@ -120,7 +102,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var filePathname = Combine(_settings.RootPath, blobPathName);
 
-            if (File.Exists(filePathname) is false)
+            if (!File.Exists(filePathname))
             {
                 throw new ArgumentException($"File {filePathname} does not exist", nameof(blobPathName));
             }
@@ -147,14 +129,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var sourceFilePathname = Combine(_settings.RootPath, sourceBlobPathName);
 
-            if (File.Exists(sourceFilePathname) is false)
+            if (!File.Exists(sourceFilePathname))
             {
                 throw new ArgumentException($"File {sourceFilePathname} does not exist", nameof(sourceBlobPathName));
             }
 
             var destinationFilePathname = Combine(_settings.RootPath, destinationBlobPathName);
 
-            if (overwrite is false && File.Exists(destinationFilePathname))
+            if (!overwrite && File.Exists(destinationFilePathname))
             {
                 throw new ArgumentException($"File {destinationFilePathname} already exists", nameof(destinationBlobPathName));
             }
@@ -168,14 +150,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var sourceFilePathname = Combine(_settings.RootPath, sourceBlobPathName);
 
-            if (File.Exists(sourceFilePathname) is false)
+            if (!File.Exists(sourceFilePathname))
             {
                 throw new ArgumentException($"File {sourceFilePathname} does not exist", nameof(sourceBlobPathName));
             }
 
             var destinationFilePathname = Combine(_settings.RootPath, destinationBlobPathName);
 
-            if (overwrite is false && File.Exists(destinationFilePathname))
+            if (!overwrite && File.Exists(destinationFilePathname))
             {
                 throw new ArgumentException($"File {destinationFilePathname} already exists", nameof(destinationBlobPathName));
             }

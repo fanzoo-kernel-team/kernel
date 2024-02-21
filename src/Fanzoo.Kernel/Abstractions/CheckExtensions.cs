@@ -4,8 +4,8 @@ namespace Fanzoo.Kernel
 {
     public static class CheckExtensions
     {
-        private const int MinimumPasswordLength = 10;
-        private const int MaximumPasswordLength = 100;
+        private const int _minimumPasswordLength = 10;
+        private const int _maximumPasswordLength = 100;
 
         public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
@@ -77,13 +77,13 @@ namespace Fanzoo.Kernel
 
         public static Check HasSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value));
 
-        public static Check DoesNotHaveSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value) is false);
+        public static Check DoesNotHaveSpaces(this Check check, string value) => check.Resolve(!RegexCatalog.HasSpaces().IsMatch(value));
 
         public static Check IsAlphaNumeric(this Check check, string value, char[] exceptions)
         {
             foreach (var character in value)
             {
-                if (char.IsLetterOrDigit(character) is false && exceptions.Contains(character) is false)
+                if (!char.IsLetterOrDigit(character) && !exceptions.Contains(character))
                 {
                     return false;
                 }
@@ -94,7 +94,7 @@ namespace Fanzoo.Kernel
 
         public static Check IsBetween(this Check check, int value, int min, int max) => check.Resolve(value >= min && value <= max);
 
-        public static Check IsValidDate(this Check check, int month, int day, int year) => check.Resolve(DateTime.TryParse($"{month}/{day}/{year}", out _));
+        public static Check IsValidDate(this Check check, int month, int day, int year) => check.Resolve(DateTime.TryParse($"{month}/{day}/{year}", new CultureInfo("en-US"), out _));
 
         public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
 
@@ -132,10 +132,7 @@ namespace Fanzoo.Kernel
             }
         }
 
-        public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency)
-        {
-            return decimal.Round(amount, currency.MinorUnits) != amount ? check.Resolve(false) : check.Resolve(true);
-        }
+        public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency) => decimal.Round(amount, currency.MinorUnits) != amount ? check.Resolve(false) : check.Resolve(true);
 
         public static Check IsValidCssColor(this Check check, string cssColor)
         {
@@ -152,9 +149,9 @@ namespace Fanzoo.Kernel
         public static Check IsValidPassword(this Check check, string password)
         {
             var isValid = Check.For
-                .LengthIsGreaterThanOrEqual(password, MinimumPasswordLength)
+                .LengthIsGreaterThanOrEqual(password, _minimumPasswordLength)
                 .And
-                .LengthIsLessThanOrEqual(password, MaximumPasswordLength)
+                .LengthIsLessThanOrEqual(password, _maximumPasswordLength)
                     .Result;
 
             var validCharacterCount = 0;
@@ -181,7 +178,7 @@ namespace Fanzoo.Kernel
 
             isValid &= validCharacterCount >= 3;
 
-            isValid &= RegexCatalog.MoreThanTwoMatchingCharactersInARow().IsMatch(password) is not true;
+            isValid &= !RegexCatalog.MoreThanTwoMatchingCharactersInARow().IsMatch(password);
 
             return check.Resolve(isValid);
         }
@@ -230,7 +227,7 @@ namespace Fanzoo.Kernel
             }
         }
 
-        private static readonly string[] _validColorNames = {
+        private static readonly string[] _validColorNames = [
             "aliceblue",
             "antiquewhite",
             "aqua",
@@ -378,6 +375,6 @@ namespace Fanzoo.Kernel
             "white",
             "whitesmoke",
             "yellow",
-            "yellowgreen"};
+            "yellowgreen"];
     }
 }

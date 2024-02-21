@@ -7,7 +7,7 @@
         public MediaTypeValue(string mediaType) : base(mediaType)
         {
             Guard.Against.NullOrWhiteSpace(mediaType, nameof(mediaType));
-            Guard.Against.NotInList(mediaTypes, mediaType, nameof(mediaType));
+            Guard.Against.NotInList(_mediaTypes, mediaType, nameof(mediaType));
         }
 
         public static ValueResult<MediaTypeValue, Error> Create(string mediaType) => CanCreate(mediaType) ? new MediaTypeValue(mediaType) : Errors.ValueObjects.MediaTypeValue.Invalid;
@@ -15,7 +15,7 @@
         public static bool CanCreate(string mediaType) => Check.For
             .NotNullOrWhiteSpace(mediaType)
             .And
-            .IsInList(mediaTypes, mediaType);
+            .IsInList(_mediaTypes, mediaType);
 
         public bool IsImage => Value.StartsWith("image/");
 
@@ -83,8 +83,8 @@
 
         public static implicit operator MediaTypeValue(string value) => new(value);
 
-        private static readonly HashSet<string> mediaTypes = new()
-        {
+        private static readonly HashSet<string> _mediaTypes =
+        [
             "application/1d-interleaved-parityfec",
             "application/3gpdash-qoe-report+xml",
             "application/3gppHal+json",
@@ -2110,6 +2110,6 @@
             "video/vnd.vivo",
             "video/VP8",
             "video/VP9"
-        };
+        ];
     }
 }

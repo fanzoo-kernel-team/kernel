@@ -2,9 +2,8 @@
 
 namespace Fanzoo.Kernel.Defaults.Domain.Entities.Users
 {
-    public abstract class User<TRoleValue> : User<UserIdentifierValue, Guid, EmailUsernameValue, TRoleValue, Guid>
+    public abstract class User<TRoleValue>(int maxFailedLogins) : User<UserIdentifierValue, Guid, EmailUsernameValue, TRoleValue, Guid>(maxFailedLogins)
         where TRoleValue : IRoleValue<Guid>
     {
-        protected User(int maxFailedLogins) : base(maxFailedLogins) { }
     }
 }

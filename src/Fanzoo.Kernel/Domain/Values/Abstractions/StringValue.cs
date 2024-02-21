@@ -6,9 +6,6 @@
 
         protected StringValue(string value) : this(value, int.MaxValue) { }
 
-        protected StringValue(string value, int maxSize) : base(value)
-        {
-            Guard.Against.ExceedsMaxValue(value.Length, maxSize, nameof(value));
-        }
+        protected StringValue(string value, int maxSize) : base(value) => Guard.Against.ExceedsMaxValue(value.Length, maxSize, nameof(value));
     }
 }

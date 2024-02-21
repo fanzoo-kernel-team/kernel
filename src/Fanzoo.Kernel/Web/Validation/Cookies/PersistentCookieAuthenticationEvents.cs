@@ -2,14 +2,9 @@
 
 namespace Fanzoo.Kernel.Web.Validation.Cookies
 {
-    public class PersistentCookieAuthenticationEvents : CookieAuthenticationEvents
+    public class PersistentCookieAuthenticationEvents(ICookieUserAuthenticationService userAuthenticationService) : CookieAuthenticationEvents
     {
-        private readonly ICookieUserAuthenticationService _userAuthenticationService;
-
-        public PersistentCookieAuthenticationEvents(ICookieUserAuthenticationService userAuthenticationService)
-        {
-            _userAuthenticationService = userAuthenticationService;
-        }
+        private readonly ICookieUserAuthenticationService _userAuthenticationService = userAuthenticationService;
 
         public override Task ValidatePrincipal(CookieValidatePrincipalContext context) => _userAuthenticationService.ValidateLastAuthenticationChangeAsync(context);
     }

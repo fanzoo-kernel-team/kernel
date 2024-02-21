@@ -2,19 +2,17 @@
 {
     public sealed class ServiceTypeAssemblyBuilder : IServiceTypeAssemblyBuilder
     {
-        private readonly List<Assembly> _assemblies = new();
+        private readonly List<Assembly> _assemblies = [];
 
-        public ServiceTypeAssemblyBuilder()
-        {
+        public ServiceTypeAssemblyBuilder() =>
             //pre-load assemblies
             AppDomain.CurrentDomain.LoadReferencedAssemblies();
-        }
 
         public IEnumerable<Assembly> Assemblies => _assemblies;
 
         public IServiceTypeAssemblyBuilder FromAssembly(Assembly assembly)
         {
-            AddAssemblies(new[] { assembly });
+            AddAssemblies([assembly]);
 
             return this;
         }

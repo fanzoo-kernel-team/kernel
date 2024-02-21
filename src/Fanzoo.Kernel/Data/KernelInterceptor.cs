@@ -1,22 +1,15 @@
-﻿#pragma warning disable S4144 // Methods should not have identical implementations
-
-using NHibernate.Type;
+﻿using NHibernate.Type;
 using ISession = NHibernate.ISession;
 
 namespace Fanzoo.Kernel.Data
 {
-    public class KernelInterceptor : EmptyInterceptor
+    public class KernelInterceptor(IServiceProvider serviceProvider) : EmptyInterceptor
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         private ISession? _session;
 
-        private static readonly string[] _propertiesToIgnore = { "CreatedDate", "CreatedBy", "UpdatedDate", "UpdatedBy" };
-
-        public KernelInterceptor(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private static readonly string[] _propertiesToIgnore = ["CreatedDate", "CreatedBy", "UpdatedDate", "UpdatedBy"];
 
         public T? GetService<T>() => (T?)_serviceProvider.GetService(typeof(T));
 
@@ -28,14 +21,14 @@ namespace Fanzoo.Kernel.Data
 
             if (session is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var entry = session.PersistenceContext.GetEntry(entity);
 
             if (entry is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var dirtyIndexes =
@@ -46,7 +39,7 @@ namespace Fanzoo.Kernel.Data
 
             if (dirtyIndexes is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var dirtyProperties = new List<int>(dirtyIndexes);
@@ -59,7 +52,7 @@ namespace Fanzoo.Kernel.Data
                 }
             }
 
-            return dirtyProperties.ToArray();
+            return [.. dirtyProperties];
         }
 
         public override bool? IsTransient(object entity) =>
@@ -74,6 +67,7 @@ namespace Fanzoo.Kernel.Data
             return false;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4144:Methods should not have identical implementations", Justification = "Overriden")]
         public override bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
             SetAsLoadedOrSaved(entity);

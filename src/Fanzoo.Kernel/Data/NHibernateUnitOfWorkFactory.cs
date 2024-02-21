@@ -1,22 +1,16 @@
 ﻿namespace Fanzoo.Kernel.Data
 {
-    public sealed class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
+    public sealed class NHibernateUnitOfWorkFactory(ISessionFactory sessionFactory, IServiceProvider serviceProvider) : IUnitOfWorkFactory
     {
-        private readonly ISessionFactory _sessionFactory;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ISessionFactory _sessionFactory = sessionFactory ?? throw new ArgumentNullException(nameof(sessionFactory));
+        private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         private NHibernateUnitOfWork? _current;
-
-        public NHibernateUnitOfWorkFactory(ISessionFactory sessionFactory, IServiceProvider serviceProvider)
-        {
-            _sessionFactory = sessionFactory ?? throw new ArgumentNullException(nameof(sessionFactory));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
 
         public IUnitOfWork Open()
         {
             //I may regret this
-            if (_current is not null && _current.IsClosed is not true)
+            if (_current is not null && !_current.IsClosed)
             {
                 return _current;
             }

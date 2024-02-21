@@ -9,16 +9,11 @@ using Xunit;
 namespace Fanzoo.Kernel.Testing.Integration
 {
     [Collection("LocalDb")]
-    public class StartupTests
+    public class StartupTests(IntegrationSqlLocalDbWebApplicationFactory factory)
     {
         private const string Password = "TestPassword123!";
 
-        private readonly IntegrationSqlLocalDbWebApplicationFactory _factory;
-
-        public StartupTests(IntegrationSqlLocalDbWebApplicationFactory factory)
-        {
-            _factory = factory;
-        }
+        private readonly IntegrationSqlLocalDbWebApplicationFactory _factory = factory;
 
         [Fact]
         public async Task Application_Dependency_Injection_And_StartUp() =>

@@ -2,24 +2,14 @@
 
 namespace Fanzoo.Kernel.Builder
 {
-    public sealed class BlobStorageFactoryBuilder
+    public sealed class BlobStorageFactoryBuilder(WebApplicationBuilder builder)
     {
-        public BlobStorageFactoryBuilder(WebApplicationBuilder builder)
-        {
-            WebApplicationBuilder = builder;
-        }
-
-        internal WebApplicationBuilder WebApplicationBuilder { get; private set; }
+        internal WebApplicationBuilder WebApplicationBuilder { get; private set; } = builder;
     }
 
-    public sealed class AzureBlobStorageBuilder
+    public sealed class AzureBlobStorageBuilder(WebApplicationBuilder builder)
     {
-        public AzureBlobStorageBuilder(WebApplicationBuilder builder)
-        {
-            WebApplicationBuilder = builder;
-        }
-
-        internal WebApplicationBuilder WebApplicationBuilder { get; private set; }
+        internal WebApplicationBuilder WebApplicationBuilder { get; private set; } = builder;
     }
 
     public static class AzureBlobStorageConfigurationExtensions

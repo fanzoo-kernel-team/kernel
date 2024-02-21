@@ -1,28 +1,19 @@
 ﻿namespace Fanzoo.Kernel.Queries
 {
-    public abstract class DispatchAndQueryResultCore
+    public abstract class DispatchAndQueryResultCore(bool isSuccessful, string? error)
     {
-        private readonly string? _error;
+        private readonly string? _error = error;
 
-        protected DispatchAndQueryResultCore(bool isSuccessful, string? error)
-        {
-            IsSuccessful = isSuccessful;
-            _error = error;
-        }
+        public string Error => !IsSuccessful && _error is not null ? _error : throw new InvalidOperationException($"Cannot access value of property {nameof(Error)} when result is sucessful.");
 
-        public string Error => IsSuccessful is false && _error is not null ? _error : throw new InvalidOperationException($"Cannot access value of property {nameof(Error)} when result is sucessful.");
-
-        public bool IsSuccessful { get; }
+        public bool IsSuccessful { get; } = isSuccessful;
     }
 
     public sealed class QueryDispatchAndMapResult<TMappedResult> : DispatchAndQueryResultCore
     {
         private readonly TMappedResult? _value;
 
-        private QueryDispatchAndMapResult(bool isSuccessful, TMappedResult? value, string? error = null) : base(isSuccessful, error)
-        {
-            _value = value;
-        }
+        private QueryDispatchAndMapResult(bool isSuccessful, TMappedResult? value, string? error = null) : base(isSuccessful, error) => _value = value;
 
         public static QueryDispatchAndMapResult<TMappedResult> Success(TMappedResult value) => new(true, value);
 
@@ -35,10 +26,7 @@
     {
         private readonly IEnumerable<TMappedResult>? _value;
 
-        private QueryDispatchResultAndMapManyResult(bool isSuccessful, IEnumerable<TMappedResult>? value, string? error = null) : base(isSuccessful, error)
-        {
-            _value = value;
-        }
+        private QueryDispatchResultAndMapManyResult(bool isSuccessful, IEnumerable<TMappedResult>? value, string? error = null) : base(isSuccessful, error) => _value = value;
 
         public static QueryDispatchResultAndMapManyResult<TMappedResult> Success(IEnumerable<TMappedResult> value) => new(true, value);
 

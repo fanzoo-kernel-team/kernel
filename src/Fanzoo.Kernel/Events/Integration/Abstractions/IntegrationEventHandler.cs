@@ -16,10 +16,7 @@ namespace Fanzoo.Kernel.Events.Integration
         {
             _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
-            if (unitOfWorkFactory is null)
-            {
-                throw new ArgumentNullException(nameof(unitOfWorkFactory));
-            }
+            ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
 
             _unitOfWork = unitOfWorkFactory.Open();
         }

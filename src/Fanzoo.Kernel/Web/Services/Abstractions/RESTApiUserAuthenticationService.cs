@@ -1,5 +1,6 @@
 ﻿#pragma warning disable S101 // Types should be named in PascalCase
 
+using System.Globalization;
 using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.Extensions.Options;
@@ -23,7 +24,7 @@ namespace Fanzoo.Kernel.Web.Services
 
     }
 
-    public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive> : IDisposable, IAsyncDisposable,
+    public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : IDisposable, IAsyncDisposable,
         IRESTApiUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>
             where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>
@@ -34,20 +35,12 @@ namespace Fanzoo.Kernel.Web.Services
             where TTokenIdentifier : IdentifierValue<TTokenPrimitive>
             where TTokenPrimitive : notnull, new()
     {
-        private readonly JwtSecurityTokenSettings _settings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPasswordHashingService _passwordHashingService;
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly JwtSecurityTokenSettings _settings = settings.Value;
+        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+        private readonly IPasswordHashingService _passwordHashingService = passwordHashingService;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory = unitOfWorkFactory;
 
         private bool _disposed = false;
-
-        protected RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory)
-        {
-            _settings = settings.Value;
-            _httpContextAccessor = httpContextAccessor;
-            _passwordHashingService = passwordHashingService;
-            _unitOfWorkFactory = unitOfWorkFactory;
-        }
 
         public async ValueTask<ValueResult<(string AccessToken, string RefreshToken), Error>> AuthenticateAsync(TUsername username, TPassword password)
         {
@@ -198,7 +191,7 @@ namespace Fanzoo.Kernel.Web.Services
                     var lastAuthenticationChange = principal.Claims.GetClaimValueOrDefault(ClaimTypes.LastAuthenticationChange);
 
                     if (lastAuthenticationChange is not null
-                        && DateTime.TryParse(lastAuthenticationChange, out var lastAuthenticationChangeDate)
+                        && DateTime.TryParse(lastAuthenticationChange, new CultureInfo("en-US"), out var lastAuthenticationChangeDate)
                         && !user.RequiresAuthentication(lastAuthenticationChangeDate))
                     {
                         _unitOfWorkFactory.Close();
@@ -318,8 +311,8 @@ namespace Fanzoo.Kernel.Web.Services
         }
     }
 
-    public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
-        RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
+    public abstract class RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) :
+        RESTApiUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(settings, httpContextAccessor, passwordHashingService, unitOfWorkFactory)
             where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>
             where TPrimitive : notnull, new()
@@ -331,8 +324,6 @@ namespace Fanzoo.Kernel.Web.Services
             where TRoleValue : IRoleValue<TRolePrimitive>
             where TRolePrimitive : notnull
     {
-        protected RESTApiUserAuthenticationService(IOptions<JwtSecurityTokenSettings> settings, IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(settings, httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
-
         internal override async ValueTask<JwtSecurityToken> GenerateAccessTokenAsync(TUser user)
         {
             var claims = await GetStandardClaimsAsync(user);

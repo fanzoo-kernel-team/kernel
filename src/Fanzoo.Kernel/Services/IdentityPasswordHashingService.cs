@@ -6,10 +6,7 @@ namespace Fanzoo.Kernel.Services
     {
         private readonly PasswordHasher<string> _passwordHasher;
 
-        public IdentityPasswordHashingService()
-        {
-            _passwordHasher = new PasswordHasher<string>();
-        }
+        public IdentityPasswordHashingService() => _passwordHasher = new PasswordHasher<string>();
 
         public string HashPassword(string username, string password) => _passwordHasher.HashPassword(username, password);
 

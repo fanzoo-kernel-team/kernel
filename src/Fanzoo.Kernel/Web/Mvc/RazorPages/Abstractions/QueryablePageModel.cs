@@ -3,14 +3,9 @@ using KernelQueries = Fanzoo.Kernel.Queries;
 
 namespace Fanzoo.Kernel.Web.Mvc.RazorPages
 {
-    public abstract class QueryablePageModel : PageModel
+    public abstract class QueryablePageModel(KernelQueries.QueryDispatcher queryDispatcher) : PageModel
     {
-        protected QueryablePageModel(KernelQueries.QueryDispatcher queryDispatcher)
-        {
-            QueryDispatcher = queryDispatcher;
-        }
-
-        protected KernelQueries.QueryDispatcher QueryDispatcher { get; }
+        protected KernelQueries.QueryDispatcher QueryDispatcher { get; } = queryDispatcher;
 
         protected async ValueTask<TResult> DispatchQueryAsync<TResult>(KernelQueries.IQuery query)
         {

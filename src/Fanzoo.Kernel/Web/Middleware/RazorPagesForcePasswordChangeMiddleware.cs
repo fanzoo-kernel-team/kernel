@@ -2,14 +2,9 @@
 
 namespace Fanzoo.Kernel.Web.Middleware
 {
-    public sealed class RazorPagesForcePasswordChangeMiddleware : AspNetMiddleware
+    public sealed class RazorPagesForcePasswordChangeMiddleware(RequestDelegate nextDelegate, RazorPagesForcePasswordChangeMiddlewareOptions options) : AspNetMiddleware(nextDelegate)
     {
-        private readonly RazorPagesForcePasswordChangeMiddlewareOptions _options;
-
-        public RazorPagesForcePasswordChangeMiddleware(RequestDelegate nextDelegate, RazorPagesForcePasswordChangeMiddlewareOptions options) : base(nextDelegate)
-        {
-            _options = options;
-        }
+        private readonly RazorPagesForcePasswordChangeMiddlewareOptions _options = options;
 
         protected override Task OnInvokeAsync(HttpContext context)
         {
@@ -41,7 +36,7 @@ namespace Fanzoo.Kernel.Web.Middleware
                 routes.Add(changePasswordRoute);
             }
 
-            IgnoredRoutes = routes.ToArray();
+            IgnoredRoutes = [.. routes];
         }
 
         public IEnumerable<string> IgnoredRoutes { get; init; }

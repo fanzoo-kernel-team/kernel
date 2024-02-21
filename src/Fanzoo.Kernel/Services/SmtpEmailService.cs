@@ -32,14 +32,9 @@ namespace Fanzoo.Kernel.Services
         public string? PickupDirectoryLocation { get; set; } = default!;
     }
 
-    public sealed class SmtpEmailService : IEmailService
+    public sealed class SmtpEmailService(IOptions<SmtpSettings> settings) : IEmailService
     {
-        private readonly SmtpSettings _settings;
-
-        public SmtpEmailService(IOptions<SmtpSettings> settings)
-        {
-            _settings = settings.Value;
-        }
+        private readonly SmtpSettings _settings = settings.Value;
 
         public string Name => "Smtp";
 
@@ -53,10 +48,7 @@ namespace Fanzoo.Kernel.Services
 
             from ??= _settings.From;
 
-            if (from is null)
-            {
-                throw new ArgumentNullException(nameof(from));
-            }
+            ArgumentNullException.ThrowIfNull(from);
 
             message.From.Add(MailboxAddress.Parse(from));
 
@@ -126,7 +118,7 @@ namespace Fanzoo.Kernel.Services
 
                     var filename = Path.Combine(_settings.PickupDirectoryLocation ?? string.Empty, $"{Guid.NewGuid()}.eml");
 
-                    if (path.IsNotNullOrWhitespace() && Directory.Exists(filename) is not true)
+                    if (path.IsNotNullOrWhitespace() && !Directory.Exists(filename))
                     {
                         Directory.CreateDirectory(path);
                     }

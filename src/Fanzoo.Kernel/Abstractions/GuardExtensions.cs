@@ -138,7 +138,7 @@ namespace Fanzoo.Kernel
 
         public static void InvalidPassword(this Guard guard, string value, string argument)
         {
-            if (Check.For.IsValidPassword(value).Result is false)
+            if (!Check.For.IsValidPassword(value).Result)
             {
                 throw new ArgumentException(argument);
             }
@@ -146,7 +146,7 @@ namespace Fanzoo.Kernel
 
         public static void InvalidFilename(this Guard guard, string value, string argument)
         {
-            if (Check.For.IsValidFilename(value).Result is false)
+            if (!Check.For.IsValidFilename(value).Result)
             {
                 throw new ArgumentException(argument);
             }
@@ -154,7 +154,7 @@ namespace Fanzoo.Kernel
 
         public static void InvalidIPAddress(this Guard guard, string value, string argument)
         {
-            if (Check.For.IsValidIPAddress(value).Result is false)
+            if (!Check.For.IsValidIPAddress(value).Result)
             {
                 throw new ArgumentException(argument);
             }

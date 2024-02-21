@@ -3,19 +3,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Fanzoo.Kernel.Testing.Integration
 {
-    public abstract class SqlLocalDbWebApplicationFactory<TStartUp> : WebApplicationFactory<TStartUp>
+    public abstract class SqlLocalDbWebApplicationFactory<TStartUp>(string instanceName, string databaseName) : WebApplicationFactory<TStartUp>
         where TStartUp : class
     {
-        private readonly string _instanceName;
-        private readonly string _databaseName;
+        private readonly string _instanceName = instanceName;
+        private readonly string _databaseName = databaseName;
 
         private bool _disposed = false;
-
-        protected SqlLocalDbWebApplicationFactory(string instanceName, string databaseName)
-        {
-            _instanceName = instanceName;
-            _databaseName = databaseName;
-        }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

@@ -7,10 +7,8 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Data.Rep
         ValueTask<IEnumerable<Game>> FindAsync(GameNameValue name);
     }
 
-    public sealed class GameRepository : NHibernateRepositoryCore<Game, GameIdentifierValue, Guid>, IGameRepository
+    public sealed class GameRepository(IUnitOfWorkFactory unitOfWorkFactory) : NHibernateRepositoryCore<Game, GameIdentifierValue, Guid>(unitOfWorkFactory), IGameRepository
     {
-        public GameRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory) { }
-
         public async ValueTask<IEnumerable<Game>> FindAsync(GameNameValue name) =>
             await Query
                 .Where(game => game.Name == name)
