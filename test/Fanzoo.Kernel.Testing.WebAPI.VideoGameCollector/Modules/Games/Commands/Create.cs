@@ -2,14 +2,9 @@ namespace Fanzoo.Kernel.Testing.WebAPI.VideoGameCollector.Modules.Games.Commands
 {
     public record CreateCommand(string Name) : ICommand;
 
-    public class CreateCommandHandler : CommandHandler<CreateCommand>
+    public class CreateCommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher, IGameRepository gameRepository) : CommandHandler<CreateCommand>(unitOfWorkFactory, eventDispatcher)
     {
-        private readonly IGameRepository _gameRepository;
-
-        public CreateCommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher, IGameRepository gameRepository) : base(unitOfWorkFactory, eventDispatcher)
-        {
-            _gameRepository = gameRepository;
-        }
+        private readonly IGameRepository _gameRepository = gameRepository;
 
         protected override async Task<CommandResult> OnHandleAsync(CreateCommand command)
         {

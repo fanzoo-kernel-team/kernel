@@ -56,10 +56,8 @@ namespace Fanzoo.Kernel.Web.Mvc.ModelBinding
         }
     }
 
-    internal sealed class FileCollection : ReadOnlyCollection<IFormFile>, IFormFileCollection
+    internal sealed class FileCollection(List<IFormFile> list) : ReadOnlyCollection<IFormFile>(list), IFormFileCollection
     {
-        public FileCollection(List<IFormFile> list) : base(list) { }
-
         public IFormFile? this[string name] => GetFile(name);
 
         public IFormFile? GetFile(string name)

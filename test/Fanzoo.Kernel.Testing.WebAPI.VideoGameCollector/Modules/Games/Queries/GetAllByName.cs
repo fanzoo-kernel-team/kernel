@@ -4,10 +4,8 @@
 
     public record struct GameDetailResult(string Name);
 
-    public sealed class GetAllByNameQueryHandler : QueryHandler<GetAllByNameQuery, IEnumerable<GameDetailResult>>
+    public sealed class GetAllByNameQueryHandler(IConfiguration configuration, IDynamicMappingService mapper) : QueryHandler<GetAllByNameQuery, IEnumerable<GameDetailResult>>(configuration, mapper)
     {
-        public GetAllByNameQueryHandler(IConfiguration configuration, IDynamicMappingService mapper) : base(configuration, mapper) { }
-
         protected override async Task<QueryResult<IEnumerable<GameDetailResult>>> OnHandleAsync(GetAllByNameQuery query) => await QueryFromSqlAsync<GameDetailResult>("SELECT [Name] FROM [dbo].[Game] WHERE [Name] = @Name", new { query.Name });
     }
 }

@@ -2,14 +2,9 @@
 
 namespace Fanzoo.Kernel.Data
 {
-    public sealed class NHibernateUnitOfWorkContext : IUnitOfWorkContext
+    public sealed class NHibernateUnitOfWorkContext(ISession session) : IUnitOfWorkContext
     {
-        private readonly ISession _session;
-
-        public NHibernateUnitOfWorkContext(ISession session)
-        {
-            _session = session ?? throw new ArgumentNullException(nameof(session));
-        }
+        private readonly ISession _session = session ?? throw new ArgumentNullException(nameof(session));
 
         public async ValueTask<TEntity> LoadAsync<TEntity, TIdentifier>(TIdentifier identifier)
             where TEntity : class

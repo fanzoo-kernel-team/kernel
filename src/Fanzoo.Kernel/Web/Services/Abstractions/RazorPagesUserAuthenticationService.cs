@@ -19,7 +19,7 @@ namespace Fanzoo.Kernel.Web.Services
 
     }
 
-    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword> : IDisposable, IAsyncDisposable,
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : IDisposable, IAsyncDisposable,
         IRazorPagesUserAuthenticationService<TIdentifier, TPrimitive, TUsername, TPassword>, ICookieUserAuthenticationService
             where TUser : IUser<TIdentifier, TPrimitive, TUsername>
             where TIdentifier : IdentifierValue<TPrimitive>
@@ -27,18 +27,11 @@ namespace Fanzoo.Kernel.Web.Services
             where TUsername : IUsernameValue
             where TPassword : IPasswordValue
     {
-        private readonly IPasswordHashingService _passwordHashingService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IPasswordHashingService _passwordHashingService = passwordHashingService;
+        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory = unitOfWorkFactory;
 
         private bool _disposed = false;
-
-        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory)
-        {
-            _passwordHashingService = passwordHashingService;
-            _httpContextAccessor = httpContextAccessor;
-            _unitOfWorkFactory = unitOfWorkFactory;
-        }
 
         public async ValueTask<UnitResult<Error>> SignInAsync(TUsername username, TPassword password)
         {
@@ -238,8 +231,8 @@ namespace Fanzoo.Kernel.Web.Services
         }
     }
 
-    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive> :
-        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive>(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) :
+        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword>(httpContextAccessor, passwordHashingService, unitOfWorkFactory)
             where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>
             where TPrimitive : notnull, new()
@@ -248,8 +241,6 @@ namespace Fanzoo.Kernel.Web.Services
             where TRoleValue : IRoleValue<TRolePrimitive>
             where TRolePrimitive : notnull
     {
-        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
-
         protected internal override async IAsyncEnumerable<Claim> GetClaimsInternalAsync(TUser user)
         {
             //add roles
@@ -260,8 +251,8 @@ namespace Fanzoo.Kernel.Web.Services
         }
     }
 
-    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
-        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive>
+    public abstract class RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) :
+        RazorPagesUserAuthenticationService<TUser, TIdentifier, TPrimitive, TUsername, TPassword, TRoleValue, TRolePrimitive>(httpContextAccessor, passwordHashingService, unitOfWorkFactory)
             where TUser : IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>
             where TPrimitive : notnull, new()
@@ -273,6 +264,5 @@ namespace Fanzoo.Kernel.Web.Services
             where TRoleValue : IRoleValue<TRolePrimitive>
             where TRolePrimitive : notnull
     {
-        protected RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory) : base(httpContextAccessor, passwordHashingService, unitOfWorkFactory) { }
     }
 }

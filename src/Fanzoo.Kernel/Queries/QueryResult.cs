@@ -14,10 +14,7 @@
             Error = error;
         }
 
-        protected QueryResult(bool isSuccessful, string? error, T value) : this(isSuccessful, error)
-        {
-            Value = value;
-        }
+        protected QueryResult(bool isSuccessful, string? error, T value) : this(isSuccessful, error) => Value = value;
 
         public static QueryResult<T> Success(T value) => new(true, null, value);
 

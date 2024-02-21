@@ -1,9 +1,7 @@
 ﻿namespace Fanzoo.Kernel.Defaults.Domain.Values
 {
-    public sealed class DefaultStringValue : StringValue
+    public sealed class DefaultStringValue(string value) : StringValue(value, DatabaseCatalog.FieldLength.Default)
     {
-        public DefaultStringValue(string value) : base(value, DatabaseCatalog.FieldLength.Default) { }
-
         public static ValueResult<DefaultStringValue, Error> Create(string value)
         {
             var isValid = Check.For
@@ -17,10 +15,8 @@
         public static implicit operator DefaultStringValue(string value) => new(value);
     }
 
-    public sealed class DefaultRequiredStringValue : RequiredStringValue
+    public sealed class DefaultRequiredStringValue(string value) : RequiredStringValue(value, DatabaseCatalog.FieldLength.Default)
     {
-        public DefaultRequiredStringValue(string value) : base(value, DatabaseCatalog.FieldLength.Default) { }
-
         public static ValueResult<DefaultRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For

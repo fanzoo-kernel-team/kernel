@@ -1,20 +1,14 @@
 ﻿namespace Fanzoo.Kernel.Storage.Blob.Services
 {
-    public sealed class CookieBlobStorageSecurityTokenPersistenceService : IBlobStorageSecurityTokenPersistenceService
+    public sealed class CookieBlobStorageSecurityTokenPersistenceService(IBlobStorageSecurityTokenGenerationService securityTokenGenerationService, IHttpContextAccessor httpContextAccessor) : IBlobStorageSecurityTokenPersistenceService
     {
         public const string SecurityTokenCookieName = "BlobStorageSecurityToken";
         public const string SecurityTokenExpirationCookieName = "BlobStorageSecurityTokenExpiration";
 
         private const int SkewMinutes = 5;
 
-        private readonly IBlobStorageSecurityTokenGenerationService _securityTokenGenerationService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public CookieBlobStorageSecurityTokenPersistenceService(IBlobStorageSecurityTokenGenerationService securityTokenGenerationService, IHttpContextAccessor httpContextAccessor)
-        {
-            _securityTokenGenerationService = securityTokenGenerationService;
-            _httpContextAccessor = httpContextAccessor;
-        }
+        private readonly IBlobStorageSecurityTokenGenerationService _securityTokenGenerationService = securityTokenGenerationService;
+        private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
         public async ValueTask<string> GetCurrentContainerSecurityTokenAsync()
         {

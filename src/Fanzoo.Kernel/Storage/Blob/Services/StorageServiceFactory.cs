@@ -14,17 +14,11 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         IBlobStorageService GetService();
     }
 
-    public sealed class BlobStorageServiceFactory : IBlobStorageServiceFactory
+    public sealed class BlobStorageServiceFactory(IOptions<BlobStorageServiceFactorySettings> settings, IEnumerable<IBlobStorageService> services) : IBlobStorageServiceFactory
     {
-        private readonly string _serviceName;
+        private readonly string _serviceName = settings.Value.Service;
 
-        private readonly IEnumerable<IBlobStorageService> _services;
-
-        public BlobStorageServiceFactory(IOptions<BlobStorageServiceFactorySettings> settings, IEnumerable<IBlobStorageService> services)
-        {
-            _services = services;
-            _serviceName = settings.Value.Service;
-        }
+        private readonly IEnumerable<IBlobStorageService> _services = services;
 
         public IBlobStorageService GetService()
         {

@@ -4,10 +4,7 @@
     {
         private HashedPasswordValue() { } //ORM
 
-        public HashedPasswordValue(string value) : base(value)
-        {
-            Guard.Against.InvalidBase64String(value, nameof(value));
-        }
+        public HashedPasswordValue(string value) : base(value) => Guard.Against.InvalidBase64String(value, nameof(value));
 
         public static ValueResult<HashedPasswordValue, Error> Create(string hashedPassword) =>
             CanCreate(hashedPassword)

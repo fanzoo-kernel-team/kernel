@@ -8,10 +8,8 @@ namespace Fanzoo.Kernel.Testing.Web.Razor.Modules.Users.Data.Repositories
         ValueTask<User?> FindByUsername(EmailUsernameValue username);
     }
 
-    public class UserRepository : NHibernateRepositoryCore<User, UserIdentifierValue, Guid>, IUserRepository
+    public class UserRepository(IUnitOfWorkFactory unitOfWorkFactory) : NHibernateRepositoryCore<User, UserIdentifierValue, Guid>(unitOfWorkFactory), IUserRepository
     {
-        public UserRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory) { }
-
         public async ValueTask<User?> FindByUsername(EmailUsernameValue username) => await Query.SingleOrDefaultAsync(u => u.Username == username);
     }
 }

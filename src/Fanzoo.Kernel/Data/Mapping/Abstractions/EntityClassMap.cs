@@ -7,11 +7,8 @@ namespace Fanzoo.Kernel.Data.Mapping
         where TIdentifier : IdentifierValue<TPrimitive>
         where TPrimitive : notnull, new()
     {
-        protected EntityClassMap()
-        {
-            CompositeId(e => e.Id)
+        protected EntityClassMap() => CompositeId(e => e.Id)
                 .KeyProperty(p => p.Value, "Id");
-        }
 
         protected ComponentPart<TComponent?> MapValueObject<TComponent>(Expression<Func<TEntity, TComponent?>> entityFieldExpression, string memberName, string columnName, bool nullable = false)
             where TComponent : ValueObject =>

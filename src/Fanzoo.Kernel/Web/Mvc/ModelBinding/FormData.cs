@@ -11,14 +11,9 @@ namespace Fanzoo.Kernel.Web.Mvc.ModelBinding
         public object Model { get; }
     }
 
-    public sealed class FormData<TModel> : IFormData
+    public sealed class FormData<TModel>(TModel model) : IFormData
     {
-        public FormData(TModel model)
-        {
-            Model = model;
-        }
-
-        public TModel Model { get; }
+        public TModel Model { get; } = model;
 
         object IFormData.Model => Model!;
 

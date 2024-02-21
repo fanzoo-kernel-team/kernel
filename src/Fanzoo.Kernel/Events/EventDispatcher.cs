@@ -3,17 +3,11 @@ using Fanzoo.Kernel.Events.Integration;
 
 namespace Fanzoo.Kernel.Events
 {
-    public sealed class EventDispatcher
+    public sealed class EventDispatcher(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-        private readonly Queue<IEvent> _deferredEvents;
-
-        public EventDispatcher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-            _deferredEvents = new();
-        }
+        private readonly Queue<IEvent> _deferredEvents = new();
 
         public void QueueIntegrationEvent(IEvent @event) => _deferredEvents.Enqueue(@event);
 

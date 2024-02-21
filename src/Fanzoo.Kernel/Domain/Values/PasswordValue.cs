@@ -4,10 +4,7 @@
     {
         private PasswordValue() { } //ORM
 
-        public PasswordValue(string password) : base(password)
-        {
-            Guard.Against.InvalidPassword(password, nameof(password));
-        }
+        public PasswordValue(string password) : base(password) => Guard.Against.InvalidPassword(password, nameof(password));
 
         public static ValueResult<PasswordValue, Error> Create(string password) => CanCreate(password) ? new PasswordValue(password) : Errors.ValueObjects.PasswordValue.InvalidFormat;
 

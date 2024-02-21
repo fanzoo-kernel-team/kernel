@@ -4,14 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Fanzoo.Kernel.Web.Mvc
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class RedirectAuthenticatedAttribute : Attribute, IAsyncPageFilter
+    public class RedirectAuthenticatedAttribute(string redirectUrl) : Attribute, IAsyncPageFilter
     {
-        public RedirectAuthenticatedAttribute(string redirectUrl)
-        {
-            RedirectUrl = redirectUrl;
-        }
-
-        private string RedirectUrl { get; set; }
+        private string RedirectUrl { get; set; } = redirectUrl;
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {

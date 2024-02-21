@@ -1,13 +1,8 @@
 ﻿namespace Fanzoo.Kernel.Queries
 {
-    public sealed class QueryDispatcher
+    public sealed class QueryDispatcher(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public QueryDispatcher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         public async Task<QueryResult<T>> DispatchAsync<T>(IQuery query)
         {

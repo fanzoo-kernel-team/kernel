@@ -86,17 +86,12 @@
 
     }
 
-    public abstract class User<TIdentifier, TPrimitive, TUsername> : AggregateRoot<TIdentifier, TPrimitive>, IUser<TIdentifier, TPrimitive, TUsername>
+    public abstract class User<TIdentifier, TPrimitive, TUsername>(int maxFailedLogins) : AggregateRoot<TIdentifier, TPrimitive>, IUser<TIdentifier, TPrimitive, TUsername>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
     {
-        private readonly int _maxFailedLogins;
-
-        protected User(int maxFailedLogins)
-        {
-            _maxFailedLogins = maxFailedLogins;
-        }
+        private readonly int _maxFailedLogins = maxFailedLogins;
 
         public virtual TUsername Username { get; protected set; } = default!;
 
@@ -216,7 +211,7 @@
         protected virtual void OnResetPassword() { }
     }
 
-    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive> : User<TIdentifier, TPrimitive, TUsername>, IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>
+    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>(int maxFailedLogins) : User<TIdentifier, TPrimitive, TUsername>(maxFailedLogins), IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive>
         where TIdentifier : IdentifierValue<TPrimitive>, new()
         where TPrimitive : notnull, new()
         where TUsername : IUsernameValue
@@ -224,8 +219,6 @@
         where TRolePrimitive : notnull, new()
     {
         private readonly IList<TRoleValue> _roles = [];
-
-        protected User(int maxFailedLogins) : base(maxFailedLogins) { }
 
         public virtual IEnumerable<TRoleValue> Roles => _roles;
 
@@ -331,8 +324,8 @@
         }
     }
 
-    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive> :
-        User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>,
+    public abstract class User<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(int maxFailedLogins, int numberOfInactiveTokensToStore) :
+        User<TIdentifier, TPrimitive, TUsername, TRefreshToken, TTokenIdentifier, TTokenPrimitive>(maxFailedLogins, numberOfInactiveTokensToStore),
         IUser<TIdentifier, TPrimitive, TUsername, TRoleValue, TRolePrimitive, TRefreshToken, TTokenIdentifier, TTokenPrimitive>
             where TIdentifier : IdentifierValue<TPrimitive>, new()
             where TPrimitive : notnull, new()
@@ -344,8 +337,6 @@
             where TRolePrimitive : notnull, new()
     {
         private readonly IList<TRoleValue> _roles = [];
-
-        protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
 
         public virtual IEnumerable<TRoleValue> Roles => _roles;
 

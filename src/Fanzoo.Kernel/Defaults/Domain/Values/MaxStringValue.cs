@@ -1,9 +1,7 @@
 ﻿namespace Fanzoo.Kernel.Defaults.Domain.Values
 {
-    public sealed class MaxStringValue : StringValue
+    public sealed class MaxStringValue(string value) : StringValue(value)
     {
-        public MaxStringValue(string value) : base(value) { }
-
         public static ValueResult<MaxStringValue, Error> Create(string value)
         {
             var isValid = Check.For.NotNull(value);
@@ -14,10 +12,8 @@
         public static implicit operator MaxStringValue(string value) => new(value);
     }
 
-    public sealed class MaxRequiredStringValue : RequiredStringValue
+    public sealed class MaxRequiredStringValue(string value) : RequiredStringValue(value)
     {
-        public MaxRequiredStringValue(string value) : base(value) { }
-
         public static ValueResult<MaxRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For.NotNullOrWhiteSpace(value);

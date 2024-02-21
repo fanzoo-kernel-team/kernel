@@ -1,12 +1,7 @@
 ﻿namespace Fanzoo.Kernel.Services
 {
-    public class EmbeddedResourceLocator : ITemplateEmbeddedResourceLocator, IScriptEmbeddedResourceLocator
+    public class EmbeddedResourceLocator(Assembly assembly) : ITemplateEmbeddedResourceLocator, IScriptEmbeddedResourceLocator
     {
-        public EmbeddedResourceLocator(Assembly assembly)
-        {
-            Assembly = assembly;
-        }
-
-        public Assembly Assembly { get; init; }
+        public Assembly Assembly { get; init; } = assembly;
     }
 }

@@ -1,9 +1,7 @@
 ﻿namespace Fanzoo.Kernel.Defaults.Domain.Values
 {
-    public sealed class LongStringValue : StringValue
+    public sealed class LongStringValue(string value) : StringValue(value, DatabaseCatalog.FieldLength.Long)
     {
-        public LongStringValue(string value) : base(value, DatabaseCatalog.FieldLength.Long) { }
-
         public static ValueResult<LongStringValue, Error> Create(string value)
         {
             var isValid = Check.For
@@ -17,10 +15,8 @@
         public static implicit operator LongStringValue(string value) => new(value);
     }
 
-    public sealed class LongRequiredStringValue : RequiredStringValue
+    public sealed class LongRequiredStringValue(string value) : RequiredStringValue(value, DatabaseCatalog.FieldLength.Long)
     {
-        public LongRequiredStringValue(string value) : base(value, DatabaseCatalog.FieldLength.Long) { }
-
         public static ValueResult<LongRequiredStringValue, Error> Create(string value)
         {
             var isValid = Check.For

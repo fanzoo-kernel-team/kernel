@@ -5,18 +5,13 @@ using ISession = NHibernate.ISession;
 
 namespace Fanzoo.Kernel.Data
 {
-    public class KernelInterceptor : EmptyInterceptor
+    public class KernelInterceptor(IServiceProvider serviceProvider) : EmptyInterceptor
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         private ISession? _session;
 
         private static readonly string[] _propertiesToIgnore = { "CreatedDate", "CreatedBy", "UpdatedDate", "UpdatedBy" };
-
-        public KernelInterceptor(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
 
         public T? GetService<T>() => (T?)_serviceProvider.GetService(typeof(T));
 

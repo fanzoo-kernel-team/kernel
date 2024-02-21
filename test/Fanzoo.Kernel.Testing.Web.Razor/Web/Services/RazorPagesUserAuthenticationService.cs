@@ -3,14 +3,9 @@ using Fanzoo.Kernel.Defaults.Domain.Values.Identifiers;
 
 namespace Fanzoo.Kernel.Testing.Web.Razor.Web.Services
 {
-    public class RazorPagesUserAuthenticationService : Defaults.Web.Services.RazorPagesUserAuthenticationService<ApplicationRoleValue>
+    public class RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory, IUserRepository userRepository) : Defaults.Web.Services.RazorPagesUserAuthenticationService<ApplicationRoleValue>(httpContextAccessor, passwordHashingService, unitOfWorkFactory)
     {
-        private readonly IUserRepository _userRepository;
-
-        public RazorPagesUserAuthenticationService(IHttpContextAccessor httpContextAccessor, IPasswordHashingService passwordHashingService, IUnitOfWorkFactory unitOfWorkFactory, IUserRepository userRepository) : base(httpContextAccessor, passwordHashingService, unitOfWorkFactory)
-        {
-            _userRepository = userRepository;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
 
         protected override ValueTask<User<ApplicationRoleValue>?> FindUserByIdAsync(UserIdentifierValue identifier) => throw new NotImplementedException();
 

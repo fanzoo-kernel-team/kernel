@@ -13,53 +13,36 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         public string ConnectionString { get; set; } = default!;
     }
 
-    public sealed class AzureBlob : IBlob
+    public sealed class AzureBlob(string filename, string path, BlobProperties? properties = null) : IBlob
     {
         public const string FileNameMetadataKey = "original_filename";
 
-        public AzureBlob(string filename, string path, BlobProperties? properties = null)
-        {
-            Filename = filename;
-            Path = path;
-            Size = properties?.ContentLength ?? 0;
-            MediaType = properties?.ContentType ?? string.Empty;
-            Metadata = (IReadOnlyDictionary<string, string>)(properties?.Metadata ?? new Dictionary<string, string>());
-            Created = properties?.CreatedOn;
-            LastModified = properties?.LastModified;
-            LastAccessed = properties?.LastAccessed;
-        }
-
         public Guid Id { get; }
 
-        public string Filename { get; }
+        public string Filename { get; } = filename;
 
-        public string Path { get; }
+        public string Path { get; } = path;
 
-        public long Size { get; }
+        public long Size { get; } = properties?.ContentLength ?? 0;
 
-        public string MediaType { get; }
+        public string MediaType { get; } = properties?.ContentType ?? string.Empty;
 
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Metadata { get; } = (IReadOnlyDictionary<string, string>)(properties?.Metadata ?? new Dictionary<string, string>());
 
         public bool IsReadOnly { get; } = true;
 
-        public DateTimeOffset? Created { get; }
+        public DateTimeOffset? Created { get; } = properties?.CreatedOn;
 
-        public DateTimeOffset? LastModified { get; }
+        public DateTimeOffset? LastModified { get; } = properties?.LastModified;
 
-        public DateTimeOffset? LastAccessed { get; }
+        public DateTimeOffset? LastAccessed { get; } = properties?.LastAccessed;
     }
 
-    public sealed class AzureBlobStorageService : IBlobStorageService
+    public sealed class AzureBlobStorageService(IOptions<AzureBlobStorageSettings> options) : IBlobStorageService
     {
-        private readonly string _connectionString;
+        private readonly string _connectionString = options.Value.ConnectionString;
 
         private Uri? _rootUri;
-
-        public AzureBlobStorageService(IOptions<AzureBlobStorageSettings> options)
-        {
-            _connectionString = options.Value.ConnectionString;
-        }
 
         public string Name => "Azure";
 

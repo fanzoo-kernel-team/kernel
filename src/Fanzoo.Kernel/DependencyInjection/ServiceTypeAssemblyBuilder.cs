@@ -4,11 +4,9 @@
     {
         private readonly List<Assembly> _assemblies = [];
 
-        public ServiceTypeAssemblyBuilder()
-        {
+        public ServiceTypeAssemblyBuilder() =>
             //pre-load assemblies
             AppDomain.CurrentDomain.LoadReferencedAssemblies();
-        }
 
         public IEnumerable<Assembly> Assemblies => _assemblies;
 

@@ -6,10 +6,7 @@
     {
         protected LookupValue() { } //ORM
 
-        protected LookupValue(TPrimitive id)
-        {
-            Id = id;
-        }
+        protected LookupValue(TPrimitive id) => Id = id;
 
         public TPrimitive Id { get; init; } = default!;
 

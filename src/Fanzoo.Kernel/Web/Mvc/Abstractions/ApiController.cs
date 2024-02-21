@@ -5,16 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fanzoo.Kernel.Web.Mvc
 {
     [ApiController]
-    public abstract class ApiController : ControllerBase
+    public abstract class ApiController(CommandDispatcher commandDispatcher, QueryDispatcher queryDispatcher) : ControllerBase
     {
-        protected ApiController(CommandDispatcher commandDispatcher, QueryDispatcher queryDispatcher)
-        {
-            CommandDispatcher = commandDispatcher;
-            QueryDispatcher = queryDispatcher;
-        }
+        protected CommandDispatcher CommandDispatcher { get; init; } = commandDispatcher;
 
-        protected CommandDispatcher CommandDispatcher { get; init; }
-
-        protected QueryDispatcher QueryDispatcher { get; init; }
+        protected QueryDispatcher QueryDispatcher { get; init; } = queryDispatcher;
     }
 }

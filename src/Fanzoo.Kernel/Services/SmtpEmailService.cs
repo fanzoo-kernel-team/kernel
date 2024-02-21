@@ -32,14 +32,9 @@ namespace Fanzoo.Kernel.Services
         public string? PickupDirectoryLocation { get; set; } = default!;
     }
 
-    public sealed class SmtpEmailService : IEmailService
+    public sealed class SmtpEmailService(IOptions<SmtpSettings> settings) : IEmailService
     {
-        private readonly SmtpSettings _settings;
-
-        public SmtpEmailService(IOptions<SmtpSettings> settings)
-        {
-            _settings = settings.Value;
-        }
+        private readonly SmtpSettings _settings = settings.Value;
 
         public string Name => "Smtp";
 
