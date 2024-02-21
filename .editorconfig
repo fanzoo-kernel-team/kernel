@@ -292,3 +292,9 @@ dotnet_diagnostic.CS8795.severity = none
 
 # RMG020: Source property is not mapped to any target property
 dotnet_diagnostic.RMG020.severity = none
+
+# IDE0290: Use primary constructor
+csharp_style_prefer_primary_constructors = true
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = warning
