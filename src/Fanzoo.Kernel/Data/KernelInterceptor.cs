@@ -52,7 +52,7 @@ namespace Fanzoo.Kernel.Data
                 }
             }
 
-            return dirtyProperties.ToArray();
+            return [.. dirtyProperties];
         }
 
         public override bool? IsTransient(object entity) =>

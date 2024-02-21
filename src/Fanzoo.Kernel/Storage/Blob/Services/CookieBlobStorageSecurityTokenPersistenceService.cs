@@ -7,7 +7,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         public const string SecurityTokenCookieName = "BlobStorageSecurityToken";
         public const string SecurityTokenExpirationCookieName = "BlobStorageSecurityTokenExpiration";
 
-        private const int SkewMinutes = 5;
+        private const int _skewMinutes = 5;
 
         private readonly IBlobStorageSecurityTokenGenerationService _securityTokenGenerationService = securityTokenGenerationService;
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -33,7 +33,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
                 var durationMinutes = _securityTokenGenerationService.SecurityTokenDurationMinutes;
 
-                var expiration = SystemDateTimeOffset.UtcNow.AddMinutes(Math.Min(durationMinutes - SkewMinutes, durationMinutes));
+                var expiration = SystemDateTimeOffset.UtcNow.AddMinutes(Math.Min(durationMinutes - _skewMinutes, durationMinutes));
 
                 httpContext.Response.Cookies.Append(SecurityTokenCookieName, token, new CookieOptions { Secure = true, HttpOnly = true });
                 httpContext.Response.Cookies.Append(SecurityTokenExpirationCookieName, expiration.ToString("o"), new CookieOptions { Secure = true, HttpOnly = true });

@@ -307,3 +307,12 @@ dotnet_diagnostic.IDE0300.severity = warning
 
 # IDE0301: Simplify collection initialization
 dotnet_diagnostic.IDE0301.severity = warning
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = warning
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = warning
+
+# CA1510: Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1510.severity = warning
