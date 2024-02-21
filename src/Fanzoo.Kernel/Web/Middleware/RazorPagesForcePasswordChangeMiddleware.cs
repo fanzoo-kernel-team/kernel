@@ -36,7 +36,7 @@ namespace Fanzoo.Kernel.Web.Middleware
                 routes.Add(changePasswordRoute);
             }
 
-            IgnoredRoutes = routes.ToArray();
+            IgnoredRoutes = [.. routes];
         }
 
         public IEnumerable<string> IgnoredRoutes { get; init; }
