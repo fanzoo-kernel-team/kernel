@@ -40,7 +40,7 @@ namespace FluentValidation
             return date >= SystemDateTime.UtcNow.Date;
         });
 
-        public static IRuleBuilderOptions<T, bool> MustBeTrue<T>(this IRuleBuilder<T, bool> ruleBuilder) => ruleBuilder.Must(p => p is true);
+        public static IRuleBuilderOptions<T, bool> MustBeTrue<T>(this IRuleBuilder<T, bool> ruleBuilder) => ruleBuilder.Must(p => p);
 
         public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this AbstractValidator<T> validator, Expression<Func<T, TProperty>> ruleFor, Func<TProperty, bool>? must = null, string? errorMessage = null)
         {

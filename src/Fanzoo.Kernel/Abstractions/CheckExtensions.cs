@@ -77,13 +77,13 @@ namespace Fanzoo.Kernel
 
         public static Check HasSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value));
 
-        public static Check DoesNotHaveSpaces(this Check check, string value) => check.Resolve(RegexCatalog.HasSpaces().IsMatch(value) is false);
+        public static Check DoesNotHaveSpaces(this Check check, string value) => check.Resolve(!RegexCatalog.HasSpaces().IsMatch(value));
 
         public static Check IsAlphaNumeric(this Check check, string value, char[] exceptions)
         {
             foreach (var character in value)
             {
-                if (char.IsLetterOrDigit(character) is false && exceptions.Contains(character) is false)
+                if (!char.IsLetterOrDigit(character) && !exceptions.Contains(character))
                 {
                     return false;
                 }
@@ -132,10 +132,7 @@ namespace Fanzoo.Kernel
             }
         }
 
-        public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency)
-        {
-            return decimal.Round(amount, currency.MinorUnits) != amount ? check.Resolve(false) : check.Resolve(true);
-        }
+        public static Check IsValidMoneyFormat(this Check check, decimal amount, CurrencyValue currency) => decimal.Round(amount, currency.MinorUnits) != amount ? check.Resolve(false) : check.Resolve(true);
 
         public static Check IsValidCssColor(this Check check, string cssColor)
         {
@@ -181,7 +178,7 @@ namespace Fanzoo.Kernel
 
             isValid &= validCharacterCount >= 3;
 
-            isValid &= RegexCatalog.MoreThanTwoMatchingCharactersInARow().IsMatch(password) is not true;
+            isValid &= !RegexCatalog.MoreThanTwoMatchingCharactersInARow().IsMatch(password);
 
             return check.Resolve(isValid);
         }

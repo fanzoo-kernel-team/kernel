@@ -72,14 +72,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var filePathname = Combine(_settings.RootPath, path, filename);
 
-            if (overwrite is false && File.Exists(filePathname))
+            if (!overwrite && File.Exists(filePathname))
             {
                 throw new ArgumentException($"File {filePathname} already exists", nameof(filename));
             }
 
             stream.Position = 0;
 
-            if (Directory.Exists(GetDirectoryName(filePathname)) is false)
+            if (!Directory.Exists(GetDirectoryName(filePathname)))
             {
                 Directory.CreateDirectory(GetDirectoryName(filePathname)!);
             }
@@ -120,7 +120,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var filePathname = Combine(_settings.RootPath, blobPathName);
 
-            if (File.Exists(filePathname) is false)
+            if (!File.Exists(filePathname))
             {
                 throw new ArgumentException($"File {filePathname} does not exist", nameof(blobPathName));
             }
@@ -147,14 +147,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var sourceFilePathname = Combine(_settings.RootPath, sourceBlobPathName);
 
-            if (File.Exists(sourceFilePathname) is false)
+            if (!File.Exists(sourceFilePathname))
             {
                 throw new ArgumentException($"File {sourceFilePathname} does not exist", nameof(sourceBlobPathName));
             }
 
             var destinationFilePathname = Combine(_settings.RootPath, destinationBlobPathName);
 
-            if (overwrite is false && File.Exists(destinationFilePathname))
+            if (!overwrite && File.Exists(destinationFilePathname))
             {
                 throw new ArgumentException($"File {destinationFilePathname} already exists", nameof(destinationBlobPathName));
             }
@@ -168,14 +168,14 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         {
             var sourceFilePathname = Combine(_settings.RootPath, sourceBlobPathName);
 
-            if (File.Exists(sourceFilePathname) is false)
+            if (!File.Exists(sourceFilePathname))
             {
                 throw new ArgumentException($"File {sourceFilePathname} does not exist", nameof(sourceBlobPathName));
             }
 
             var destinationFilePathname = Combine(_settings.RootPath, destinationBlobPathName);
 
-            if (overwrite is false && File.Exists(destinationFilePathname))
+            if (!overwrite && File.Exists(destinationFilePathname))
             {
                 throw new ArgumentException($"File {destinationFilePathname} already exists", nameof(destinationBlobPathName));
             }

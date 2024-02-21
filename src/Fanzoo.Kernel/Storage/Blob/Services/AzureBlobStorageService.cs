@@ -88,7 +88,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
             var blobClient = containerClient.GetBlobClient(blobName);
 
             //if overwrite = false, then check if it exists first and throw an exception
-            _ = overwrite is false && await blobClient.ExistsAsync()
+            _ = !overwrite && await blobClient.ExistsAsync()
                 ? throw new InvalidOperationException($"Blob {blobName} already exists.")
                 : await blobClient.DeleteIfExistsAsync();
 
@@ -172,7 +172,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
                     {
                         await DeleteAsync(destinationBlobPathName);
                     }
-                    else if (exists && overwrite is false)
+                    else if (exists && !overwrite)
                     {
                         throw new InvalidOperationException($"Destination blob already exists.");
                     }

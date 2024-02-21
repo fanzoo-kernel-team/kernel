@@ -83,8 +83,8 @@
 
         public static implicit operator MediaTypeValue(string value) => new(value);
 
-        private static readonly HashSet<string> mediaTypes = new()
-        {
+        private static readonly HashSet<string> mediaTypes =
+        [
             "application/1d-interleaved-parityfec",
             "application/3gpdash-qoe-report+xml",
             "application/3gppHal+json",
@@ -2110,6 +2110,6 @@
             "video/vnd.vivo",
             "video/VP8",
             "video/VP9"
-        };
+        ];
     }
 }

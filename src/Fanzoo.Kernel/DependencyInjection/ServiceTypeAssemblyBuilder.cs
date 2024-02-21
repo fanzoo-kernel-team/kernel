@@ -2,7 +2,7 @@
 {
     public sealed class ServiceTypeAssemblyBuilder : IServiceTypeAssemblyBuilder
     {
-        private readonly List<Assembly> _assemblies = new();
+        private readonly List<Assembly> _assemblies = [];
 
         public ServiceTypeAssemblyBuilder()
         {

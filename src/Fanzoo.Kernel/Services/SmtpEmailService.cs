@@ -126,7 +126,7 @@ namespace Fanzoo.Kernel.Services
 
                     var filename = Path.Combine(_settings.PickupDirectoryLocation ?? string.Empty, $"{Guid.NewGuid()}.eml");
 
-                    if (path.IsNotNullOrWhitespace() && Directory.Exists(filename) is not true)
+                    if (path.IsNotNullOrWhitespace() && !Directory.Exists(filename))
                     {
                         Directory.CreateDirectory(path);
                     }

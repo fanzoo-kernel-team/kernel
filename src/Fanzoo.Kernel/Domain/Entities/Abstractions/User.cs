@@ -223,7 +223,7 @@
         where TRoleValue : IRoleValue<TRolePrimitive>
         where TRolePrimitive : notnull, new()
     {
-        private readonly IList<TRoleValue> _roles = new List<TRoleValue>();
+        private readonly IList<TRoleValue> _roles = [];
 
         protected User(int maxFailedLogins) : base(maxFailedLogins) { }
 
@@ -266,7 +266,7 @@
     {
 
         private readonly int _numberOfInactiveTokensToStore;
-        private readonly IList<TRefreshToken> _refreshTokens = new List<TRefreshToken>();
+        private readonly IList<TRefreshToken> _refreshTokens = [];
 
         protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins)
         {
@@ -343,7 +343,7 @@
             where TRoleValue : IRoleValue<TRolePrimitive>
             where TRolePrimitive : notnull, new()
     {
-        private readonly IList<TRoleValue> _roles = new List<TRoleValue>();
+        private readonly IList<TRoleValue> _roles = [];
 
         protected User(int maxFailedLogins, int numberOfInactiveTokensToStore) : base(maxFailedLogins, numberOfInactiveTokensToStore) { }
 

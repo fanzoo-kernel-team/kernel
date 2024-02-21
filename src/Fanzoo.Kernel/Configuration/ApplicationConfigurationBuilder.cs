@@ -10,7 +10,7 @@
         {
             _configurationBuilder = new Microsoft.Extensions.Configuration.ConfigurationBuilder();
 
-            _keyValues = new();
+            _keyValues = [];
         }
 
         public ApplicationConfigurationBuilder AddJsonFile(string pathFileName, bool optional = true)

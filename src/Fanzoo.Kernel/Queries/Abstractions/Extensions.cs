@@ -10,7 +10,7 @@
             _error = error;
         }
 
-        public string Error => IsSuccessful is false && _error is not null ? _error : throw new InvalidOperationException($"Cannot access value of property {nameof(Error)} when result is sucessful.");
+        public string Error => !IsSuccessful && _error is not null ? _error : throw new InvalidOperationException($"Cannot access value of property {nameof(Error)} when result is sucessful.");
 
         public bool IsSuccessful { get; }
     }

@@ -16,7 +16,7 @@
         public IUnitOfWork Open()
         {
             //I may regret this
-            if (_current is not null && _current.IsClosed is not true)
+            if (_current is not null && !_current.IsClosed)
             {
                 return _current;
             }

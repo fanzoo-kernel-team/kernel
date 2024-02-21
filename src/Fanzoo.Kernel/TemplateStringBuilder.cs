@@ -9,7 +9,7 @@
         public TemplateStringBuilder(string template)
         {
             _template = template;
-            TemplateValues = new Dictionary<string, object>();
+            TemplateValues = [];
         }
 
         public TemplateStringBuilder(string template, Dictionary<string, object> templateValues) : this(template)

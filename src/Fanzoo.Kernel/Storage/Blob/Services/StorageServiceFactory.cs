@@ -19,6 +19,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
         private readonly string _serviceName;
 
         private readonly IEnumerable<IBlobStorageService> _services;
+
         public BlobStorageServiceFactory(IOptions<BlobStorageServiceFactorySettings> settings, IEnumerable<IBlobStorageService> services)
         {
             _services = services;

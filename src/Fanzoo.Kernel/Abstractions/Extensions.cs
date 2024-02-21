@@ -219,8 +219,7 @@ namespace System
                 ? StringComparison.OrdinalIgnoreCase
                 : StringComparison.Ordinal;
 
-            return input.EndsWith(trimString, comparisonType) is false
-                ? input
+            return !input.EndsWith(trimString, comparisonType) ? input
                 : input[..^trimString.Length];
         }
 

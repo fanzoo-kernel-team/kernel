@@ -1,5 +1,4 @@
-﻿using Fanzoo.Kernel.Web.Mvc.Filters;
-using Fanzoo.Kernel.Web.Validation.Cookies;
+﻿using Fanzoo.Kernel.Web.Validation.Cookies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Fanzoo.Kernel.DependencyInjection

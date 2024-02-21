@@ -118,7 +118,7 @@ namespace Fanzoo.Kernel.DependencyInjection
 
         internal class SwashbuckleSchemaHelper
         {
-            private readonly Dictionary<string, int> _schemaNameRepetition = new();
+            private readonly Dictionary<string, int> _schemaNameRepetition = [];
 
             // borrowed from https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/95cb4d370e08e54eb04cf14e7e6388ca974a686e/src/Swashbuckle.AspNetCore.SwaggerGen/SchemaGenerator/SchemaGeneratorOptions.cs#L44
             private string DefaultSchemaIdSelector(Type modelType)

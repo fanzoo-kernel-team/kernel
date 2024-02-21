@@ -52,6 +52,5 @@ namespace Fanzoo.Kernel.DependencyInjection
 
             return services;
         }
-
     }
 }

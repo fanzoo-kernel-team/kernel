@@ -7,7 +7,6 @@
     }
 
     [Flags]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4070:Non-flags enums should not be marked with \"FlagsAttribute\"", Justification = "The analyzer doesn't understand bitwise operators")]
     public enum BlobStorageSecurityPermissions
     {
         Read = 1,

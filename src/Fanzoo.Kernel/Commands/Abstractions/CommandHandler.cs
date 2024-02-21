@@ -10,7 +10,7 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
     private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
 
-    private readonly IList<IEvent> _domainEvents = new List<IEvent>();
+    private readonly IList<IEvent> _domainEvents = [];
 
     protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {
@@ -96,7 +96,7 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
     private readonly IUnitOfWork _unitOfWork;
     private readonly EventDispatcher _eventDispatcher;
 
-    private readonly IList<IEvent> _domainEvents = new List<IEvent>();
+    private readonly IList<IEvent> _domainEvents = [];
 
     protected CommandHandler(IUnitOfWorkFactory unitOfWorkFactory, EventDispatcher eventDispatcher)
     {

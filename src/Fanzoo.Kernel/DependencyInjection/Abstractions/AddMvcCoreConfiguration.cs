@@ -18,27 +18,27 @@ namespace Fanzoo.Kernel.DependencyInjection
 
         public IDictionary<string, CacheProfile> CacheProfiles { get; } = new Dictionary<string, CacheProfile>(StringComparer.OrdinalIgnoreCase);
 
-        public IList<IPageConvention> Conventions { get; } = new List<IPageConvention>();
+        public IList<IPageConvention> Conventions { get; } = [];
 
         public string? RootDirectory { get; set; }
 
-        public FilterCollection Filters { get; } = new FilterCollection();
+        public FilterCollection Filters { get; } = [];
 
         public int CookieExpirationDays { get; set; } = 90;
 
-        internal Dictionary<string, MediaTypeHeaderValue> FormatterMappings { get; } = new();
+        internal Dictionary<string, MediaTypeHeaderValue> FormatterMappings { get; } = [];
 
-        public FormatterCollection<IInputFormatter> InputFormatters { get; } = new FormatterCollection<IInputFormatter>();
+        public FormatterCollection<IInputFormatter> InputFormatters { get; } = [];
 
-        public FormatterCollection<IOutputFormatter> OutputFormatters { get; } = new FormatterCollection<IOutputFormatter>();
+        public FormatterCollection<IOutputFormatter> OutputFormatters { get; } = [];
 
-        public IList<IModelBinderProvider> ModelBinderProviders { get; } = new List<IModelBinderProvider>();
+        public IList<IModelBinderProvider> ModelBinderProviders { get; } = [];
 
-        public IList<IMetadataDetailsProvider> ModelMetadataDetailsProviders { get; } = new List<IMetadataDetailsProvider>();
+        public IList<IMetadataDetailsProvider> ModelMetadataDetailsProviders { get; } = [];
 
-        public IList<IModelValidatorProvider> ModelValidatorProviders { get; } = new List<IModelValidatorProvider>();
+        public IList<IModelValidatorProvider> ModelValidatorProviders { get; } = [];
 
-        public IList<IValueProviderFactory> ValueProviderFactories { get; } = new List<IValueProviderFactory>();
+        public IList<IValueProviderFactory> ValueProviderFactories { get; } = [];
 
         public void SetFormatterMapping(string format, MediaTypeHeaderValue contentType) => FormatterMappings[format] = contentType;
 
