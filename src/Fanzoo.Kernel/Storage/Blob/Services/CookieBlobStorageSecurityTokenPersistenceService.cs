@@ -1,4 +1,6 @@
-﻿namespace Fanzoo.Kernel.Storage.Blob.Services
+﻿using System.Globalization;
+
+namespace Fanzoo.Kernel.Storage.Blob.Services
 {
     public sealed class CookieBlobStorageSecurityTokenPersistenceService(IBlobStorageSecurityTokenGenerationService securityTokenGenerationService, IHttpContextAccessor httpContextAccessor) : IBlobStorageSecurityTokenPersistenceService
     {
@@ -20,7 +22,7 @@
             if (httpContext.Request.Cookies.TryGetValue(SecurityTokenCookieName, out var token) &&
                 httpContext.Request.Cookies.TryGetValue(SecurityTokenExpirationCookieName, out var expirationString))
             {
-                var expiration = DateTimeOffset.Parse(expirationString);
+                var expiration = DateTimeOffset.Parse(expirationString, new CultureInfo("en-US"));
 
                 generateToken = SystemDateTimeOffset.UtcNow >= expiration;
             }

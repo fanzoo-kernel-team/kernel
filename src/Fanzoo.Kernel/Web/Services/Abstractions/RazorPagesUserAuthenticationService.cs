@@ -1,4 +1,5 @@
-﻿using Fanzoo.Kernel.Data;
+﻿using System.Globalization;
+using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -140,7 +141,7 @@ namespace Fanzoo.Kernel.Web.Services
                     var lastAuthenticationChange = principal.Claims.GetClaimValueOrDefault(ClaimTypes.LastAuthenticationChange);
 
                     if (lastAuthenticationChange is not null
-                        && DateTime.TryParse(lastAuthenticationChange, out var lastAuthenticationChangeDate)
+                        && DateTime.TryParse(lastAuthenticationChange, new CultureInfo("en-US"), out var lastAuthenticationChangeDate)
                         && !user.RequiresAuthentication(lastAuthenticationChangeDate))
                     {
                         _unitOfWorkFactory.Close();

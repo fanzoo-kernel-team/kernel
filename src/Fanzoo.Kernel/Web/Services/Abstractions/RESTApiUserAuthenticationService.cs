@@ -1,5 +1,6 @@
 ﻿#pragma warning disable S101 // Types should be named in PascalCase
 
+using System.Globalization;
 using Fanzoo.Kernel.Data;
 using Fanzoo.Kernel.Domain.Entities.Users;
 using Microsoft.Extensions.Options;
@@ -190,7 +191,7 @@ namespace Fanzoo.Kernel.Web.Services
                     var lastAuthenticationChange = principal.Claims.GetClaimValueOrDefault(ClaimTypes.LastAuthenticationChange);
 
                     if (lastAuthenticationChange is not null
-                        && DateTime.TryParse(lastAuthenticationChange, out var lastAuthenticationChangeDate)
+                        && DateTime.TryParse(lastAuthenticationChange, new CultureInfo("en-US"), out var lastAuthenticationChangeDate)
                         && !user.RequiresAuthentication(lastAuthenticationChangeDate))
                     {
                         _unitOfWorkFactory.Close();
