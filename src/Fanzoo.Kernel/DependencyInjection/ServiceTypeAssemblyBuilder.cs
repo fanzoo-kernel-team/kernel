@@ -12,7 +12,7 @@
 
         public IServiceTypeAssemblyBuilder FromAssembly(Assembly assembly)
         {
-            AddAssemblies(new[] { assembly });
+            AddAssemblies([assembly]);
 
             return this;
         }

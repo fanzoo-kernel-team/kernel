@@ -11,12 +11,12 @@ namespace Fanzoo.Kernel.DependencyInjection
         {
             //add all the core stuff
             services
-                .AddCommandHandlers(new[] { typeof(ICommandHandler<,>).Assembly })
-                .AddEventHandlers(new[] { typeof(IEventHandler<>).Assembly })
-                .AddQueryHandlers(new[] { typeof(IQueryHandler<,>).Assembly })
-                .AddRepositories(new[] { typeof(IRepository<,,>).Assembly })
+                .AddCommandHandlers([typeof(ICommandHandler<,>).Assembly])
+                .AddEventHandlers([typeof(IEventHandler<>).Assembly])
+                .AddQueryHandlers([typeof(IQueryHandler<,>).Assembly])
+                .AddRepositories([typeof(IRepository<,,>).Assembly])
                 .AddSlapper()
-                .AddServices(new[] { typeof(IService).Assembly })
+                .AddServices([typeof(IService).Assembly])
                 .AddCore();
 
             //add configured stuff
@@ -147,7 +147,7 @@ namespace Fanzoo.Kernel.DependencyInjection
                 var applicationServices = assembly.GetTypes()
                     .Where(t => t.IsClass)
                     .Where(t => t.GetInterfaces().Exists(i => i == typeof(IService)))
-                        .Select(t => (Type: t, Interface: t.GetInterfaces().Except(new[] { typeof(IService) }).First()));
+                        .Select(t => (Type: t, Interface: t.GetInterfaces().Except([typeof(IService)]).First()));
 
                 foreach (var applicationService in applicationServices)
                 {
