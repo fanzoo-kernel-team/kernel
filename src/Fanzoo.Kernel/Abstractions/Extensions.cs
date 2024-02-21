@@ -225,15 +225,9 @@ namespace System
 
         public static Uri Combine(this Uri uri, string relativeUri)
         {
-            if (uri == null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
+            ArgumentNullException.ThrowIfNull(uri);
 
-            if (relativeUri == null)
-            {
-                throw new ArgumentNullException(nameof(relativeUri));
-            }
+            ArgumentNullException.ThrowIfNull(relativeUri);
 
             if (relativeUri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {

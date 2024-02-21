@@ -248,10 +248,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
 
         private static (string Container, string Path) GetContainerAndFolderPath(string path)
         {
-            if (path is null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
+            ArgumentNullException.ThrowIfNull(path);
 
             //clean it up
             path = path.Trim();

@@ -48,10 +48,7 @@ namespace Fanzoo.Kernel.Services
 
             from ??= _settings.From;
 
-            if (from is null)
-            {
-                throw new ArgumentNullException(nameof(from));
-            }
+            ArgumentNullException.ThrowIfNull(from);
 
             message.From.Add(MailboxAddress.Parse(from));
 

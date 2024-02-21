@@ -16,10 +16,7 @@ public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TComma
     {
         _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
-        if (unitOfWorkFactory is null)
-        {
-            throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        }
+        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
 
         _unitOfWork = unitOfWorkFactory.Open();
     }
@@ -102,10 +99,7 @@ public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand> where
     {
         _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
-        if (unitOfWorkFactory is null)
-        {
-            throw new ArgumentNullException(nameof(unitOfWorkFactory));
-        }
+        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
 
         _unitOfWork = unitOfWorkFactory.Open();
     }
