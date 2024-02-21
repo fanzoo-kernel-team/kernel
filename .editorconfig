@@ -304,3 +304,6 @@ dotnet_style_prefer_collection_expression = when_types_loosely_match
 
 # IDE0300: Simplify collection initialization
 dotnet_diagnostic.IDE0300.severity = warning
+
+# IDE0301: Simplify collection initialization
+dotnet_diagnostic.IDE0301.severity = warning

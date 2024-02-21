@@ -14,6 +14,6 @@
                 && user.Identity.IsAuthenticated
                 && user.HasClaim(c => c.Type == claimType)
                     ? user.Claims.Where(c => c.Type == claimType)
-                    : Enumerable.Empty<Claim>();
+                    : [];
     }
 }

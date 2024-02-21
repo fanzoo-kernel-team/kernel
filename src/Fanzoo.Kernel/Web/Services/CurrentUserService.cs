@@ -40,7 +40,7 @@
             }
         }
 
-        public IEnumerable<Claim> GetClaims(string claim) => _contextAccessor.User?.GetClaims(claim) ?? Enumerable.Empty<Claim>();
+        public IEnumerable<Claim> GetClaims(string claim) => _contextAccessor.User?.GetClaims(claim) ?? [];
     }
 
     public static class CurrentUserServiceExtensions

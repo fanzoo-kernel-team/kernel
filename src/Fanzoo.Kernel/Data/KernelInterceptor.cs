@@ -21,14 +21,14 @@ namespace Fanzoo.Kernel.Data
 
             if (session is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var entry = session.PersistenceContext.GetEntry(entity);
 
             if (entry is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var dirtyIndexes =
@@ -39,7 +39,7 @@ namespace Fanzoo.Kernel.Data
 
             if (dirtyIndexes is null)
             {
-                return Array.Empty<int>();
+                return [];
             }
 
             var dirtyProperties = new List<int>(dirtyIndexes);
