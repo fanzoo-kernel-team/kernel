@@ -11,7 +11,7 @@ namespace Fanzoo.Kernel.Data
 
         private ISession? _session;
 
-        private static readonly string[] _propertiesToIgnore = { "CreatedDate", "CreatedBy", "UpdatedDate", "UpdatedBy" };
+        private static readonly string[] _propertiesToIgnore = ["CreatedDate", "CreatedBy", "UpdatedDate", "UpdatedBy"];
 
         public T? GetService<T>() => (T?)_serviceProvider.GetService(typeof(T));
 

@@ -298,3 +298,9 @@ csharp_style_prefer_primary_constructors = true
 
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = warning
+
+# IDE0300: Simplify collection initialization
+dotnet_style_prefer_collection_expression = when_types_loosely_match
+
+# IDE0300: Simplify collection initialization
+dotnet_diagnostic.IDE0300.severity = warning

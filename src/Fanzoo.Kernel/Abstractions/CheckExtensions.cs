@@ -227,7 +227,7 @@ namespace Fanzoo.Kernel
             }
         }
 
-        private static readonly string[] _validColorNames = {
+        private static readonly string[] _validColorNames = [
             "aliceblue",
             "antiquewhite",
             "aqua",
@@ -375,6 +375,6 @@ namespace Fanzoo.Kernel
             "white",
             "whitesmoke",
             "yellow",
-            "yellowgreen"};
+            "yellowgreen"];
     }
 }

@@ -114,9 +114,9 @@ namespace Fanzoo.Kernel.Builder
             return builder;
         }
 
-        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, Assembly assembly) => builder.AddApplicationModulesFromAssemblies(new[] { assembly });
+        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, Assembly assembly) => builder.AddApplicationModulesFromAssemblies([assembly]);
 
-        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, string assemblyName) => builder.AddApplicationModulesFromAssemblies(new[] { Assembly.Load(assemblyName) });
+        public static WebApplicationBuilder AddApplicationModulesFromAssembly(this WebApplicationBuilder builder, string assemblyName) => builder.AddApplicationModulesFromAssemblies([Assembly.Load(assemblyName)]);
 
         public static WebApplicationBuilder AddApplicationModulesFromAssemblies(this WebApplicationBuilder builder, Assembly[] assemblies)
         {
