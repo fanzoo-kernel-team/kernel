@@ -1,6 +1,4 @@
-﻿#pragma warning disable S4144 // Methods should not have identical implementations
-
-using NHibernate.Type;
+﻿using NHibernate.Type;
 using ISession = NHibernate.ISession;
 
 namespace Fanzoo.Kernel.Data
@@ -69,6 +67,7 @@ namespace Fanzoo.Kernel.Data
             return false;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4144:Methods should not have identical implementations", Justification = "Overriden")]
         public override bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
         {
             SetAsLoadedOrSaved(entity);

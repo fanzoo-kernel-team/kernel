@@ -75,7 +75,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
                 ? throw new InvalidOperationException($"Blob {blobName} already exists.")
                 : await blobClient.DeleteIfExistsAsync();
 
-            var options = new BlobUploadOptions()
+            var blobOptions = new BlobUploadOptions()
             {
                 HttpHeaders = new()
                 {
@@ -83,7 +83,7 @@ namespace Fanzoo.Kernel.Storage.Blob.Services
                 }
             };
 
-            var result = await blobClient.UploadAsync(stream, options);
+            var result = await blobClient.UploadAsync(stream, blobOptions);
 
             var uploadBlobResponse = result.GetRawResponse();
 

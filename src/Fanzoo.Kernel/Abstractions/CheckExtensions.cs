@@ -4,8 +4,8 @@ namespace Fanzoo.Kernel
 {
     public static class CheckExtensions
     {
-        private const int MinimumPasswordLength = 10;
-        private const int MaximumPasswordLength = 100;
+        private const int _minimumPasswordLength = 10;
+        private const int _maximumPasswordLength = 100;
 
         public static Check NotNull<T>(this Check check, T value) => check.Resolve(value is not null);
 
@@ -94,7 +94,7 @@ namespace Fanzoo.Kernel
 
         public static Check IsBetween(this Check check, int value, int min, int max) => check.Resolve(value >= min && value <= max);
 
-        public static Check IsValidDate(this Check check, int month, int day, int year) => check.Resolve(DateTime.TryParse($"{month}/{day}/{year}", out _));
+        public static Check IsValidDate(this Check check, int month, int day, int year) => check.Resolve(DateTime.TryParse($"{month}/{day}/{year}", new CultureInfo("en-US"), out _));
 
         public static Check IsValidIPAddress(this Check check, string ipAddress) => check.Resolve(RegexCatalog.IPAddressPattern().IsMatch(ipAddress));
 
@@ -149,9 +149,9 @@ namespace Fanzoo.Kernel
         public static Check IsValidPassword(this Check check, string password)
         {
             var isValid = Check.For
-                .LengthIsGreaterThanOrEqual(password, MinimumPasswordLength)
+                .LengthIsGreaterThanOrEqual(password, _minimumPasswordLength)
                 .And
-                .LengthIsLessThanOrEqual(password, MaximumPasswordLength)
+                .LengthIsLessThanOrEqual(password, _maximumPasswordLength)
                     .Result;
 
             var validCharacterCount = 0;
