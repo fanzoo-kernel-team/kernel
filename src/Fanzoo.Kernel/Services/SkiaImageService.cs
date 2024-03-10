@@ -58,6 +58,68 @@ namespace Fanzoo.Kernel.Services
             return scaledImageStream.ReadAllBytes();
         }
 
+        public Stream OverlayImage(Stream backgroundImage, Stream overlayImage, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
+        {
+            using var backgroundBmp = SKBitmap.Decode(backgroundImage);
+            using var overlayBmp = SKBitmap.Decode(overlayImage);
+
+            return OverlayImage(backgroundBmp, overlayBmp, x, y, imageFormat, quality);
+        }
+
+        public byte[] OverlayImage(byte[] backgroundImage, byte[] overlayImage, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
+        {
+            using var backgroundImageStream = new MemoryStream(backgroundImage);
+            using var overlayImageStream = new MemoryStream(overlayImage);
+
+            var outputImageStream = OverlayImage(backgroundImageStream, overlayImageStream, x, y, imageFormat, quality);
+
+            return outputImageStream.ReadAllBytes();
+        }
+
+        public Stream OverlayCenteredImage(Stream backgroundImage, Stream overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
+        {
+            var backgroundBmp = SKBitmap.Decode(backgroundImage);
+            var overlayBmp = SKBitmap.Decode(overlayImage);
+
+            var posX = (backgroundBmp.Width - overlayBmp.Width) / 2;
+            var posY = (backgroundBmp.Height - overlayBmp.Height) / 2;
+
+            return OverlayImage(backgroundBmp, overlayBmp, posX, posY, imageFormat, quality);
+        }
+
+        public byte[] OverlayCenteredImage(byte[] backgroundImage, byte[] overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
+        {
+            using var backgroundImageStream = new MemoryStream(backgroundImage);
+            using var overlayImageStream = new MemoryStream(overlayImage);
+
+            var outputImageStream = OverlayCenteredImage(backgroundImageStream, overlayImageStream, imageFormat, quality);
+
+            return outputImageStream.ReadAllBytes();
+        }
+
+        private static Stream OverlayImage(SKBitmap backgroundBmp, SKBitmap overlayBmp, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
+        {
+            var backgroundInfo = new SKImageInfo(backgroundBmp.Width, backgroundBmp.Height);
+            using var surface = SKSurface.Create(backgroundInfo);
+
+            var canvas = surface.Canvas;
+
+            canvas.DrawBitmap(backgroundBmp, 0, 0);
+
+            var paint = new SKPaint
+            {
+                FilterQuality = SKFilterQuality.High,
+                IsAntialias = true,
+                BlendMode = SKBlendMode.SrcOver,
+            };
+
+            canvas.DrawBitmap(overlayBmp, x, y, paint);
+
+            var outputImage = surface.Snapshot();
+
+            return outputImage.Encode(imageFormat.ToSKEncodedImageFormat(), quality).AsStream();
+        }
+
         private static SKBitmap ScaleImage(SKBitmap originalImage, int targetWidth, int targetHeight, int x = 0, int y = 0, SKColorType colorType = SKColorType.Rgba8888, SKAlphaType alphaType = SKAlphaType.Premul) => ScaleImage(originalImage, targetWidth, targetHeight, targetWidth, targetHeight, x, y, colorType, alphaType);
 
         private static SKBitmap ScaleImage(SKBitmap originalImage, int targetWidth, int targetHeight, int width, int height, int x = 0, int y = 0, SKColorType colorType = SKColorType.Rgba8888, SKAlphaType alphaType = SKAlphaType.Premul)
