@@ -27,5 +27,13 @@
         ValueTask<Stream> ShrinkToMaxAsync(Stream image, int maxSize, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
 
         ValueTask<byte[]> ShrinkToMaxAsync(byte[] image, int maxSize, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        Stream OverlayImage(Stream backgroundImage, Stream overlayImage, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        byte[] OverlayImage(byte[] backgroundImage, byte[] overlayImage, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        Stream OverlayCenteredImage(Stream backgroundImage, Stream overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        byte[] OverlayCenteredImage(byte[] backgroundImage, byte[] overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
     }
 }
