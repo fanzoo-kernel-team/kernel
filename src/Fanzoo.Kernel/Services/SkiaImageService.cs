@@ -97,6 +97,22 @@ namespace Fanzoo.Kernel.Services
             return outputImageStream.ReadAllBytes();
         }
 
+        public Stream ConvertImage(Stream image, ImageFormat imageFormat, int quality = 100)
+        {
+            var originalImage = SKBitmap.Decode(image);
+
+            return originalImage.Encode(imageFormat.ToSKEncodedImageFormat(), quality).AsStream();
+        }
+
+        public byte[] ConvertImage(byte[] image, ImageFormat imageFormat, int quality = 100)
+        {
+            var imageStream = new MemoryStream(image);
+
+            var outputImageStream = ConvertImage(imageStream, imageFormat, quality);
+
+            return outputImageStream.ReadAllBytes();
+        }
+
         private static Stream OverlayImage(SKBitmap backgroundBmp, SKBitmap overlayBmp, int x, int y, ImageFormat imageFormat = ImageFormat.Png, int quality = 100)
         {
             var backgroundInfo = new SKImageInfo(backgroundBmp.Width, backgroundBmp.Height);

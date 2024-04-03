@@ -35,5 +35,9 @@
         Stream OverlayCenteredImage(Stream backgroundImage, Stream overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
 
         byte[] OverlayCenteredImage(byte[] backgroundImage, byte[] overlayImage, ImageFormat imageFormat = ImageFormat.Png, int quality = 100);
+
+        Stream ConvertImage(Stream image, ImageFormat imageFormat, int quality = 100);
+
+        byte[] ConvertImage(byte[] image, ImageFormat imageFormat, int quality = 100);
     }
 }
